@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "778860783996",
+    "project_id": "confiao-571b0",
+    "storage_bucket": "confiao-571b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778860783996:android:a8c4348cc7446ad8f65cf9",
+        "android_client_info": {
+          "package_name": "com.bankingtechn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMINqoRrfMWqdwQTM17wIhzda7Z3ACdM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778860783996:android:dc3eb1078cd8e14ef65cf9",
+        "android_client_info": {
+          "package_name": "com.bankingtechnologies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMINqoRrfMWqdwQTM17wIhzda7Z3ACdM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778860783996:android:f67c5223fc7d26a9f65cf9",
+        "android_client_info": {
+          "package_name": "com.bankingtechnologies.consulting.confiao"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMINqoRrfMWqdwQTM17wIhzda7Z3ACdM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,6 +5,8 @@ class StorageKeys {
   // Permissions
   static const String storageItemPermissionsBiometry = 'permissions_biometry';
   static const String storageItemPermissionsLocation = 'permissions_location';
+  static const String storageItemPermissionsNotifications =
+      'permissions_notifications';
 
   // User
   static const String storageItemUserUsername = 'username';

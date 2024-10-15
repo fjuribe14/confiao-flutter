@@ -35,4 +35,26 @@ class PermissionsCtrl extends GetxController {
       debugPrint('$e');
     }
   }
+
+  requestPermissionNotifications() async {
+    try {
+      final storageItemPermissionsNotifications = await secureStorage.read(
+          key: StorageKeys.storageItemPermissionsNotifications);
+
+      debugPrint(
+          'storageItemPermissionsNotifications $storageItemPermissionsNotifications');
+
+      if (storageItemPermissionsNotifications == 'true') {
+        return;
+      } else {
+        final status = await Permission.notification.request();
+        await secureStorage.write(
+          key: StorageKeys.storageItemPermissionsNotifications,
+          value: status.isGranted.toString(),
+        );
+      }
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
 }

@@ -4,11 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:confiao/pages/index.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:confiao/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   /** Ensure that plugin services are initialized */
   WidgetsFlutterBinding.ensureInitialized();
+
+  /** Initialize Firebase */
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   /** Set preferred orientations */
   SystemChrome.setPreferredOrientations([
