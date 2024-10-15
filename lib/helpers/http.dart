@@ -276,11 +276,11 @@ class Http {
     FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
     dynamic data = await secureStorage.read(
-      key: StorageKeys.storageItemAuthData,
+      key: StorageKeys.storageItemUserToken,
     );
 
     if (data != null) {
-      return jsonDecode(data)?['access_token'];
+      return data;
     } else {
       if (kDebugMode) {
         debugPrint('getTokenLocaly: not token');

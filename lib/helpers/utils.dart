@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Helper {
   final _random = Random();
@@ -138,9 +137,6 @@ class Helper {
   }
 
   bool isEsLang() {
-    /// formato, cambiar y revisar
-    /// return Get.deviceLocale?.languageCode == 'es';
-    ///
     final result = ['es_'].contains(Get.deviceLocale.toString());
     return result;
   }
@@ -148,46 +144,6 @@ class Helper {
   getLogoAppByTheme() {
     return Get.isDarkMode ? AssetsDir.logoLight : AssetsDir.logo;
   }
-
-  Future<bool> getDarkMode() async {
-    try {
-      const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-
-      var r =
-          await secureStorage.read(key: StorageKeys.storageItemUserDarkMode);
-      return r == 'true';
-    } catch (e) {
-      printError(info: e.toString());
-      return false;
-    }
-  }
-
-  /// muestra la información de recarga
-  // Future<TasaBcv?> getTasaBcv() async {
-  //   DatabaseService dbService = DatabaseService.instance;
-  //   final Database db = await dbService.database;
-  //
-  //   try {
-  //     final List<Map<String, dynamic>> maps = await db.query(
-  //       DatabaseService.tableParametrosSistema,
-  //       where: 'co_parametro_sistema = ?',
-  //       whereArgs: ['P007'],
-  //     );
-  //
-  //     // print({'maps': jsonDecode(maps[0]['tx_valor'])});
-  //
-  //     if (maps[0]['tx_valor'] != null && maps[0]['tx_valor'] != '') {
-  //       TasaBcv? tasa = TasaBcv.fromJson(jsonDecode(maps[0]['tx_valor']));
-  //       return tasa;
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     debugPrint('getTasaBcv');
-  //     debugPrint(e.toString());
-  //     return null;
-  //   }
-  // }
 
   double getDoubleFromString(String val) {
     return double.tryParse(val.contains(',')

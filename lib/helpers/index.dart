@@ -7,6 +7,7 @@ export 'apiurl.dart';
 export 'location.dart';
 export 'calltoapi.dart';
 export 'datetimes.dart';
+export 'localauth.dart';
 export 'assets_dir.dart';
 export 'deviceinfo.dart';
 export 'responsive.dart';

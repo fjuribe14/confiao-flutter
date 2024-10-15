@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:confiao/pages/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   /** Ensure that plugin services are initialized */
@@ -22,8 +21,6 @@ void main() async {
 
   /** Get env variables */
   final appName = dotenv.env['APP_NAME'] ?? 'Confiao';
-
-  await Permission.location.request();
 
   runApp(MyApp(appName: appName));
 }

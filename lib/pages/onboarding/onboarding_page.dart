@@ -22,7 +22,7 @@ class OnboardingPage extends StatelessWidget {
             return Column(
               children: [
                 SvgPicture.asset(
-                  'assets/images/logo.svg',
+                  AssetsDir.logo,
                   height: Responsive.width(20),
                 ),
                 Expanded(
