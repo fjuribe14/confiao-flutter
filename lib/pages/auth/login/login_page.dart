@@ -9,8 +9,7 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
   @override
   Widget build(BuildContext context) {
-    AuthCtrl ctrl = Get.put(AuthCtrl());
-    Get.put(PermissionsCtrl());
+    AuthCtrl ctrl = Get.put(AuthCtrl(), permanent: true);
 
     return Scaffold(
       backgroundColor: Get.theme.primaryColor,
@@ -177,7 +176,9 @@ class LoginPage extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: InkWell(
-                                        onTap: () async => await ctrl.login(),
+                                        onTap: () async {
+                                          await ctrl.login();
+                                        },
                                         child: Container(
                                           height: Responsive.width(16.0),
                                           width: double.infinity,

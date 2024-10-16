@@ -28,7 +28,7 @@ class SettingsCtrl extends GetxController {
   }
 
   toggleBiometricPermission(bool value) async {
-    AuthCtrl authCtrl = Get.put(AuthCtrl());
+    AuthCtrl authCtrl = Get.find<AuthCtrl>();
 
     final claim = await authCtrl.claimPassword(state: value);
 
@@ -38,6 +38,7 @@ class SettingsCtrl extends GetxController {
       await LocalAuth().setBiometricPermission(value);
       biometricPermission.value = value;
       biometricPermission.refresh();
+      authCtrl.update();
     }
   }
 }

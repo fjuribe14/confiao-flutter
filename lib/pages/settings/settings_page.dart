@@ -10,31 +10,104 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Get.theme.colorScheme.onPrimary,
         title: Text(
           'Configuración',
           style: Get.theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
+            color: Get.theme.colorScheme.primary,
           ),
         ),
       ),
       body: GetBuilder<SettingsCtrl>(
           init: SettingsCtrl(),
           builder: (ctrl) {
+            AuthCtrl authCtrl = Get.find<AuthCtrl>();
+
             return Obx(
               () => SettingsList(
                 brightness: Brightness.light,
+                lightTheme: SettingsThemeData(
+                  settingsListBackground: Get.theme.scaffoldBackgroundColor,
+                ),
                 sections: [
+                  CustomSettingsSection(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: Get.theme.colorScheme.primary,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 24.0,
+                            child: Text(
+                              '${authCtrl.currentUser?.name?[0]}',
+                              style: Get.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Get.theme.primaryColor),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${authCtrl.currentUser?.name}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Get.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Get.theme.colorScheme.onPrimary,
+                                  ),
+                                ),
+                                Text(
+                                  '${authCtrl.currentUser?.email}',
+                                  style: Get.textTheme.titleMedium?.copyWith(
+                                    color: Get.theme.colorScheme.onPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Text('👋', style: Get.textTheme.titleLarge),
+                        ],
+                      ),
+                    ),
+                  ),
                   CustomSettingsSection(
                     child: SettingsTile.navigation(
                       onPressed: (context) {},
-                      title: const Text('Perfil'),
-                      leading: const Icon(Icons.account_circle_outlined),
-                      trailing: const Icon(Icons.chevron_right),
+                      title: const Text('Cambiar contraseña'),
+                      leading: const Icon(Icons.key_rounded),
                     ),
                   ),
-
+                  CustomSettingsSection(
+                    child: SettingsTile.navigation(
+                      onPressed: (context) {
+                        AuthCtrl().logout();
+                      },
+                      title: const Text('Cerrar Sesión'),
+                      leading: const Icon(Icons.exit_to_app_outlined),
+                    ),
+                  ),
                   SettingsSection(
-                    title: const Text('Seguridad'),
+                    title: Text(
+                      'Seguridad',
+                      style: Get.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Get.theme.colorScheme.primary,
+                      ),
+                    ),
                     tiles: <SettingsTile>[
                       SettingsTile.switchTile(
                         onToggle: (value) async {
@@ -45,50 +118,52 @@ class SettingsPage extends StatelessWidget {
                         leading: const Icon(Icons.fingerprint_outlined),
                         enabled: ctrl.canBiometric.value,
                         description: Text(
-                          ctrl.biometricPermission.value ? 'On' : 'Off',
+                          ctrl.biometricPermission.value
+                              ? 'Activo'
+                              : 'Desactivado',
                         ),
                       ),
                     ],
                   ),
-                  // SettingsSection(
-                  //   title: const Text('Permisos'),
-                  //   tiles: <SettingsTile>[
-                  //     SettingsTile.switchTile(
-                  //       onToggle: (value) {
-                  //         ctrl.tooglePushNotificationPermission();
-                  //         // ctrl.pushNotificationPermission.value = value;
-                  //         // ctrl.pushNotificationPermission.refresh();
-                  //       },
-                  //       title: const Text('Push Notification'),
-                  //       leading: const Icon(Icons.notifications),
-                  //       initialValue: ctrl.pushNotificationPermission.value,
-                  //       description: Text(
-                  //         ctrl.pushNotificationPermission.value ? 'On' : 'Off',
-                  //       ),
-                  //     ),
-                  //     SettingsTile.switchTile(
-                  //       onToggle: (value) {
-                  //         ctrl.storagePermission.value = value;
-                  //         ctrl.storagePermission.refresh();
-                  //       },
-                  //       title: const Text('Storage'),
-                  //       leading: const Icon(Icons.save),
-                  //       initialValue: ctrl.storagePermission.value,
-                  //       description: Text(
-                  //         ctrl.storagePermission.value ? 'On' : 'Off',
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  CustomSettingsSection(
-                    child: SettingsTile.navigation(
-                      onPressed: (context) {
-                        // Get.find<GlobalController>(tag: 'global-main')
-                        //     .endSessionUser(withRedirect: true);
-                      },
-                      title: const Text('Cerrar Sesión'),
-                      leading: const Icon(Icons.exit_to_app_outlined),
+                  SettingsSection(
+                    title: Text(
+                      'Permisos',
+                      style: Get.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Get.theme.colorScheme.primary,
+                      ),
                     ),
+                    tiles: <SettingsTile>[
+                      SettingsTile.switchTile(
+                        onToggle: (value) {
+                          // ctrl.tooglePushNotificationPermission();
+                          // ctrl.pushNotificationPermission.value = value;
+                          // ctrl.pushNotificationPermission.refresh();
+                        },
+                        title: const Text('Notificaciones'),
+                        leading: const Icon(Icons.notifications),
+                        initialValue: ctrl.pushNotificationPermission.value,
+                        description: Text(
+                          ctrl.pushNotificationPermission.value
+                              ? 'Activo'
+                              : 'Desactivado',
+                        ),
+                      ),
+                      // SettingsTile.switchTile(
+                      //   onToggle: (value) {
+                      //     ctrl.storagePermission.value = value;
+                      //     ctrl.storagePermission.refresh();
+                      //   },
+                      //   title: const Text('Almacenamiento'),
+                      //   leading: const Icon(Icons.save),
+                      //   initialValue: ctrl.storagePermission.value,
+                      //   description: Text(
+                      //     ctrl.storagePermission.value
+                      //         ? 'Activo'
+                      //         : 'Desactivado',
+                      //   ),
+                      // ),
+                    ],
                   ),
                 ],
               ),
@@ -99,99 +174,99 @@ class SettingsPage extends StatelessWidget {
 }
 
 // ListView(
-      //   children: [
-      //     // buildItemMenu(
-      //     //   title: 'profile'.tr,
-      //     //   // subtitle: 'Muestra la información de mi cuenta.',
-      //     //   iconStart: Icons.accessibility_outlined,
-      //     //   onPress: () => Get.toNamed(AppRouteName.profile),
-      //     // ),
-      //     // dividerMenu(),
+//   children: [
+//     // buildItemMenu(
+//     //   title: 'profile'.tr,
+//     //   // subtitle: 'Muestra la información de mi cuenta.',
+//     //   iconStart: Icons.accessibility_outlined,
+//     //   onPress: () => Get.toNamed(AppRouteName.profile),
+//     // ),
+//     // dividerMenu(),
 
-      //     // dividerMenu(),
-      //     // buildItemMenu(
-      //     //   title: 'Términos y condiciones',
-      //     //   // subtitle: 'Lee los términos y condiciones.',
-      //     //   iconStart: Icons.policy_outlined,
-      //     //   onPress: () => Get.to(
-      //     //     () => PrivacyPolicePage(
-      //     //       title: 'Terms_conditions'.tr,
-      //     //       iconTitle: SvgPicture.asset(
-      //     //         AssetsDir.iconTermCond,
-      //     //         height: 20,
-      //     //       ),
-      //     //       docDir: AssetsDir.vposTerminos,
-      //     //     ),
-      //     //   ),
-      //     // ),
-      //     // dividerMenu(),
-      //     // buildItemMenu(
-      //     //   title: 'Políticas de privacidad',
-      //     //   // subtitle: 'Lee las políticas de privacidad.',
-      //     //   iconStart: Icons.policy_outlined,
-      //     //   onPress: () => Get.to(
-      //     //     () => PrivacyPolicePage(
-      //     //       title: 'privacy_policy'.tr,
-      //     //       iconTitle: SvgPicture.asset(
-      //     //         AssetsDir.iconTermCond,
-      //     //         height: 20,
-      //     //       ),
-      //     //       docDir: AssetsDir.vposPolicies,
-      //     //     ),
-      //     //   ),
-      //     // ),
-      //     // dividerMenu(),
-      //     // buildItemMenu(
-      //     //   title: 'Dispositivos',
-      //     //   iconStart: Icons.device_unknown,
-      //     //   onPress: () => Get.toNamed(AppRouteName.devices),
-      //     // ),
-      //     dividerMenu(),
-      //     buildItemMenu(
-      //       title: 'Permisos',
-      //       iconStart: Icons.shield_outlined,
-      //       onPress: () => Get.toNamed(AppRouteName.permissionDevice),
-      //     ),
-      //     dividerMenu(),
-      //     Obx(
-      //       () => ListTile(
-      //         title: const Text('Modo oscuro'),
-      //         // subtitle: const Text('Establece el tema en app.'),
-      //         leading: Icon(
-      //           globalController.isDarkMode.value
-      //               ? Icons.light_mode_outlined
-      //               : Icons.dark_mode_outlined,
-      //         ),
-      //         trailing: CupertinoSwitch(
-      //           onChanged: (val) async {
-      //             await globalController.toDarkMode();
-      //           },
-      //           value: globalController.isDarkMode.value,
-      //         ),
-      //       ),
-      //     ),
-      //     dividerMenu(),
-      //     buildItemMenu(
-      //       title: 'exit'.tr,
-      //       // subtitle: 'Cierra la sesión activa en app.',
-      //       iconStart: Icons.exit_to_app,
-      //       colorIcon: Get.theme.colorScheme.primary,
-      //       colorText: Get.theme.colorScheme.primary,
-      //       onPress: () => globalController.endSessionUser(),
-      //     ),
-      //     dividerMenu(),
-      //     Padding(
-      //       padding: const EdgeInsets.only(left: 5.0, right: 15.0),
-      //       child: Row(
-      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //         children: [
-      //           const HelpAppWidget(),
-      //           Text(
-      //             '${globalController.appVersion}',
-      //             style: const TextStyle(fontSize: 12.0),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ],
-      // ),
+//     // dividerMenu(),
+//     // buildItemMenu(
+//     //   title: 'Términos y condiciones',
+//     //   // subtitle: 'Lee los términos y condiciones.',
+//     //   iconStart: Icons.policy_outlined,
+//     //   onPress: () => Get.to(
+//     //     () => PrivacyPolicePage(
+//     //       title: 'Terms_conditions'.tr,
+//     //       iconTitle: SvgPicture.asset(
+//     //         AssetsDir.iconTermCond,
+//     //         height: 20,
+//     //       ),
+//     //       docDir: AssetsDir.vposTerminos,
+//     //     ),
+//     //   ),
+//     // ),
+//     // dividerMenu(),
+//     // buildItemMenu(
+//     //   title: 'Políticas de privacidad',
+//     //   // subtitle: 'Lee las políticas de privacidad.',
+//     //   iconStart: Icons.policy_outlined,
+//     //   onPress: () => Get.to(
+//     //     () => PrivacyPolicePage(
+//     //       title: 'privacy_policy'.tr,
+//     //       iconTitle: SvgPicture.asset(
+//     //         AssetsDir.iconTermCond,
+//     //         height: 20,
+//     //       ),
+//     //       docDir: AssetsDir.vposPolicies,
+//     //     ),
+//     //   ),
+//     // ),
+//     // dividerMenu(),
+//     // buildItemMenu(
+//     //   title: 'Dispositivos',
+//     //   iconStart: Icons.device_unknown,
+//     //   onPress: () => Get.toNamed(AppRouteName.devices),
+//     // ),
+//     dividerMenu(),
+//     buildItemMenu(
+//       title: 'Permisos',
+//       iconStart: Icons.shield_outlined,
+//       onPress: () => Get.toNamed(AppRouteName.permissionDevice),
+//     ),
+//     dividerMenu(),
+//     Obx(
+//       () => ListTile(
+//         title: const Text('Modo oscuro'),
+//         // subtitle: const Text('Establece el tema en app.'),
+//         leading: Icon(
+//           globalController.isDarkMode.value
+//               ? Icons.light_mode_outlined
+//               : Icons.dark_mode_outlined,
+//         ),
+//         trailing: CupertinoSwitch(
+//           onChanged: (val) async {
+//             await globalController.toDarkMode();
+//           },
+//           value: globalController.isDarkMode.value,
+//         ),
+//       ),
+//     ),
+//     dividerMenu(),
+//     buildItemMenu(
+//       title: 'exit'.tr,
+//       // subtitle: 'Cierra la sesión activa en app.',
+//       iconStart: Icons.exit_to_app,
+//       colorIcon: Get.theme.colorScheme.primary,
+//       colorText: Get.theme.colorScheme.primary,
+//       onPress: () => globalController.endSessionUser(),
+//     ),
+//     dividerMenu(),
+//     Padding(
+//       padding: const EdgeInsets.only(left: 5.0, right: 15.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           const HelpAppWidget(),
+//           Text(
+//             '${globalController.appVersion}',
+//             style: const TextStyle(fontSize: 12.0),
+//           ),
+//         ],
+//       ),
+//     ),
+//   ],
+// ),

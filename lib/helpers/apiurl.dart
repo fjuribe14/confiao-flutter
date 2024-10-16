@@ -3,6 +3,9 @@ import 'package:confiao/helpers/index.dart';
 class ApiUrl {
   /// api seg
   static String authLogin = '/api/v3/auth/login';
+  static String authLogout = '/api/v3/auth/logout';
+  static String authCheckCredentials = '/api/v3/auth/user/credenciales/check';
+
   static String apiRestEndPointActivateRegister =
       '${Environments.apiSeg}/api/v3/auth/signup';
   static String apiRestEndPointResentCodeRegister =
@@ -13,10 +16,6 @@ class ApiUrl {
       '${Environments.apiSeg}/api/v3/auth/password/reset';
   static String apiRestEndPointPasswordResetValidate =
       '${Environments.apiSeg}/api/v3/auth/password/validate';
-  static String apiRestEndPointLogout =
-      '${Environments.apiSeg}/api/v3/auth/logout';
-  static String apiRestEndPointUserCheckCredentials =
-      '${Environments.apiSeg}/api/v3/auth/user/credenciales/check';
   static String apiRestEndPointLoginRefresh =
       '${Environments.apiSeg}/api/v3/auth/refresh-session';
   static String apiSegEndPointLoginRefreshProfile =

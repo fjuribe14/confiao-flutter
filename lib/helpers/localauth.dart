@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -82,7 +82,9 @@ class LocalAuth {
 
   Future<bool> getBiometricPermission() async {
     final String? value = await secureStorage.read(
-        key: StorageKeys.storageItemPermissionsBiometry);
+      key: StorageKeys.storageItemPermissionsBiometry,
+    );
+
     return value == 'true';
   }
 }

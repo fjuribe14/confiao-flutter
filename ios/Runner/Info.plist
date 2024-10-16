@@ -31,6 +31,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Necesitamos verificar que eres tu.</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

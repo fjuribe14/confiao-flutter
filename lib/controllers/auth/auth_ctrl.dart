@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
@@ -51,13 +52,13 @@ class AuthCtrl extends GetxController {
     try {
       final resp = await Http().http(showLoading: true).then(
             (value) => value.post(
-              ApiUrl.apiRestEndPointUserCheckCredentials,
+              '${dotenv.env['URL_API_AUTH']}${ApiUrl.authCheckCredentials}',
               data: jsonEncode({
                 "scope": '*',
                 "username": email,
                 "grant_type": "password",
-                "secret": Environments.secret,
-                "client_id": Environments.clientId,
+                "client_id": dotenv.env['CLIENT_ID'],
+                "secret": dotenv.env['CLIENT_SECRET'],
                 "password": Helper().stringToBase64.encode(password),
               }),
             ),
@@ -186,6 +187,34 @@ class AuthCtrl extends GetxController {
       body:
           'Por favor accede con tu contraseña, e intenta configurar la biometría nuevamente',
     );
+  }
+
+  Future<void> logout() async {
+    try {
+      /** get logout url */
+      await Dio().get(
+        '${dotenv.env['URL_API_AUTH']}${ApiUrl.authLogout}',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${await helper.getToken()}',
+          },
+        ),
+      );
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      /** delete access token */
+      await secureStorage.delete(key: StorageKeys.storageItemUserToken);
+
+      /** delete refresh token */
+      await secureStorage.delete(key: StorageKeys.storageItemUserRefreshToken);
+
+      /** delete roles */
+      await secureStorage.delete(key: StorageKeys.storageItemUserRoles);
+
+      /** set initial screen */
+      await _setInitialScreen();
+    }
   }
 
   Future<bool> claimPassword({bool? state = false}) async {

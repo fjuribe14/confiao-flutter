@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:confiao/controllers/auth/auth_ctrl.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
@@ -43,36 +44,36 @@ class Http {
 
           final token = await getTokenLocaly();
 
-          if (['', null, 'null', ' '].contains(token) &&
-              ![
-                ApiUrl.authLogin,
-                ApiUrl.apiComunesTasaValor,
-                ApiUrl.apiComunesParticipantes,
-                ApiUrl.apiRestEndPointPasswordReset,
-                ApiUrl.apiRestEndPointActivateRegister,
-                ApiUrl.apiRestEndPointResentCodeRegister,
-                ApiUrl.apiRestEndPointPasswordResetRequest,
-                ApiUrl.apiRestEndPointRegisterDeviceRecent,
-                ApiUrl.apiRestEndPointPasswordResetValidate,
-              ].contains(options.path)) {
-            // await exit();
-            return handler.reject(
-              DioException.requestCancelled(
-                  requestOptions: requestOptions,
-                  reason: 'cancelled not token provide'),
-            );
-          } else {
-            // log(jsonEncode({"authorization added": 'Bearer $token'}));
-            options.headers.addAll({"Authorization": 'Bearer $token'});
-          }
+          // if (['', null, 'null', ' '].contains(token) &&
+          //     ![
+          //       ApiUrl.authLogin,
+          //       ApiUrl.apiComunesTasaValor,
+          //       ApiUrl.apiComunesParticipantes,
+          //       ApiUrl.apiRestEndPointPasswordReset,
+          //       ApiUrl.apiRestEndPointActivateRegister,
+          //       ApiUrl.apiRestEndPointResentCodeRegister,
+          //       ApiUrl.apiRestEndPointPasswordResetRequest,
+          //       ApiUrl.apiRestEndPointRegisterDeviceRecent,
+          //       ApiUrl.apiRestEndPointPasswordResetValidate,
+          //     ].contains(options.path)) {
+          //   // await exit();
+          //   return handler.reject(
+          //     DioException.requestCancelled(
+          //         requestOptions: requestOptions,
+          //         reason: 'cancelled not token provide'),
+          //   );
+          // } else {
+          log(jsonEncode({"Authorization": 'Bearer $token'}));
+          options.headers.addAll({"Authorization": 'Bearer $token'});
+          // }
           return handler.next(options);
         },
         onResponse: (response, handler) {
           // pendingRequests.remove(response.requestOptions.path);
 
           if (kDebugMode) {
-            // log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
-            // log('DATA FROM PATH => ${response.data}');
+            log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
+            log('DATA FROM PATH => ${response.data}');
           }
 
           if (showLoading) {
@@ -290,8 +291,6 @@ class Http {
   }
 
   exit() async {
-    // GlobalController globalController =
-    //     Get.find<GlobalController>(tag: 'global-main');
-    // return await globalController.endSessionUser();
+    await AuthCtrl().logout();
   }
 }

@@ -8,12 +8,17 @@ class HomeLayoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(PermissionsCtrl());
+
     return GetBuilder<HomeCtrl>(
       init: HomeCtrl(),
       builder: (ctrl) => Obx(() {
         return Scaffold(
           body: PageView(
+            allowImplicitScrolling: false,
             controller: ctrl.pageController,
+            scrollDirection: Axis.horizontal,
+            scrollBehavior: const ScrollBehavior(),
             physics: const NeverScrollableScrollPhysics(),
             children: ctrl.pages,
           ),
