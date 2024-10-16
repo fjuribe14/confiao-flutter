@@ -8,7 +8,7 @@ class AppRouteName {
   static const String onboarding = '/onboarding';
 
   // Auth
-  static const String login = '/login';
+  static const String authLogin = '/login';
   static const String authRegister = '/register';
 
   // Protected
@@ -41,8 +41,12 @@ class AppRoutes {
 
     /** Auth */
     GetPage(
-      name: AppRouteName.login,
+      name: AppRouteName.authLogin,
       page: () => const LoginPage(),
+    ),
+    GetPage(
+      name: AppRouteName.authRegister,
+      page: () => const RegisterPage(),
     ),
 
     /** Protected */

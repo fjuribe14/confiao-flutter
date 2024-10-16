@@ -232,7 +232,9 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16.0),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.toNamed(AppRouteName.authRegister);
+                                  },
                                   child: Container(
                                     width: double.infinity,
                                     height: Responsive.width(16.0),

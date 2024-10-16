@@ -56,7 +56,7 @@ class OnboardingCtrl extends GetxController {
         (value) {
           //
           if (value == 'true') {
-            Get.offAllNamed(AppRouteName.login);
+            Get.offAllNamed(AppRouteName.authLogin);
           } else {
             viewed.value = false;
             loading.value = false;
@@ -82,6 +82,6 @@ class OnboardingCtrl extends GetxController {
   void skip() {
     secureStorage
         .write(key: StorageKeys.storageItemOnboarding, value: 'true')
-        .then((value) => Get.offAllNamed(AppRouteName.login));
+        .then((value) => Get.offAllNamed(AppRouteName.authLogin));
   }
 }

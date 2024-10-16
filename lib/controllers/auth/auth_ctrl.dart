@@ -39,11 +39,11 @@ class AuthCtrl extends GetxController {
   Future<void> _setInitialScreen() async {
     final user = await getCurrentUser();
 
-    if (user == null && Get.currentRoute != AppRouteName.login) {
-      Get.offAllNamed(AppRouteName.login);
-    }
+    debugPrint('getCurrentUser: $user');
 
-    if (user is User) {
+    if (user == null && Get.currentRoute != AppRouteName.authLogin) {
+      Get.offAllNamed(AppRouteName.authLogin);
+    } else if (user != null && Get.currentRoute != AppRouteName.home) {
       Get.offAllNamed(AppRouteName.home);
     }
   }
