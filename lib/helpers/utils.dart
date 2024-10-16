@@ -159,7 +159,6 @@ class Helper {
   }
 
   Future<String> getAppBuildVersion() async {
-    printInfo(info: 'getAppBuildVersion');
     PackageInfo device = await DeviceInfoService().getAppInfo;
     return 'V${device.version}.${device.buildNumber}';
   }

@@ -22,8 +22,6 @@ class AuthCtrl extends GetxController {
 
   RxBool biometricPermission = false.obs;
   RxBool canAuthWithBiometric = false.obs;
-  bool actBiometryLogin = false, tokenExpired = false;
-  RxInt timePassedLastActivity = 0.obs, timeValidateLastActivity = 0.obs;
 
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
@@ -39,12 +37,16 @@ class AuthCtrl extends GetxController {
   Future<void> _setInitialScreen() async {
     final user = await getCurrentUser();
 
-    debugPrint('getCurrentUser: $user');
+    debugPrint('stVerificado: ${user?.stVerificado == 'VERIFICADO'}');
 
     if (user == null && Get.currentRoute != AppRouteName.authLogin) {
       Get.offAllNamed(AppRouteName.authLogin);
     } else if (user != null && Get.currentRoute != AppRouteName.home) {
-      Get.offAllNamed(AppRouteName.home);
+      if (user.stVerificado == 'VERIFICADO') {
+        Get.offAllNamed(AppRouteName.home);
+      } else {
+        Get.offAllNamed(AppRouteName.setup);
+      }
     }
   }
 
@@ -102,6 +104,10 @@ class AuthCtrl extends GetxController {
     if (token == null) return null;
 
     currentUser = User.fromJson(JWT.decode(token).payload['user']);
+
+    await secureStorage.write(
+        key: StorageKeys.storageItemUserVerify,
+        value: '${currentUser?.stVerificado == 'VERIFICADO'}');
 
     return currentUser;
   }
@@ -191,6 +197,8 @@ class AuthCtrl extends GetxController {
 
   Future<void> logout() async {
     try {
+      alertService.showLoading(true);
+
       /** get logout url */
       await Dio().get(
         '${dotenv.env['URL_API_AUTH']}${ApiUrl.authLogout}',
@@ -203,6 +211,8 @@ class AuthCtrl extends GetxController {
     } catch (e) {
       debugPrint('$e');
     } finally {
+      alertService.showLoading(false);
+
       /** delete access token */
       await secureStorage.delete(key: StorageKeys.storageItemUserToken);
 
@@ -213,7 +223,7 @@ class AuthCtrl extends GetxController {
       await secureStorage.delete(key: StorageKeys.storageItemUserRoles);
 
       /** set initial screen */
-      await _setInitialScreen();
+      await init();
     }
   }
 

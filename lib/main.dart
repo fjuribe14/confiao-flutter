@@ -49,14 +49,15 @@ class MyApp extends StatelessWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetMaterialApp(
           title: appName,
-          theme: theme.light(),
+          darkTheme: theme.dark(),
           getPages: AppRoutes.pages,
-          themeMode: ThemeMode.light,
           locale: Localization.locale,
           translations: Localization(),
           initialRoute: AppRouteName.onboarding,
           debugShowCheckedModeBanner: kDebugMode,
           fallbackLocale: Localization.fallbackLocale,
+          theme: Get.isDarkMode ? theme.dark() : theme.light(),
+          themeMode: Get.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           onGenerateRoute: (settings) => MaterialPageRoute(
               builder: (BuildContext context) => const NotFoundPage())),
     );

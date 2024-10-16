@@ -18,9 +18,6 @@ class PermissionsCtrl extends GetxController {
       final storageItemPermissionsLocation = await secureStorage.read(
           key: StorageKeys.storageItemPermissionsLocation);
 
-      debugPrint(
-          'storageItemPermissionsLocation $storageItemPermissionsLocation');
-
       if (storageItemPermissionsLocation == 'true') {
         return;
       } else {

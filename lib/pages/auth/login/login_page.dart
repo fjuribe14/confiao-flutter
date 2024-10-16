@@ -7,9 +7,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     AuthCtrl ctrl = Get.put(AuthCtrl(), permanent: true);
+
+    // Set initial values
+    ctrl.init();
 
     return Scaffold(
       backgroundColor: Get.theme.primaryColor,

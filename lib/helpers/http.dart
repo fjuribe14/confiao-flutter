@@ -1,28 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:confiao/controllers/auth/auth_ctrl.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:confiao/helpers/index.dart';
-// import 'package:confiao/controllers/index.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:confiao/controllers/index.dart';
 
 class Http {
   var alertService = AlertService();
 
   Future<Dio> http({bool showLoading = true}) async {
     var dio = Dio();
-    // final Map<String, CancelToken> pendingRequests = {};
 
     dio.options.contentType = "application/json";
     dio.options.headers = {"Accept": "application/json"};
-    // dio.options.connectTimeout = const Duration(minutes: 1);
-
-    // void cancelAll() {
-    //   pendingRequests.forEach((url, token) => token.cancel());
-    //   pendingRequests.clear();
-    // }
 
     dio.interceptors.add(
       QueuedInterceptorsWrapper(
@@ -30,7 +21,6 @@ class Http {
           final requestOptions = RequestOptions(path: options.path);
           final cancelToken = CancelToken();
           requestOptions.cancelToken = cancelToken;
-          // pendingRequests[options.path] = cancelToken;
 
           if (showLoading) {
             alertService.showLoading(true);
@@ -44,37 +34,17 @@ class Http {
 
           final token = await getTokenLocaly();
 
-          // if (['', null, 'null', ' '].contains(token) &&
-          //     ![
-          //       ApiUrl.authLogin,
-          //       ApiUrl.apiComunesTasaValor,
-          //       ApiUrl.apiComunesParticipantes,
-          //       ApiUrl.apiRestEndPointPasswordReset,
-          //       ApiUrl.apiRestEndPointActivateRegister,
-          //       ApiUrl.apiRestEndPointResentCodeRegister,
-          //       ApiUrl.apiRestEndPointPasswordResetRequest,
-          //       ApiUrl.apiRestEndPointRegisterDeviceRecent,
-          //       ApiUrl.apiRestEndPointPasswordResetValidate,
-          //     ].contains(options.path)) {
-          //   // await exit();
-          //   return handler.reject(
-          //     DioException.requestCancelled(
-          //         requestOptions: requestOptions,
-          //         reason: 'cancelled not token provide'),
-          //   );
-          // } else {
-          log(jsonEncode({"Authorization": 'Bearer $token'}));
-          options.headers.addAll({"Authorization": 'Bearer $token'});
-          // }
+          if (token != null) {
+            options.headers.addAll({"Authorization": 'Bearer $token'});
+          }
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          // pendingRequests.remove(response.requestOptions.path);
-
-          if (kDebugMode) {
-            log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
-            log('DATA FROM PATH => ${response.data}');
-          }
+          // if (kDebugMode) {
+          // log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
+          // log('DATA FROM PATH => ${response.data}');
+          // }
 
           if (showLoading) {
             alertService.showLoading(false);
@@ -83,13 +53,6 @@ class Http {
           return handler.next(response);
         },
         onError: (DioException err, ErrorInterceptorHandler handler) async {
-          // pendingRequests.remove(err.requestOptions.path);
-
-          // HandleErrors handleErrors = HandleErrors();
-
-          // handleErrors.setMetadataLogAndErrorTrace(
-          //     key: 'status_code', value: "${err.response?.statusCode}");
-
           if (kDebugMode) {
             log('ERROR FROM PATH => ${err.requestOptions.path}');
             log('cod: ${err.response?.statusCode} >> message: ${err.response?.data}');
@@ -119,8 +82,6 @@ class Http {
                 );
               }
 
-              // cancelAll();
-
               await exit();
 
               break;
@@ -132,7 +93,6 @@ class Http {
                   body: 'Por favor acceda nuevamente con su contraseña',
                 );
               }
-              // cancelAll();
 
               await exit();
 
@@ -198,12 +158,6 @@ class Http {
                 '${err.response?.statusCode} >> message: ${err.response?.data}',
               );
 
-              // handleErrors.setMetadataLogAndErrorTrace(
-              //     key: 'URI',
-              //     value: err.requestOptions.path,
-              //     log:
-              //         'ERROR FROM PATH => ${err.requestOptions.path}\n cod: ${err.response?.statusCode} >> message: ${err.response?.data}');
-
               bool isNotFinded = err.response?.data?['message']
                       .toString()
                       .contains('No query results') ??
@@ -241,12 +195,6 @@ class Http {
               break;
 
             default:
-              // handleErrors.setMetadataLogAndErrorTrace(
-              //     key: 'URI',
-              //     value: err.requestOptions.path,
-              //     log:
-              //         'ERROR FROM PATH => ${err.requestOptions.path}\n cod: ${err.response?.statusCode} >> message: ${err.response?.data}');
-
               if (!Get.isSnackbarOpen) {
                 alertService.showSnackBar(
                   title: "oops, ${"error_ocurred".tr},\n ${"try_again".tr}",
@@ -254,15 +202,12 @@ class Http {
                   duration: 10,
                 );
               }
-              // alertService.showLoading(false);
               break;
           }
           if (kDebugMode) {
             alertService.showSnackBar(
               title: "<<>>DeBuG ErRoR COD: ${err.response?.statusCode}",
               body: "${err.response?.data.toString()}",
-              // backgroundColor: ColorTheme.primary,
-              // colorText: ColorTheme.light,
             );
           }
           return handler.next(err);
@@ -274,18 +219,12 @@ class Http {
   }
 
   getTokenLocaly() async {
-    FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-
-    dynamic data = await secureStorage.read(
-      key: StorageKeys.storageItemUserToken,
-    );
+    String? data = await Helper().getToken();
 
     if (data != null) {
       return data;
     } else {
-      if (kDebugMode) {
-        debugPrint('getTokenLocaly: not token');
-      }
+      debugPrint('getTokenLocaly: Not Token');
       return null;
     }
   }

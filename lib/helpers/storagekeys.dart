@@ -9,6 +9,7 @@ class StorageKeys {
       'permissions_notifications';
 
   // User
+  static const String storageItemUserVerify = 'verify';
   static const String storageItemUserUsername = 'username';
   static const String storageItemUserPassword = 'password';
   // Auth
