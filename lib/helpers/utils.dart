@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -105,6 +106,11 @@ class Helper {
         ),
         decimalSeparator: ',',
       );
+
+  Future<String?> getToken() async {
+    return await const FlutterSecureStorage()
+        .read(key: StorageKeys.storageItemUserToken);
+  }
 
   /// parse jwt token and return data
   Map<String, dynamic> tryParseJwt(String token) {

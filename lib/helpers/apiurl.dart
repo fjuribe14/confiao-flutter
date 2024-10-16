@@ -2,8 +2,7 @@ import 'package:confiao/helpers/index.dart';
 
 class ApiUrl {
   /// api seg
-  static String apiRestEndPointLogin =
-      '${Environments.apiSeg}/api/v3/auth/login';
+  static String authLogin = '/api/v3/auth/login';
   static String apiRestEndPointActivateRegister =
       '${Environments.apiSeg}/api/v3/auth/signup';
   static String apiRestEndPointResentCodeRegister =

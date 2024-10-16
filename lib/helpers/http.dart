@@ -45,8 +45,8 @@ class Http {
 
           if (['', null, 'null', ' '].contains(token) &&
               ![
+                ApiUrl.authLogin,
                 ApiUrl.apiComunesTasaValor,
-                ApiUrl.apiRestEndPointLogin,
                 ApiUrl.apiComunesParticipantes,
                 ApiUrl.apiRestEndPointPasswordReset,
                 ApiUrl.apiRestEndPointActivateRegister,

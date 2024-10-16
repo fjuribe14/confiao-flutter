@@ -1,25 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthCtrl extends GetxController {
   Helper helper = Helper();
-  Validations validations = Validations();
   AlertService alertService = AlertService();
-  HandleErrors handleErrors = HandleErrors();
   DeviceInfoService deviceInfoService = DeviceInfoService();
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
-  dynamic location;
-  Client? currentUser;
-  List codSchemeJson = [];
+  User? currentUser;
   RxBool loading = false.obs;
-  RxBool isDarkMode = false.obs;
   RxBool textVisible = false.obs;
   Rx<String> appVersion = '1.0.0'.obs;
 
@@ -35,40 +31,19 @@ class AuthCtrl extends GetxController {
 
   @override
   void onInit() async {
+    await init();
     super.onInit();
-    await load();
   }
 
-  Future<void> load() async {
-    appVersion.value = await helper.getAppBuildVersion();
+  Future<void> _setInitialScreen() async {
+    final user = await getCurrentUser();
 
-    final String? username = await secureStorage.read(
-      key: StorageKeys.storageItemUserUsername,
-    );
-
-    final String? password = await secureStorage.read(
-      key: StorageKeys.storageItemUserPassword,
-    );
-
-    canAuthWithBiometric.value = await LocalAuth().getBiometricPermission();
-
-    biometricPermission.value = canAuthWithBiometric.value &&
-        !['', null].contains(username) &&
-        !['', null].contains(password);
-
-    if (username != null) {
-      usernameController.text = username;
-    }
-  }
-
-  _setInitialScreen(Client? user) async {
     if (user == null && Get.currentRoute != AppRouteName.login) {
       Get.offAllNamed(AppRouteName.login);
-    } else if (user is Client && Get.currentRoute != AppRouteName.home) {
-      Get.offAllNamed(
-        AppRouteName.home,
-        arguments: {'check_biometri': true},
-      );
+    }
+
+    if (user is User) {
+      Get.offAllNamed(AppRouteName.home);
     }
   }
 
@@ -96,20 +71,52 @@ class AuthCtrl extends GetxController {
     }
   }
 
-  Future login({dynamic password}) async {
-    FocusManager.instance.primaryFocus?.unfocus();
+  Future<void> init() async {
+    await _setInitialScreen();
 
+    appVersion.value = await helper.getAppBuildVersion();
+
+    final String? username = await secureStorage.read(
+      key: StorageKeys.storageItemUserUsername,
+    );
+
+    final String? password = await secureStorage.read(
+      key: StorageKeys.storageItemUserPassword,
+    );
+
+    canAuthWithBiometric.value = await LocalAuth().getBiometricPermission();
+
+    biometricPermission.value = canAuthWithBiometric.value &&
+        !['', null].contains(username) &&
+        !['', null].contains(password);
+
+    if (username != null) {
+      usernameController.text = username;
+    }
+  }
+
+  Future<User?> getCurrentUser() async {
+    String? token = await helper.getToken();
+
+    if (token == null) return null;
+
+    currentUser = User.fromJson(JWT.decode(token).payload['user']);
+
+    return currentUser;
+  }
+
+  Future login({dynamic password}) async {
     if (loginFormKey.currentState!.validate() || password != null) {
       loading.value = true;
 
-      final resp = await Http().http(showLoading: true).then(
+      final res = await Http().http(showLoading: true).then(
             (value) => value.post(
-              ApiUrl.apiRestEndPointLogin,
+              '${dotenv.env['URL_API_AUTH']}${ApiUrl.authLogin}',
               data: {
                 "scope": "*",
                 "grant_type": "password",
-                "secret": Environments.secret,
-                "client_id": Environments.clientId,
+                "secret": dotenv.env['CLIENT_SECRET'],
+                "client_id": dotenv.env['CLIENT_ID'],
                 "username": usernameController.text.toLowerCase(),
                 "password": Helper()
                     .stringToBase64
@@ -118,47 +125,45 @@ class AuthCtrl extends GetxController {
             ),
           );
 
-      if (resp.data?['access_token'] != null &&
-          resp.data?['refresh_token'] != null &&
-          resp.data?['expires_in'] != null &&
-          resp.data?['roles'] != null) {
+      if (res.data != null) {
+        /** save access token */
+        await secureStorage.write(
+          key: StorageKeys.storageItemUserToken,
+          value: res.data['access_token'],
+        );
+
+        /** save refresh token */
+        await secureStorage.write(
+          key: StorageKeys.storageItemUserRefreshToken,
+          value: res.data['refresh_token'],
+        );
+
+        /** save roles */
+        await secureStorage.write(
+          key: StorageKeys.storageItemUserRoles,
+          value: jsonEncode(res.data['roles']),
+        );
+
+        /** save username */
         await secureStorage.write(
           value: usernameController.text,
           key: StorageKeys.storageItemUserUsername,
         );
 
+        /** save password */
         if (passwordController.text.isNotEmpty) {
           await secureStorage
               .write(
                 value: passwordController.text,
                 key: StorageKeys.storageItemUserPassword,
               )
-              .whenComplete(() => passwordController.clear());
+              .whenComplete(passwordController.clear);
         }
-
-        // await globalController.startSessionUser();
-
-        await setCurrentUser(resp.data);
-
-        loading.value = false;
-
-        await _setInitialScreen(currentUser);
-      } else if (resp.data['success'] != null) {
-        alertService.showDialog(
-          title: resp.data['success'],
-          subtitle: resp.data['message'],
-          content: [],
-          actions: [
-            // CustomRoundedButton(text: 'ok'.tr, press: () => Get.back())
-          ],
-        );
-
-        loading.value = false;
-
-        passwordController.clear();
-      } else {
-        loading.value = false;
       }
+
+      loading.value = false;
+
+      await _setInitialScreen();
     }
   }
 
@@ -181,68 +186,6 @@ class AuthCtrl extends GetxController {
       body:
           'Por favor accede con tu contraseña, e intenta configurar la biometría nuevamente',
     );
-  }
-
-  Future<Client?> setCurrentUser(data) async {
-    // var typeAccess =
-    //     await secureStorage.read(key: StorageKeys.storageItemTypeAccess);
-
-    // var hasBiometry =
-    //     await secureStorage.read(key: StorageKeys.storageItemBiometry);
-
-    // if (hasBiometry == 'true') {}
-
-    // data['type_access'] = typeAccess;
-
-    // await secureStorage.write(
-    //   key: StorageKeys.storageItemAuthData,
-    //   value: json.encode(data),
-    // );
-
-    // if (data['fecha_actual'] != null) {
-    //   await secureStorage.write(
-    //     key: StorageKeys.storageItemDateServer,
-    //     value: data['fecha_actual'],
-    //   );
-    // }
-
-    await getCurrentUser();
-
-    return currentUser;
-  }
-
-  Future<Client?> getCurrentUser() async {
-    // var data = await secureStorage.read(
-    //   key: StorageKeys.storageItemAuthData,
-    // );
-
-    secureStorage
-        .readAll()
-        .then((value) => log('setCurrentUser readAll $value'));
-
-    // if (data != null) {
-    //   try {
-    //     var userData = helper.tryParseJwt(jsonDecode(data)?['access_token']);
-
-    //     currentUser = Client.fromJson(userData['user']);
-    //     currentUser?.id = int.parse(userData['sub']);
-
-    //     usernameController.text = currentUser!.username;
-    //   } catch (e) {
-    //     debugPrint('$e');
-    //     await const FlutterSecureStorage().delete(
-    //       key: StorageKeys.storageItemAuthData,
-    //     );
-
-    //     if (Get.currentRoute != AppRouteName.login) {
-    //       Get.offAllNamed(AppRouteName.login);
-    //     }
-    //   }
-
-    //   update();
-    // }
-
-    return currentUser;
   }
 
   Future<bool> claimPassword({bool? state = false}) async {
@@ -333,7 +276,7 @@ class AuthCtrl extends GetxController {
                   onTap: () async {
                     final user = await getCurrentUser();
                     final isValid = await _checkCredentials(
-                        user!.username, passwordController.text);
+                        user!.username!, passwordController.text);
 
                     if (isValid && state == true) {
                       await secureStorage.write(
@@ -353,8 +296,8 @@ class AuthCtrl extends GetxController {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Get.theme.buttonTheme.colorScheme!.secondary,
-                          Get.theme.primaryColorDark,
+                          Get.theme.primaryColor,
+                          Get.theme.colorScheme.secondary,
                         ],
                         end: Alignment.topRight,
                         begin: Alignment.bottomLeft,

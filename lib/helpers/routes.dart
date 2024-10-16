@@ -28,7 +28,7 @@ class AppRoutes {
     /** Initial */
     GetPage(
       name: AppRouteName.home,
-      page: () => const HomePage(),
+      page: () => const HomeLayoutPage(),
     ),
     GetPage(
       name: AppRouteName.setup,
