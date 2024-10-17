@@ -1,5 +1,8 @@
 export './home/home_page.dart';
+export './setup/setup_one.dart';
+export './setup/setup_two.dart';
 export './setup/setup_page.dart';
+export './setup/setup_three.dart';
 export './search/search_page.dart';
 export './history/history_page.dart';
 export './home/home_layout_page.dart';
