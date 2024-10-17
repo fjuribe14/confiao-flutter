@@ -51,7 +51,27 @@ class SetupPage extends StatelessWidget {
                                 ),
                               ),
                               const Spacer(),
+
                               // Skip
+                              if (ctrl.index.value == 0)
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shadowColor: Colors.transparent,
+                                    backgroundColor: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                  ),
+                                  onPressed: ctrl.skip,
+                                  child: Text(
+                                    'Quizás más tarde'.tr,
+                                    style: TextStyle(
+                                      color: Get.theme.colorScheme.error,
+                                    ),
+                                  ),
+                                ),
+
+                              // Back
                               if (ctrl.index.value >= 1)
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(

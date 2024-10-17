@@ -1,3 +1,4 @@
+import 'package:confiao/helpers/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/pages/index.dart';
@@ -28,6 +29,12 @@ class SetupCtrl extends GetxController {
     SetupThree(),
     SetupTwo(),
   ];
+
+  void skip() async {
+    authCtrl.logout().whenComplete(() {
+      Get.offAllNamed(AppRouteName.authLogin);
+    });
+  }
 
   void back() {
     pageController.previousPage(
