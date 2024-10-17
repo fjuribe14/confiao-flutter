@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:confiao/pages/index.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,11 +12,13 @@ class HomePage extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         scrollDirection: Axis.vertical,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(height: Get.height / 2, color: Colors.red),
-            Container(height: Get.height / 2, color: Colors.blue),
-            Container(height: Get.height / 2, color: Colors.green),
-            Container(height: Get.height / 2, color: Colors.orange),
+            Container(height: Get.height / 4, color: Colors.red),
+            // const CuotaPendientesList(),
+            const FinanciamientoList(),
+            const TiendaList(),
           ],
         ),
       ),

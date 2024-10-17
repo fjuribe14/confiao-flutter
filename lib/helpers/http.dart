@@ -35,6 +35,7 @@ class Http {
           final token = await getTokenLocaly();
 
           if (token != null) {
+            // log('TOKEN => $token');
             options.headers.addAll({"Authorization": 'Bearer $token'});
           }
 

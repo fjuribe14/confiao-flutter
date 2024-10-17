@@ -14,6 +14,13 @@ class ApiUrl {
   // Step 3
   static String authPasswordReset = '/api/v3/auth/password/reset';
 
+  /// Businness
+  static String apiTienda = '/api/v1/public/tienda';
+
+  /// Confiao
+  static String apiCuota = '/api/v1/cuota';
+  static String apiFinanciamiento = '/api/v1/financiamiento';
+
   static String apiRestEndPointActivateRegister =
       '${Environments.apiSeg}/api/v3/auth/signup';
   static String apiRestEndPointResentCodeRegister =
