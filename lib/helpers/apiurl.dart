@@ -3,6 +3,7 @@ import 'package:confiao/helpers/index.dart';
 class ApiUrl {
   /// Auth
   static String authLogin = '/api/v3/auth/login';
+  static String authSignup = '/api/v3/auth/signup';
   static String authLogout = '/api/v3/auth/logout';
   static String authCheckCredentials = '/api/v3/auth/user/credenciales/check';
 

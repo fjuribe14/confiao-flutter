@@ -23,8 +23,6 @@ class AuthCtrl extends GetxController {
   RxBool biometricPermission = false.obs;
   RxBool canAuthWithBiometric = false.obs;
 
-  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
 
@@ -113,65 +111,63 @@ class AuthCtrl extends GetxController {
   }
 
   Future login({dynamic password}) async {
-    if (loginFormKey.currentState!.validate() || password != null) {
-      loading.value = true;
+    loading.value = true;
 
-      final res = await Http().http(showLoading: true).then(
-            (value) => value.post(
-              '${dotenv.env['URL_API_AUTH']}${ApiUrl.authLogin}',
-              data: {
-                "scope": "*",
-                "grant_type": "password",
-                "secret": dotenv.env['CLIENT_SECRET'],
-                "client_id": dotenv.env['CLIENT_ID'],
-                "username": usernameController.text.toLowerCase(),
-                "password": Helper()
-                    .stringToBase64
-                    .encode(password ?? passwordController.text),
-              },
-            ),
-          );
-
-      if (res.data != null) {
-        /** save access token */
-        await secureStorage.write(
-          key: StorageKeys.storageItemUserToken,
-          value: res.data['access_token'],
+    final res = await Http().http(showLoading: true).then(
+          (value) => value.post(
+            '${dotenv.env['URL_API_AUTH']}${ApiUrl.authLogin}',
+            data: {
+              "scope": "*",
+              "grant_type": "password",
+              "secret": dotenv.env['CLIENT_SECRET'],
+              "client_id": dotenv.env['CLIENT_ID'],
+              "username": usernameController.text.toLowerCase(),
+              "password": Helper()
+                  .stringToBase64
+                  .encode(password ?? passwordController.text),
+            },
+          ),
         );
 
-        /** save refresh token */
-        await secureStorage.write(
-          key: StorageKeys.storageItemUserRefreshToken,
-          value: res.data['refresh_token'],
-        );
+    if (res.data != null) {
+      /** save access token */
+      await secureStorage.write(
+        key: StorageKeys.storageItemUserToken,
+        value: res.data['access_token'],
+      );
 
-        /** save roles */
-        await secureStorage.write(
-          key: StorageKeys.storageItemUserRoles,
-          value: jsonEncode(res.data['roles']),
-        );
+      /** save refresh token */
+      await secureStorage.write(
+        key: StorageKeys.storageItemUserRefreshToken,
+        value: res.data['refresh_token'],
+      );
 
-        /** save username */
-        await secureStorage.write(
-          value: usernameController.text,
-          key: StorageKeys.storageItemUserUsername,
-        );
+      /** save roles */
+      await secureStorage.write(
+        key: StorageKeys.storageItemUserRoles,
+        value: jsonEncode(res.data['roles']),
+      );
 
-        /** save password */
-        if (passwordController.text.isNotEmpty) {
-          await secureStorage
-              .write(
-                value: passwordController.text,
-                key: StorageKeys.storageItemUserPassword,
-              )
-              .whenComplete(passwordController.clear);
-        }
+      /** save username */
+      await secureStorage.write(
+        value: usernameController.text,
+        key: StorageKeys.storageItemUserUsername,
+      );
+
+      /** save password */
+      if (passwordController.text.isNotEmpty) {
+        await secureStorage
+            .write(
+              value: passwordController.text,
+              key: StorageKeys.storageItemUserPassword,
+            )
+            .whenComplete(passwordController.clear);
       }
-
-      loading.value = false;
-
-      await _setInitialScreen();
     }
+
+    loading.value = false;
+
+    await _setInitialScreen();
   }
 
   Future loginLocalAuth() async {
@@ -193,6 +189,20 @@ class AuthCtrl extends GetxController {
       body:
           'Por favor accede con tu contraseña, e intenta configurar la biometría nuevamente',
     );
+  }
+
+  Future signUp({required Map<String, dynamic> data}) async {
+    try {
+      final res = await Http().http(showLoading: true).then(
+            (value) => value.post(
+                '${dotenv.env['URL_API_AUTH']}${ApiUrl.authSignup}',
+                data: data),
+          );
+
+      debugPrint(res.data.toString());
+    } catch (e) {
+      debugPrint('$e');
+    }
   }
 
   Future<void> logout() async {

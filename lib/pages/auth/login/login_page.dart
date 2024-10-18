@@ -87,180 +87,174 @@ class LoginPage extends StatelessWidget {
                                 topLeft: Radius.circular(16.0 * 2),
                                 topRight: Radius.circular(16.0 * 2))),
                         child: Obx(() {
-                          return Form(
-                            key: ctrl.loginFormKey,
-                            child: Column(
-                              children: [
-                                Text(dotenv.env['APP_NAME']!,
-                                    style: Get.theme.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            color: Get.theme.primaryColor,
-                                            fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  'Inicia sesión para continuar',
-                                  style: Get.theme.textTheme.titleMedium
+                          return Column(
+                            children: [
+                              Text(dotenv.env['APP_NAME']!,
+                                  style: Get.theme.textTheme.headlineMedium
                                       ?.copyWith(
-                                          color: Get.theme.primaryColor
-                                              .withOpacity(0.8)),
+                                          color: Get.theme.primaryColor,
+                                          fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4.0),
+                              Text(
+                                'Inicia sesión para continuar',
+                                style: Get.theme.textTheme.titleMedium
+                                    ?.copyWith(
+                                        color: Get.theme.primaryColor
+                                            .withOpacity(0.8)),
+                              ),
+                              const SizedBox(height: 16.0 * 2),
+                              Container(
+                                width: double.infinity,
+                                height: Responsive.width(16.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color:
+                                      Get.theme.primaryColor.withOpacity(0.1),
                                 ),
-                                const SizedBox(height: 16.0 * 2),
-                                Container(
-                                  width: double.infinity,
-                                  height: Responsive.width(16.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    color:
-                                        Get.theme.primaryColor.withOpacity(0.1),
-                                  ),
-                                  child: TextFormField(
-                                    cursorColor: Get.theme.primaryColor,
-                                    controller: ctrl.usernameController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: const InputDecoration(
-                                      hintText: '@gmail.com',
-                                      border: InputBorder.none,
-                                      label: Text('Correo electrónico'),
-                                      contentPadding: EdgeInsets.all(16.0),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 16.0),
-                                Container(
-                                  width: double.infinity,
-                                  height: Responsive.width(16.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    color:
-                                        Get.theme.primaryColor.withOpacity(0.1),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          obscureText: !ctrl.textVisible.value,
-                                          cursorColor: Get.theme.primaryColor,
-                                          controller: ctrl.passwordController,
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                          decoration: const InputDecoration(
-                                            hintText: '**********',
-                                            border: InputBorder.none,
-                                            label: Text('Contraseña'),
-                                            contentPadding:
-                                                EdgeInsets.all(16.0),
-                                          ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          ctrl.textVisible.value =
-                                              !ctrl.textVisible.value;
-                                        },
-                                        child: SizedBox(
-                                            width: Responsive.width(16.0),
-                                            height: Responsive.width(16.0),
-                                            child: Icon(
-                                              ctrl.textVisible.value
-                                                  ? Icons
-                                                      .visibility_off_outlined
-                                                  : Icons
-                                                      .remove_red_eye_outlined,
-                                              color: Get.theme.primaryColor
-                                                  .withOpacity(0.5),
-                                            )),
-                                      )
-                                    ],
+                                child: TextFormField(
+                                  cursorColor: Get.theme.primaryColor,
+                                  controller: ctrl.usernameController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: const InputDecoration(
+                                    hintText: '@gmail.com',
+                                    border: InputBorder.none,
+                                    label: Text('Correo electrónico'),
+                                    contentPadding: EdgeInsets.all(16.0),
                                   ),
                                 ),
-                                const SizedBox(height: 16.0),
-                                const Spacer(),
-                                Row(
+                              ),
+                              const SizedBox(height: 16.0),
+                              Container(
+                                width: double.infinity,
+                                height: Responsive.width(16.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color:
+                                      Get.theme.primaryColor.withOpacity(0.1),
+                                ),
+                                child: Row(
                                   children: [
                                     Expanded(
-                                      flex: 1,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          await ctrl.login();
-                                        },
-                                        child: Container(
-                                          height: Responsive.width(16.0),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Get.theme.primaryColor,
-                                                Get.theme.colorScheme.secondary,
-                                              ],
-                                              end: Alignment.topRight,
-                                              begin: Alignment.bottomLeft,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Ingresar',
-                                              style: Get.textTheme.titleMedium
-                                                  ?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
+                                      child: TextFormField(
+                                        obscureText: !ctrl.textVisible.value,
+                                        cursorColor: Get.theme.primaryColor,
+                                        controller: ctrl.passwordController,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: const InputDecoration(
+                                          hintText: '**********',
+                                          border: InputBorder.none,
+                                          label: Text('Contraseña'),
+                                          contentPadding: EdgeInsets.all(16.0),
                                         ),
                                       ),
                                     ),
-                                    if (ctrl.biometricPermission.isTrue)
-                                      const SizedBox(width: 16.0),
-                                    if (ctrl.biometricPermission.isTrue)
-                                      InkWell(
-                                        onTap: () async =>
-                                            await ctrl.loginLocalAuth(),
-                                        child: Container(
+                                    InkWell(
+                                      onTap: () {
+                                        ctrl.textVisible.value =
+                                            !ctrl.textVisible.value;
+                                      },
+                                      child: SizedBox(
                                           width: Responsive.width(16.0),
                                           height: Responsive.width(16.0),
-                                          decoration: BoxDecoration(
-                                            color: Get.theme.primaryColor
-                                                .withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
                                           child: Icon(
-                                            Icons.fingerprint,
-                                            size: Get.height * 0.035,
-                                          ),
-                                        ),
-                                      ),
+                                            ctrl.textVisible.value
+                                                ? Icons.visibility_off_outlined
+                                                : Icons.remove_red_eye_outlined,
+                                            color: Get.theme.primaryColor
+                                                .withOpacity(0.5),
+                                          )),
+                                    )
                                   ],
                                 ),
-                                const SizedBox(height: 16.0),
-                                InkWell(
-                                  onTap: () {
-                                    Get.toNamed(AppRouteName.authRegister);
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: Responsive.width(16.0),
-                                    decoration: BoxDecoration(
-                                      color: Get.theme.primaryColor
-                                          .withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Registrarse',
-                                        style:
-                                            Get.textTheme.titleMedium?.copyWith(
-                                          color: Get.theme.primaryColor,
-                                          fontWeight: FontWeight.w600,
+                              ),
+                              const SizedBox(height: 16.0),
+                              const Spacer(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        await ctrl.login();
+                                      },
+                                      child: Container(
+                                        height: Responsive.width(16.0),
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Get.theme.primaryColor,
+                                              Get.theme.colorScheme.secondary,
+                                            ],
+                                            end: Alignment.topRight,
+                                            begin: Alignment.bottomLeft,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Ingresar',
+                                            style: Get.textTheme.titleMedium
+                                                ?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
+                                  if (ctrl.biometricPermission.isTrue)
+                                    const SizedBox(width: 16.0),
+                                  if (ctrl.biometricPermission.isTrue)
+                                    InkWell(
+                                      onTap: () async =>
+                                          await ctrl.loginLocalAuth(),
+                                      child: Container(
+                                        width: Responsive.width(16.0),
+                                        height: Responsive.width(16.0),
+                                        decoration: BoxDecoration(
+                                          color: Get.theme.primaryColor
+                                              .withOpacity(0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        child: Icon(
+                                          Icons.fingerprint,
+                                          size: Get.height * 0.035,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 16.0),
+                              InkWell(
+                                onTap: () {
+                                  Get.toNamed(AppRouteName.authRegister);
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: Responsive.width(16.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Get.theme.primaryColor.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Registrarse',
+                                      style:
+                                          Get.textTheme.titleMedium?.copyWith(
+                                        color: Get.theme.primaryColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           );
                         }),
                       ),

@@ -25,9 +25,6 @@ class TiendaCtrl extends GetxController {
 
       for (var item in response.data['data']) {
         data.add(Tienda.fromJson(item));
-        data.add(Tienda.fromJson(item));
-        data.add(Tienda.fromJson(item));
-        data.add(Tienda.fromJson(item));
       }
     } catch (e) {
       debugPrint('$e');

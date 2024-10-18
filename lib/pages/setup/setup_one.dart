@@ -121,27 +121,27 @@ class SetupOne extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20.0),
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: TextField(
-                  controller: setupCtrl.emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    enabled: false,
-                    labelText: 'Correo',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10.0),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.edit))
-            ],
-          ),
-          const SizedBox(height: 20.0),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       flex: 1,
+          //       child: TextField(
+          //         controller: setupCtrl.emailController,
+          //         keyboardType: TextInputType.emailAddress,
+          //         decoration: InputDecoration(
+          //           enabled: false,
+          //           labelText: 'Correo',
+          //           border: OutlineInputBorder(
+          //             borderRadius: BorderRadius.circular(10.0),
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10.0),
+          //     IconButton(onPressed: () {}, icon: const Icon(Icons.edit))
+          //   ],
+          // ),
+          // const SizedBox(height: 20.0),
           Row(
             children: [
               Expanded(

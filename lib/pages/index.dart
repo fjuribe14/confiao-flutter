@@ -11,6 +11,8 @@ export 'auth/login/login_page.dart';
 export 'not_found/not_found_page.dart';
 export 'onboarding/onboarding_item.dart';
 export 'onboarding/onboarding_page.dart';
+export 'auth/register/register_one.dart';
+export 'auth/register/register_two.dart';
 export 'auth/register/register_page.dart';
 export 'cuota/cuota_pendientes_list.dart';
 export 'financiamiento/financiamiento_list.dart';

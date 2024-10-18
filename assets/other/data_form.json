@@ -1,0 +1,82 @@
+{
+  "scheme_name": [
+    {
+      "scheme_type": "SCID",
+      "scheme_label": "Cédula"
+    },
+    {
+      "scheme_type": "SRIF",
+      "scheme_label": "RIF"
+    },
+    {
+      "scheme_type": "SPAS",
+      "scheme_label": "Pasaporte"
+    }
+  ],
+  "cod_scheme_name": [
+    {
+      "scheme_type": "SCID",
+      "cod": "V"
+    },
+    {
+      "scheme_type": "SCID",
+      "cod": "E"
+    },
+    {
+      "scheme_type": "SRIF",
+      "cod": "J"
+    },
+    {
+      "scheme_type": "SRIF",
+      "cod": "G"
+    },
+    {
+      "scheme_type": "SRIF",
+      "cod": "C"
+    },
+    {
+      "scheme_type": "SRIF",
+      "cod": "R"
+    },
+    {
+      "scheme_type": "SPAS",
+      "cod": "P"
+    }
+  ],
+  "acct_tp": [
+    {
+      "acct_type": "CELE",
+      "acct_label": "Teléfono"
+    },
+    {
+      "acct_type": "ALIS",
+      "acct_label": "Alias"
+    },
+    {
+      "acct_type": "CNTA",
+      "acct_label": "Cuenta"
+    }
+  ],
+  "cod_acct_tp": [
+    {
+      "acct_type": "CELE",
+      "cod": "0412"
+    },
+    {
+      "acct_type": "CELE",
+      "cod": "0414"
+    },
+    {
+      "acct_type": "CELE",
+      "cod": "0416"
+    },
+    {
+      "acct_type": "CELE",
+      "cod": "0424"
+    },
+    {
+      "acct_type": "CELE",
+      "cod": "0426"
+    }
+  ]
+}
