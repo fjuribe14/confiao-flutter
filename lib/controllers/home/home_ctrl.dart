@@ -10,7 +10,8 @@ class HomeCtrl extends GetxController {
 
   List<Widget> pages = [
     const HomePage(),
-    const SearchPage(),
+    const NotificationsList(),
+    // const SearchPage(),
     const HistoryPage(),
     const SettingsPage(),
   ];

@@ -17,11 +17,14 @@ class NotificationCtrl extends GetxController {
 
   @override
   void onInit() async {
-    await requestpermission();
+    // await requestpermission();
     super.onInit();
   }
 
-  requestpermission() async {
+  Iterable<PushMessage> get notificationsUnread =>
+      notifications.where((item) => item.status!);
+
+  requestPermissions() async {
     settings = await messaging.requestPermission(
       alert: true,
       sound: true,
@@ -33,11 +36,12 @@ class NotificationCtrl extends GetxController {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      debugPrint('User declined or has not accepted permission');
+      debugPrint('User notifications declined or has not accepted permission');
       await secureStorage.write(
           key: StorageKeys.storageItemPermissionsNotifications, value: 'false');
     } else {
-      debugPrint('User granted  permission');
+      debugPrint('User notifications granted  permission');
+
       await secureStorage.write(
           key: StorageKeys.storageItemPermissionsNotifications, value: 'true');
 
@@ -45,17 +49,20 @@ class NotificationCtrl extends GetxController {
 
       final fcmToken = await messaging.getToken();
 
+      debugPrint('fcmToken: $fcmToken');
+
       await Http().http(showLoading: false).then(
         (http) async {
           var deviceInfo = await DeviceInfoService().getDeviceInfo;
+          final authCtrl = Get.find<AuthCtrl>();
 
           await http.post(
             '${dotenv.env['URL_API_GTW']}${ApiUrl.apiRegistrarDispositivo}',
             data: {
-              "tx_data": 'data',
+              "tx_data": '',
               "nb_servicio": 'CONFIAO',
               "tx_token_firebase": fcmToken,
-              "tx_usuario": AuthCtrl().currentUser?.username,
+              "tx_usuario": authCtrl.currentUser?.username,
               "co_dispositivo": Platform.isAndroid
                   ? deviceInfo['id']
                   : deviceInfo['identifierForVendor'],
@@ -102,7 +109,7 @@ class NotificationCtrl extends GetxController {
       data: notification.messageId,
     );
 
-    // debugPrint("handleRemoteMessage ${notification.toString()}");
+    debugPrint("handleRemoteMessage ${notification.toString()}");
 
     notifications.add(notification);
     notifications.value = notifications.reversed.toList();

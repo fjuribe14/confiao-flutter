@@ -11,10 +11,10 @@ class Financiador {
   String? txIdentificacion;
   String? tiIdentificacion;
   String? moLimiteFinanciamiento;
-  dynamic moFinanciadoTotal;
+  String? moFinanciadoTotal;
   String? stFinanciador;
   bool? inAfiliado;
-  dynamic limiteCliente;
+  LimiteCliente? limiteCliente;
 
   Financiador({
     this.idFinanciador,
@@ -37,7 +37,9 @@ class Financiador {
         moFinanciadoTotal: json["mo_financiado_total"],
         stFinanciador: json["st_financiador"],
         inAfiliado: json["in_afiliado"],
-        limiteCliente: json["limite_cliente"],
+        limiteCliente: json["limite_cliente"] == null
+            ? null
+            : LimiteCliente.fromJson(json["limite_cliente"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,6 +51,58 @@ class Financiador {
         "mo_financiado_total": moFinanciadoTotal,
         "st_financiador": stFinanciador,
         "in_afiliado": inAfiliado,
-        "limite_cliente": limiteCliente,
+        "limite_cliente": limiteCliente?.toJson(),
+      };
+}
+
+class LimiteCliente {
+  int? idLimiteCliente;
+  int? idNivelCliente;
+  String? moLimite;
+  String? moDeuda;
+  String? moDisponible;
+  String? stLimite;
+  int? idFinanciador;
+  String? txIdentificacionCliente;
+  String? coIdentificacionCliente;
+  String? idCliente;
+
+  LimiteCliente({
+    this.idLimiteCliente,
+    this.idNivelCliente,
+    this.moLimite,
+    this.moDeuda,
+    this.moDisponible,
+    this.stLimite,
+    this.idFinanciador,
+    this.txIdentificacionCliente,
+    this.coIdentificacionCliente,
+    this.idCliente,
+  });
+
+  factory LimiteCliente.fromJson(Map<String, dynamic> json) => LimiteCliente(
+        idLimiteCliente: json["id_limite_cliente"],
+        idNivelCliente: json["id_nivel_cliente"],
+        moLimite: json["mo_limite"],
+        moDeuda: json["mo_deuda"],
+        moDisponible: json["mo_disponible"],
+        stLimite: json["st_limite"],
+        idFinanciador: json["id_financiador"],
+        txIdentificacionCliente: json["tx_identificacion_cliente"],
+        coIdentificacionCliente: json["co_identificacion_cliente"],
+        idCliente: json["id_cliente"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id_limite_cliente": idLimiteCliente,
+        "id_nivel_cliente": idNivelCliente,
+        "mo_limite": moLimite,
+        "mo_deuda": moDeuda,
+        "mo_disponible": moDisponible,
+        "st_limite": stLimite,
+        "id_financiador": idFinanciador,
+        "tx_identificacion_cliente": txIdentificacionCliente,
+        "co_identificacion_cliente": coIdentificacionCliente,
+        "id_cliente": idCliente,
       };
 }

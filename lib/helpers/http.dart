@@ -44,7 +44,7 @@ class Http {
         onResponse: (response, handler) {
           // if (kDebugMode) {
           // log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
-          // log('DATA FROM PATH => ${response.data}');
+          // log('DATA FROM PATH ${response.requestOptions.path} => ${response.data}');
           // }
 
           if (showLoading) {

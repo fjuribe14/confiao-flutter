@@ -18,13 +18,16 @@ class ApiUrl {
   /// Businness
   static String apiTienda = '/api/v1/public/tienda';
 
+  /// Notifications
+  static String apiRegistrarDispositivo = '/api/v2/pna/registrar_dispositivo';
+
   /// Confiao
   static String apiCuota = '/api/v1/cuota';
   static String apiFinanciador = '/api/v1/financiador';
   static String apiFinanciamiento = '/api/v1/financiamiento';
 
-  /// Notifications
-  static String apiRegistrarDispositivo = '/api/v2/pna/registrar_dispositivo';
+  /// Pagar
+  static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";
 
   static String apiRestEndPointActivateRegister =
       '${Environments.apiSeg}/api/v3/auth/signup';

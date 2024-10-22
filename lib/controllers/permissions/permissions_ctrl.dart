@@ -1,15 +1,18 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:confiao/controllers/index.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class PermissionsCtrl extends GetxController {
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  NotificationCtrl notificationCtrl = Get.put(NotificationCtrl());
 
   @override
   void onInit() async {
     await requestPermissionLocation();
+    await requestPermissionNotifications();
     super.onInit();
   }
 
@@ -34,24 +37,6 @@ class PermissionsCtrl extends GetxController {
   }
 
   requestPermissionNotifications() async {
-    try {
-      final storageItemPermissionsNotifications = await secureStorage.read(
-          key: StorageKeys.storageItemPermissionsNotifications);
-
-      debugPrint(
-          'storageItemPermissionsNotifications $storageItemPermissionsNotifications');
-
-      if (storageItemPermissionsNotifications == 'true') {
-        return;
-      } else {
-        final status = await Permission.notification.request();
-        await secureStorage.write(
-          key: StorageKeys.storageItemPermissionsNotifications,
-          value: status.isGranted.toString(),
-        );
-      }
-    } catch (e) {
-      debugPrint('$e');
-    }
+    await notificationCtrl.requestPermissions();
   }
 }

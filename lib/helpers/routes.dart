@@ -13,24 +13,22 @@ class AppRouteName {
 
   // Protected
   static const String config = '/settings';
-  static const String socketPage = '/socketPage';
-  static const String cuentaForm = '/cuentaForm';
-  static const String payQuickPage = '/payQuickPage';
-  static const String checkoutPage = '/checkoutPage';
-  static const String authRegisterCode = '/register_code';
-  static const String bpayPaymentPage = '/bpayPaymentPage';
-  static const String authPasswordReset = '/password_reset';
-  static const String permissionDevice = '/permissionDevice';
-  static const String notificationsDetails = '/notificationsDetails';
+  // static const String socketPage = '/socketPage';
+  // static const String cuentaForm = '/cuentaForm';
+  // static const String payQuickPage = '/payQuickPage';
+  // static const String checkoutPage = '/checkoutPage';
+  // static const String authRegisterCode = '/register_code';
+  // static const String bpayPaymentPage = '/bpayPaymentPage';
+  // static const String authPasswordReset = '/password_reset';
+  // static const String permissionDevice = '/permissionDevice';
+
+  static const String notificationsList = '/notificationsList';
+  static const String notificationsDetail = '/notificationsDetail';
 }
 
 class AppRoutes {
   static final pages = [
     /** Initial */
-    GetPage(
-      name: AppRouteName.home,
-      page: () => const HomeLayoutPage(),
-    ),
     GetPage(
       name: AppRouteName.setup,
       page: () => const SetupPage(),
@@ -51,6 +49,18 @@ class AppRoutes {
     ),
 
     /** Protected */
+    GetPage(
+      name: AppRouteName.home,
+      page: () => const HomeLayoutPage(),
+    ),
+    GetPage(
+      name: AppRouteName.notificationsList,
+      page: () => const NotificationsList(),
+    ),
+    GetPage(
+      name: AppRouteName.notificationsDetail,
+      page: () => const NotificationsDetail(),
+    ),
     // GetPage(
     //   name: AppRouteName.config,
     //   page: () => const ConfigPage(),

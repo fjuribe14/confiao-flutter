@@ -9,7 +9,7 @@ class HomeLayoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(PermissionsCtrl());
-    Get.put(NotificationCtrl());
+    final notificationCtrl = Get.put(NotificationCtrl());
 
     return GetBuilder<HomeCtrl>(
       init: HomeCtrl(),
@@ -42,11 +42,22 @@ class HomeLayoutPage extends StatelessWidget {
                 inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
               ),
               FlashyTabBarItem(
-                icon: const Icon(Icons.search),
-                title: const Text('Buscar'),
+                icon: Badge.count(
+                  isLabelVisible:
+                      notificationCtrl.notificationsUnread.isNotEmpty,
+                  count: notificationCtrl.notificationsUnread.length,
+                  child: const Icon(Icons.inbox),
+                ),
+                title: const Text('Notificaciones'),
                 activeColor: Get.theme.primaryColor,
                 inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
               ),
+              // FlashyTabBarItem(
+              //   icon: const Icon(Icons.search),
+              //   title: const Text('Buscar'),
+              //   activeColor: Get.theme.primaryColor,
+              //   inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
+              // ),
               FlashyTabBarItem(
                 icon: const Icon(Icons.history),
                 title: const Text('Historial'),

@@ -14,7 +14,7 @@ class FinanciadorCard extends StatelessWidget {
       init: FinanciadorCtrl(),
       builder: (ctrl) {
         return Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Obx(
             () {
               if (ctrl.loading.isTrue) {
@@ -22,7 +22,7 @@ class FinanciadorCard extends StatelessWidget {
                   baseColor: Colors.grey.shade200,
                   highlightColor: Colors.grey.shade300,
                   child: Container(
-                    height: 200,
+                    height: 100,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.grey,
@@ -36,7 +36,7 @@ class FinanciadorCard extends StatelessWidget {
 
               if (item.isBlank!) {
                 return Container(
-                  height: 200,
+                  height: 100,
                   width: double.infinity,
                   color: Get.theme.primaryColor,
                   child: const Center(
@@ -45,20 +45,8 @@ class FinanciadorCard extends StatelessWidget {
                 );
               }
 
-              return Container(
+              return SizedBox(
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Get.theme.colorScheme.onPrimary,
-                  borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,10 +55,14 @@ class FinanciadorCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          AssetsDir.logo,
-                          width: 50,
-                          height: 50,
+                        SizedBox(
+                          height: 45,
+                          width: 45,
+                          child: SvgPicture.asset(
+                            AssetsDir.logo,
+                            width: 100,
+                            height: 100,
+                          ),
                         ),
                         Text(
                           item.nbFinanciador!,
@@ -79,44 +71,55 @@ class FinanciadorCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // if (item.inAfiliado!)
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          item.inAfiliado!
-                              ? Text(
-                                  '${item.limiteCliente}',
-                                  textAlign: TextAlign.end,
-                                  style: Get.textTheme.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                )
-                              : Expanded(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Get.theme.colorScheme.primary,
-                                    ),
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Cotizar',
-                                      style: Get.textTheme.bodyLarge?.copyWith(
-                                        color: Get.theme.colorScheme.onPrimary,
-                                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        item.inAfiliado!
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}'))}',
+                                    textAlign: TextAlign.end,
+                                    style: Get.textTheme.titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * 39.8)}',
+                                      textAlign: TextAlign.end,
+                                      style: Get.textTheme.titleSmall)
+                                ],
+                              )
+                            : Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Get.theme.colorScheme.primary,
+                                  ),
+                                  onPressed: () {},
+                                  child: Text(
+                                    'Cotizar',
+                                    style: Get.textTheme.bodyLarge?.copyWith(
+                                      color: Get.theme.colorScheme.onPrimary,
                                     ),
                                   ),
                                 ),
-                        ],
-                      ),
+                              ),
+                      ],
                     ),
-                    // if (!item.inAfiliado!)
-                    //   Row(
-                    //     children: [
-
-                    //     ],
-                    //   )
+                    if (item.inAfiliado!) const SizedBox(height: 10.0),
+                    if (item.inAfiliado!)
+                      LinearProgressIndicator(
+                        minHeight: 5.0,
+                        backgroundColor: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20.0),
+                        value: double.parse(
+                                '${item.limiteCliente?.moDisponible}') /
+                            double.parse('${item.limiteCliente?.moLimite}'),
+                      ),
+                    if (item.inAfiliado!) const SizedBox(height: 20.0),
                   ],
                 ),
               );

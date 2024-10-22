@@ -72,14 +72,14 @@ class LocalNotifications {
 
   onDidReceiveBackgroundNotificationResponse(NotificationResponse response) {
     Get.toNamed(
-      AppRouteName.notificationsDetails,
+      AppRouteName.notificationsDetail,
       arguments: {'message_id': response.payload},
     );
   }
 
   static void onDidReceiveNotificationResponse(NotificationResponse response) {
     Get.toNamed(
-      AppRouteName.notificationsDetails,
+      AppRouteName.notificationsDetail,
       arguments: {'message_id': response.payload},
     );
 
