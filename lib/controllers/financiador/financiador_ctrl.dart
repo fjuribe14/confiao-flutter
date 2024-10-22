@@ -4,10 +4,11 @@ import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class TiendaCtrl extends GetxController {
-  String url = ApiUrl.apiTienda;
+class FinanciadorCtrl extends GetxController {
+  String url = ApiUrl.apiFinanciador;
+
   RxBool loading = false.obs;
-  RxList<Tienda> data = <Tienda>[].obs;
+  RxList<Financiador> data = <Financiador>[].obs;
 
   @override
   void onInit() async {
@@ -21,12 +22,19 @@ class TiendaCtrl extends GetxController {
 
       data.clear();
 
-      final response = await Http()
-          .http(showLoading: false)
-          .then((http) => http.get('${dotenv.env['URL_API_MARKET']}$url'));
+      Map<String, String> queryParameters = {
+        'st_financiador': 'ACTIVO',
+        'append': 'in_afiliado,limite_cliente',
+      };
+
+      final response = await Http().http(showLoading: false).then((value) =>
+          value.get('${dotenv.env['URL_API_BASE']}$url',
+              queryParameters: queryParameters));
 
       for (var item in response.data['data']) {
-        data.add(Tienda.fromJson(item));
+        final newData = Financiador.fromJson(item);
+
+        data.add(newData);
       }
     } catch (e) {
       debugPrint('$e');

@@ -6,5 +6,7 @@ export './auth/register_ctrl.dart';
 export './tienda/tienda_ctrl.dart';
 export './settings/settings_ctrl.dart';
 export './onboarding/onboarding_ctrl.dart';
+export './financiador/financiador_ctrl.dart';
 export './permissions/permissions_ctrl.dart';
+export './notification/notification_ctrl.dart';
 export './financiamiento/financiamiento_ctrl.dart';

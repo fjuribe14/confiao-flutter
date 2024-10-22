@@ -50,6 +50,8 @@ class FinanciamientoCtrl extends GetxController {
     try {
       loading.value = true;
 
+      data.clear();
+
       Map<String, dynamic>? queryParameters = {
         'with': 'cuotas',
         'st_financiamiento': 'ACEPTADO',

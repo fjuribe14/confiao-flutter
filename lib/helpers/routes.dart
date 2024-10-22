@@ -21,6 +21,7 @@ class AppRouteName {
   static const String bpayPaymentPage = '/bpayPaymentPage';
   static const String authPasswordReset = '/password_reset';
   static const String permissionDevice = '/permissionDevice';
+  static const String notificationsDetails = '/notificationsDetails';
 }
 
 class AppRoutes {

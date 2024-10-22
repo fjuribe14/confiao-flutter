@@ -12,6 +12,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -20,6 +22,7 @@ android {
 
     defaultConfig {
         applicationId "com.bankingtechnologies.consulting.confiao"
+        multiDexEnabled true
         minSdk = flutter.minSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -32,6 +35,10 @@ android {
         }
     }
     buildToolsVersion '35.0.0'
+}
+
+dependencies {
+  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }
 
 flutter {

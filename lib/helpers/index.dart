@@ -16,3 +16,4 @@ export 'validations.dart';
 export 'environment.dart';
 export 'localization.dart';
 export 'handle_errors.dart';
+export 'local_notifications.dart';

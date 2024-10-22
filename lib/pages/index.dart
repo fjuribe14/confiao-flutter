@@ -15,4 +15,5 @@ export 'auth/register/register_one.dart';
 export 'auth/register/register_two.dart';
 export 'auth/register/register_page.dart';
 export 'cuota/cuota_pendientes_list.dart';
+export 'financiador/financiador_card.dart';
 export 'financiamiento/financiamiento_list.dart';

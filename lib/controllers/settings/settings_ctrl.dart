@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/auth/auth_ctrl.dart';
@@ -9,13 +10,22 @@ class SettingsCtrl extends GetxController {
   Rx<bool> biometricPermission = false.obs;
   Rx<bool> localAuthPermission = false.obs;
   Rx<bool> pushNotificationPermission = false.obs;
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   @override
   void onInit() async {
     super.onInit();
 
     canBiometric.value = await LocalAuth().checkBiometric();
+    pushNotificationPermission.value = await hasNotificationPermission();
     biometricPermission.value = await LocalAuth().getBiometricPermission();
+  }
+
+  Future<bool> hasNotificationPermission() async {
+    final String? value = await secureStorage.read(
+        key: StorageKeys.storageItemPermissionsNotifications);
+
+    return value == 'true';
   }
 
   togglePushNotificationPermission() async {

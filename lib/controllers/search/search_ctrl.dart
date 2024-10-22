@@ -24,7 +24,7 @@ class SearchCtrl extends GetxController {
       queryParameters = {'q': queryController.text};
     }
 
-    final response = await Http().http(showLoading: false).then(
+    final response = await Http().http(showLoading: true).then(
           (http) => http.get(
             '${dotenv.env['URL_API_MARKET']}$url',
             queryParameters: queryParameters,

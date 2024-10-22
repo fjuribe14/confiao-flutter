@@ -9,6 +9,7 @@ class HomeLayoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(PermissionsCtrl());
+    Get.put(NotificationCtrl());
 
     return GetBuilder<HomeCtrl>(
       init: HomeCtrl(),

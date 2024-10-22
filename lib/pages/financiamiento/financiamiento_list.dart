@@ -15,7 +15,7 @@ class FinanciamientoList extends StatelessWidget {
         return Container(
           height: 100,
           width: double.infinity,
-          margin: const EdgeInsets.all(20.0),
+          margin: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Obx(() {
             if (ctrl.loading.isTrue) {
               return Shimmer.fromColors(
