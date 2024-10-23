@@ -1,9 +1,9 @@
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter/material.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:confiao/controllers/index.dart';
-import 'package:shimmer/shimmer.dart';
 
 class FinanciadorCard extends StatelessWidget {
   const FinanciadorCard({super.key});
@@ -24,6 +24,7 @@ class FinanciadorCard extends StatelessWidget {
                   child: Container(
                     height: 100,
                     width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 20.0),
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(20.0),

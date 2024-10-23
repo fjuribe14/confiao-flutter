@@ -10,10 +10,13 @@ class FinanciamientoCtrl extends GetxController {
   String url = ApiUrl.apiFinanciamiento;
 
   RxBool loading = false.obs;
+  RxInt statusSelected = 0.obs;
   DateTime hoy = DateTime.now();
   RxList<Cuota> cuotas = <Cuota>[].obs;
   List<DateTime> dias = <DateTime>[].obs;
   RxList<Financiamiento> data = <Financiamiento>[].obs;
+  ScrollController scrollController = ScrollController();
+  List<String> status = <String>['ACEPTADO', 'INACTIVO', 'PENDIENTE'];
 
   @override
   void onInit() async {
@@ -29,8 +32,21 @@ class FinanciamientoCtrl extends GetxController {
 
   get totalCuotas => cuotas.length;
 
-  get cuotasPendientes =>
-      cuotas.where((item) => item.stCuota == 'PENDIENTE').toList().length;
+  List<Cuota> get cuotasPendientes =>
+      cuotas.where((item) => item.stCuota == 'PENDIENTE').toList();
+
+  List<Cuota> get cuotasSelected =>
+      cuotas.where((item) => item.selected!).toList();
+
+  bool get hasCuotasSelectedAndPendientes =>
+      cuotas.any((item) => item.stCuota == 'PENDIENTE' && item.selected!);
+
+  double get moCuotasSelected => hasCuotasSelectedAndPendientes
+      ? cuotas
+          .where((item) => item.stCuota == 'PENDIENTE' && item.selected!)
+          .map((item) => double.parse('${item.moCuota}'))
+          .reduce((a, b) => a + b)
+      : 0.0;
 
   _setDiasDelMes() {
     //
@@ -63,7 +79,7 @@ class FinanciamientoCtrl extends GetxController {
 
       Map<String, dynamic>? queryParameters = {
         'with': 'cuotas',
-        'st_financiamiento': 'ACEPTADO',
+        'st_financiamiento': status[statusSelected.value],
       };
 
       final response = await Http().http(showLoading: false).then((http) =>

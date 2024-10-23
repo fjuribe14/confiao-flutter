@@ -14,6 +14,7 @@ class Cuota {
   String? stCuota;
   int? nuCuota;
   int? inNotificada;
+  bool? selected;
 
   Cuota({
     this.idCuota,
@@ -25,6 +26,7 @@ class Cuota {
     this.stCuota,
     this.nuCuota,
     this.inNotificada,
+    this.selected = false,
   });
 
   factory Cuota.fromJson(Map<String, dynamic> json) => Cuota(
@@ -40,6 +42,7 @@ class Cuota {
         stCuota: json["st_cuota"],
         nuCuota: json["nu_cuota"],
         inNotificada: json["in_notificada"],
+        selected: false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,5 +57,6 @@ class Cuota {
         "st_cuota": stCuota,
         "nu_cuota": nuCuota,
         "in_notificada": inNotificada,
+        "selected": selected,
       };
 }

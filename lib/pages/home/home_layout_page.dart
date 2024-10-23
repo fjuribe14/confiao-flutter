@@ -58,12 +58,12 @@ class HomeLayoutPage extends StatelessWidget {
               //   activeColor: Get.theme.primaryColor,
               //   inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
               // ),
-              FlashyTabBarItem(
-                icon: const Icon(Icons.history),
-                title: const Text('Historial'),
-                activeColor: Get.theme.primaryColor,
-                inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
-              ),
+              // FlashyTabBarItem(
+              //   icon: const Icon(Icons.history),
+              //   title: const Text('Historial'),
+              //   activeColor: Get.theme.primaryColor,
+              //   inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
+              // ),
               FlashyTabBarItem(
                 icon: const Icon(Icons.settings),
                 title: const Text('Configuración'),

@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FinanciadorCard(),
-              FinanciamientoList(),
+              FinanciamientoCard(),
               TiendaList(),
             ],
           ),

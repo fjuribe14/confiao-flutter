@@ -12,7 +12,7 @@ class HomeCtrl extends GetxController {
     const HomePage(),
     const NotificationsList(),
     // const SearchPage(),
-    const HistoryPage(),
+    // const HistoryPage(),
     const SettingsPage(),
   ];
 }

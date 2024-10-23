@@ -22,8 +22,12 @@ class AppRouteName {
   // static const String authPasswordReset = '/password_reset';
   // static const String permissionDevice = '/permissionDevice';
 
+  static const String tiendaDetail = '/tiendaDetail';
+  static const String cobroServicioList = '/cobroServicioList';
   static const String notificationsList = '/notificationsList';
+  static const String financiamientoList = '/financiamientoList';
   static const String notificationsDetail = '/notificationsDetail';
+  static const String financiamientoDetail = '/financiamientoDetail';
 }
 
 class AppRoutes {
@@ -54,17 +58,29 @@ class AppRoutes {
       page: () => const HomeLayoutPage(),
     ),
     GetPage(
+      name: AppRouteName.tiendaDetail,
+      page: () => const TiendaDetail(),
+    ),
+    GetPage(
       name: AppRouteName.notificationsList,
       page: () => const NotificationsList(),
+    ),
+    GetPage(
+      name: AppRouteName.cobroServicioList,
+      page: () => const CobroServicioList(),
+    ),
+    GetPage(
+      name: AppRouteName.financiamientoList,
+      page: () => const FinanciamientoList(),
     ),
     GetPage(
       name: AppRouteName.notificationsDetail,
       page: () => const NotificationsDetail(),
     ),
-    // GetPage(
-    //   name: AppRouteName.config,
-    //   page: () => const ConfigPage(),
-    // ),
+    GetPage(
+      name: '${AppRouteName.financiamientoDetail}/:id',
+      page: () => const FinanciamientoDetail(),
+    ),
     // GetPage(
     //   name: AppRouteName.checkoutPage,
     //   page: () => const CheckoutPage(),
