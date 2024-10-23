@@ -4,13 +4,12 @@ import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class TiendaCtrl extends GetxController {
-  String url = ApiUrl.apiTienda;
+class ModeloFinanciamientoCtrl extends GetxController {
+  String url = ApiUrl.apiModeloFinanciamiento;
+
   RxBool loading = false.obs;
-  RxList<Tienda> data = <Tienda>[].obs;
   ScrollController scrollController = ScrollController();
-  TabController tabController =
-      TabController(length: 2, vsync: ScrollableState());
+  RxList<ModeloFinanciamiento> data = <ModeloFinanciamiento>[].obs;
 
   @override
   void onInit() async {
@@ -27,18 +26,18 @@ class TiendaCtrl extends GetxController {
       Map<String, dynamic>? queryParameters = {
         'append': 'credito',
         'st_empresa': 'ACTIVA',
-        'with': 'empresa_modelo_financiamiento'
+        'with': 'modelo_financiamiento'
       };
 
       final response = await Http().http(showLoading: false).then(
             (http) => http.get(
-              '${dotenv.env['URL_API_MARKET']}$url',
+              '${dotenv.env['URL_API_BASE']}$url',
               queryParameters: queryParameters,
             ),
           );
 
       for (var item in response.data['data']) {
-        data.add(Tienda.fromJson(item));
+        data.add(ModeloFinanciamiento.fromJson(item));
       }
     } catch (e) {
       debugPrint('$e');

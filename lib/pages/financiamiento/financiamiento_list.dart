@@ -82,57 +82,67 @@ class FinanciamientoList extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20.0),
-                      ...ctrl.data.map(
-                        (item) => ListTile(
-                          dense: true,
-                          onTap: () => Get.bottomSheet(
-                            const FinanciamientoDetail(),
-                            enableDrag: true,
-                            backgroundColor: Get.theme.scaffoldBackgroundColor,
-                            settings: RouteSettings(
-                              arguments: item,
-                              name: AppRouteName.financiamientoDetail,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 10.0,
-                          ),
-                          leading: Icon(
-                            Icons.monetization_on_outlined,
-                            color: Get.theme.colorScheme.primary,
-                            size: 40.0,
-                          ),
-                          title: Text(
-                            '#${item.idFinanciamiento}',
-                            style: Get.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Cuotas ${item.cuotas?.length}',
-                            style: Get.textTheme.bodyMedium?.copyWith(),
-                          ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!))}',
-                                textAlign: TextAlign.end,
-                                style: Get.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!) * 39.8)}',
-                                textAlign: TextAlign.end,
-                                style: Get.textTheme.bodyMedium,
-                              )
-                            ],
+                      if (ctrl.loading.isTrue)
+                        SizedBox(
+                          height: Get.height / 2,
+                          width: double.infinity,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
                           ),
                         ),
-                      ),
+                      if (ctrl.loading.isFalse)
+                        ...ctrl.data.map(
+                          (item) => ListTile(
+                            dense: true,
+                            onTap: () => Get.bottomSheet(
+                              const FinanciamientoDetail(),
+                              enableDrag: true,
+                              backgroundColor:
+                                  Get.theme.scaffoldBackgroundColor,
+                              settings: RouteSettings(
+                                arguments: item,
+                                name: AppRouteName.financiamientoDetail,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                              vertical: 10.0,
+                            ),
+                            leading: Icon(
+                              Icons.monetization_on_outlined,
+                              color: Get.theme.colorScheme.primary,
+                              size: 40.0,
+                            ),
+                            title: Text(
+                              '#${item.idFinanciamiento}',
+                              style: Get.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Cuotas ${item.cuotas?.length}',
+                              style: Get.textTheme.bodyMedium?.copyWith(),
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!))}',
+                                  textAlign: TextAlign.end,
+                                  style: Get.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!) * 39.8)}',
+                                  textAlign: TextAlign.end,
+                                  style: Get.textTheme.bodyMedium,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

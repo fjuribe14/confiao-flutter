@@ -99,7 +99,7 @@ class TiendaList extends StatelessWidget {
                                         image: imageProvider,
                                         fit: BoxFit.contain,
                                       ),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(8.5),
                                     ),
                                   ),
                                 ),

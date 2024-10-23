@@ -25,6 +25,8 @@ class ApiUrl {
   static String apiCuota = '/api/v1/cuota';
   static String apiFinanciador = '/api/v1/financiador';
   static String apiFinanciamiento = '/api/v1/financiamiento';
+  static String apiModeloFinanciamiento =
+      '/api/v1/public/modelo_financiamiento';
 
   /// Pagar
   static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";

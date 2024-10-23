@@ -41,7 +41,7 @@ class SearchPage extends StatelessWidget {
                           const SizedBox(width: 20.0),
                           IconButton(
                             onPressed: () {
-                              ctrl.getProductos();
+                              ctrl.getData();
                             },
                             icon: const Icon(Icons.search),
                           )

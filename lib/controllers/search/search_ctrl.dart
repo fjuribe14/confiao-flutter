@@ -6,33 +6,49 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SearchCtrl extends GetxController {
   String url = '/api/v1/public/buscar';
+
+  RxBool loading = false.obs;
+  Tienda item = Get.arguments;
+  RxBool isCredito = false.obs;
   final queryController = TextEditingController();
   List<SearchProducto> data = <SearchProducto>[].obs;
 
   @override
   void onInit() async {
-    await getProductos();
+    await getData();
     super.onInit();
   }
 
-  Future getProductos() async {
-    Map<String, dynamic>? queryParameters = {};
+  Future getData() async {
+    try {
+      loading.value = true;
 
-    debugPrint(queryController.text);
+      data.clear();
 
-    if (queryController.text.isNotEmpty) {
-      queryParameters = {'q': queryController.text};
-    }
+      Map<String, dynamic>? queryParameters = {};
 
-    final response = await Http().http(showLoading: true).then(
-          (http) => http.get(
-            '${dotenv.env['URL_API_MARKET']}$url',
-            queryParameters: queryParameters,
-          ),
-        );
+      queryParameters.addAllIf(isCredito, {'nb_categoria': 'Crédito'});
 
-    for (var item in response.data['data']) {
-      data.add(SearchProducto.fromJson(item));
+      queryParameters
+          .addAllIf(item.idEmpresa != null, {'id_empresa': item.idEmpresa});
+
+      queryParameters.addAllIf(
+          queryController.text.isNotEmpty, {'q': queryController.text});
+
+      final response = await Http().http(showLoading: false).then(
+            (http) => http.get(
+              '${dotenv.env['URL_API_MARKET']}$url',
+              queryParameters: queryParameters,
+            ),
+          );
+
+      for (var item in response.data['data']) {
+        data.add(SearchProducto.fromJson(item));
+      }
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
     }
   }
 }

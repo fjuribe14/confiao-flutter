@@ -6,3 +6,4 @@ export './financiador/financiador.dart';
 export './search/producto/producto.dart';
 export './push_message/push_message.dart';
 export './financiamiento/financiamiento.dart';
+export './modelo_financiamiento/modelo_financiamiento.dart';
