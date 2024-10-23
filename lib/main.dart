@@ -48,18 +48,20 @@ class MyApp extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetMaterialApp(
-          title: appName,
-          darkTheme: theme.dark(),
-          getPages: AppRoutes.pages,
-          locale: Localization.locale,
-          translations: Localization(),
-          initialRoute: AppRouteName.onboarding,
-          debugShowCheckedModeBanner: kDebugMode,
-          fallbackLocale: Localization.fallbackLocale,
-          theme: Get.isDarkMode ? theme.dark() : theme.light(),
-          themeMode: Get.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          onGenerateRoute: (settings) => MaterialPageRoute(
-              builder: (BuildContext context) => const NotFoundPage())),
+        title: appName,
+        darkTheme: theme.dark(),
+        getPages: AppRoutes.pages,
+        locale: Localization.locale,
+        translations: Localization(),
+        initialRoute: AppRouteName.onboarding,
+        debugShowCheckedModeBanner: kDebugMode,
+        fallbackLocale: Localization.fallbackLocale,
+        theme: Get.isDarkMode ? theme.dark() : theme.light(),
+        themeMode: Get.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        onGenerateRoute: (settings) => MaterialPageRoute(
+          builder: (BuildContext context) => const NotFoundPage(),
+        ),
+      ),
     );
   }
 }

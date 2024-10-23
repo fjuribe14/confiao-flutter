@@ -5,17 +5,20 @@ import 'package:confiao/helpers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TiendaCtrl extends GetxController {
+  var tabIndex = 0.obs;
   String url = ApiUrl.apiTienda;
   RxBool loading = false.obs;
   RxList<Tienda> data = <Tienda>[].obs;
   ScrollController scrollController = ScrollController();
-  TabController tabController =
-      TabController(length: 2, vsync: ScrollableState());
 
   @override
   void onInit() async {
     await getData();
     super.onInit();
+  }
+
+  void changeTabIndex(int index) {
+    tabIndex.value = index;
   }
 
   getData() async {
