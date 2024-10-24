@@ -27,7 +27,7 @@ class SearchCtrl extends GetxController {
 
       Map<String, dynamic>? queryParameters = {};
 
-      queryParameters.addAllIf(isCredito, {'nb_categoria': 'Crédito'});
+      queryParameters.addAllIf(isCredito.isTrue, {'nb_categoria': 'Crédito'});
 
       queryParameters
           .addAllIf(item.idEmpresa != null, {'id_empresa': item.idEmpresa});

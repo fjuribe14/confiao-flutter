@@ -16,21 +16,7 @@ class TiendaDetail extends StatelessWidget {
         Tienda item = Get.arguments;
 
         return Scaffold(
-          appBar: AppBar(
-              // bottom: TabBar(
-              //   controller: TabController(length: 2, vsync: ctrl.scrollController),
-              //   tabs: [
-              //     Tab(icon: Icon(Icons.home)),
-              //     Tab(icon: Icon(Icons.settings)),
-              //   ],
-              // ),
-              ), // AppBar
-          // body: TabBarView(
-          //   children: [
-          //     Center(child: Text('Home')),
-          //     Center(child: Text('Settings')),
-          //   ],
-          // ),
+          appBar: AppBar(), // AppBar
           body: SingleChildScrollView(
             clipBehavior: Clip.hardEdge,
             scrollDirection: Axis.vertical,
@@ -87,7 +73,6 @@ class TiendaDetail extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                // const SizedBox(width: 10),
                               ],
                             ),
                             const SizedBox(height: 5.0),
@@ -100,33 +85,45 @@ class TiendaDetail extends StatelessWidget {
                             if (item.credito == true)
                               const SizedBox(height: 5.0),
                             if (item.credito == true)
-                              Row(
-                                children: [
-                                  Expanded(child: Container()),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton.icon(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Get.theme.colorScheme
-                                          .surfaceContainerHighest,
-                                      shadowColor: Colors.transparent,
-                                      elevation: 0.0,
-                                    ),
-                                    icon: Icon(
-                                      Icons.credit_card,
-                                      color: Get.theme.colorScheme.primary,
-                                    ),
-                                    label: Text(
-                                      'Céditos',
-                                      style:
-                                          Get.textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
+                              Obx(() {
+                                final searchCtrl = Get.put(SearchCtrl());
+
+                                return Row(
+                                  children: [
+                                    Expanded(child: Container()),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton.icon(
+                                      onPressed: () async {
+                                        searchCtrl.isCredito.value =
+                                            !searchCtrl.isCredito.value;
+                                        await searchCtrl.getData();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Get.theme.colorScheme
+                                            .surfaceContainerHighest,
+                                        shadowColor: Colors.transparent,
+                                        elevation: 0.0,
+                                      ),
+                                      icon: Icon(
+                                        searchCtrl.isCredito.value
+                                            ? Icons.arrow_back
+                                            : Icons.credit_card,
                                         color: Get.theme.colorScheme.primary,
                                       ),
-                                    ),
-                                  )
-                                ],
-                              )
+                                      label: Text(
+                                        searchCtrl.isCredito.value
+                                            ? 'Volver'
+                                            : 'Céditos',
+                                        style:
+                                            Get.textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Get.theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              })
                           ],
                         ),
                       )
