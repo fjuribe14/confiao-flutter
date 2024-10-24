@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:confiao/pages/index.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:confiao/pages/index.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -48,7 +48,7 @@ class AuthCtrl extends GetxController {
   Future<void> _setInitialScreen() async {
     final user = await getCurrentUser();
 
-    debugPrint('stVerificado: ${user?.stVerificado == 'VERIFICADO'}');
+    // debugPrint('stVerificado: ${user?.stVerificado == 'VERIFICADO'}');
 
     if (user == null && Get.currentRoute != AppRouteName.authLogin) {
       Get.offAllNamed(AppRouteName.authLogin);
@@ -344,6 +344,7 @@ class AuthCtrl extends GetxController {
       debugPrint(res.data.toString());
     } catch (e) {
       debugPrint('$e');
+      throw Exception(e);
     }
   }
 
