@@ -211,12 +211,15 @@ class AuthCtrl extends GetxController {
       await Dio().post(
         '${dotenv.env['URL_API_AUTH']}${ApiUrl.authPasswordCreate}',
         data: {
-          "username": currentUser?.email,
+          "username": usernameController.text.isNotEmpty
+              ? usernameController.text
+              : currentUser?.email,
         },
       );
     } catch (e) {
-      alertService.showSnackBar(title: 'Error', body: 'Código inválido');
       debugPrint('$e');
+      alertService.showSnackBar(title: 'Error', body: 'Correo inválido');
+      throw Exception('Código inválido');
     } finally {
       alertService.showLoading(false);
     }
@@ -229,7 +232,9 @@ class AuthCtrl extends GetxController {
       await Dio().post(
         '${dotenv.env['URL_API_AUTH']}${ApiUrl.authPasswordValidate}',
         data: {
-          "username": currentUser?.email,
+          "username": usernameController.text.isNotEmpty
+              ? usernameController.text
+              : currentUser?.email,
           "token": resetPasswordCodeController.text,
         },
       );
@@ -249,7 +254,9 @@ class AuthCtrl extends GetxController {
       await Dio().post(
         '${dotenv.env['URL_API_AUTH']}${ApiUrl.authPasswordReset}',
         data: {
-          "username": currentUser?.email,
+          "username": usernameController.text.isNotEmpty
+              ? usernameController.text
+              : currentUser?.email,
           "token": resetPasswordCodeController.text,
           "password": Helper().stringToBase64.encode(passwordController.text),
           "password_confirmation":

@@ -24,7 +24,7 @@ class FinanciadorCard extends StatelessWidget {
                   child: Container(
                     height: 100,
                     width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 20.0),
+                    margin: const EdgeInsets.symmetric(vertical: 20.0),
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(20.0),
@@ -33,18 +33,22 @@ class FinanciadorCard extends StatelessWidget {
                 );
               }
 
-              final item = ctrl.data.first;
-
-              if (item.isBlank!) {
+              if (ctrl.data.isEmpty) {
                 return Container(
                   height: 100,
                   width: double.infinity,
-                  color: Get.theme.primaryColor,
+                  margin: const EdgeInsets.only(top: 10.0),
+                  decoration: BoxDecoration(
+                    color: Get.theme.colorScheme.surfaceContainer,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
                   child: const Center(
-                    child: Text('No tenemos financiadores registrados.'),
+                    child: Text('Lo sentimos, no hay financiadores aún.'),
                   ),
                 );
               }
+
+              final item = ctrl.data.first;
 
               return SizedBox(
                 width: double.infinity,

@@ -1,7 +1,8 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:confiao/helpers/index.dart';
-import 'package:confiao/controllers/auth/auth_ctrl.dart';
+import 'package:confiao/controllers/index.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SettingsCtrl extends GetxController {
@@ -10,6 +11,7 @@ class SettingsCtrl extends GetxController {
   Rx<bool> biometricPermission = false.obs;
   Rx<bool> localAuthPermission = false.obs;
   Rx<bool> pushNotificationPermission = false.obs;
+  NotificationCtrl notificationCtrl = Get.put(NotificationCtrl());
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   @override
@@ -22,18 +24,37 @@ class SettingsCtrl extends GetxController {
   }
 
   Future<bool> hasNotificationPermission() async {
+    await notificationCtrl.requestPermissions();
+
     final String? value = await secureStorage.read(
         key: StorageKeys.storageItemPermissionsNotifications);
 
     return value == 'true';
   }
 
-  togglePushNotificationPermission() async {
-    if (pushNotificationPermission.value) {
-      pushNotificationPermission.value = false;
-    } else {
-      await Permission.notification.request();
-      pushNotificationPermission.value = true;
+  Future<void> togglePushNotificationPermission({bool? value = false}) async {
+    try {
+      final validation = value ?? pushNotificationPermission.value;
+
+      final PermissionStatus status = await Permission.notification.request();
+
+      debugPrint('togglePushNotificationPermission $status');
+
+      if (validation &&
+          ![
+            PermissionStatus.granted,
+            PermissionStatus.provisional,
+          ].contains(status)) {
+        await notificationCtrl.requestPermissions();
+        pushNotificationPermission.value = false;
+        pushNotificationPermission.refresh();
+      } else {
+        await notificationCtrl.removePermissions();
+        pushNotificationPermission.value = true;
+        pushNotificationPermission.refresh();
+      }
+    } catch (e) {
+      debugPrint('$e');
     }
   }
 

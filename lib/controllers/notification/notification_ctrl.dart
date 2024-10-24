@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:confiao/controllers/auth/auth_ctrl.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:confiao/controllers/auth/auth_ctrl.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class NotificationCtrl extends GetxController {
   RxInt notificationCount = 0.obs;
@@ -14,12 +14,6 @@ class NotificationCtrl extends GetxController {
   RxList<PushMessage> notifications = <PushMessage>[].obs;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-
-  @override
-  void onInit() async {
-    // await requestpermission();
-    super.onInit();
-  }
 
   Iterable<PushMessage> get notificationsUnread =>
       notifications.where((item) => item.status!);
@@ -36,11 +30,12 @@ class NotificationCtrl extends GetxController {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      debugPrint('User notifications declined or has not accepted permission');
+      debugPrint('User notifications declined or has not accepted permission.');
+
       await secureStorage.write(
           key: StorageKeys.storageItemPermissionsNotifications, value: 'false');
     } else {
-      debugPrint('User notifications granted  permission');
+      debugPrint('User notifications granted permission.');
 
       await secureStorage.write(
           key: StorageKeys.storageItemPermissionsNotifications, value: 'true');
@@ -75,17 +70,24 @@ class NotificationCtrl extends GetxController {
     }
   }
 
+  removePermissions() async {
+    try {
+      debugPrint('Removing permissions');
+      await messaging.deleteToken();
+      await secureStorage.write(
+          key: StorageKeys.storageItemPermissionsNotifications, value: 'false');
+      debugPrint('Permissions removed');
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
   void _onForegroundMessage() {
     FirebaseMessaging.onMessage.listen(handleRemoteMessage);
   }
 
   void handleRemoteMessage(RemoteMessage message) {
-    // debugPrint('Got a message whilst in the foreground!');
-    // debugPrint('Message data: ${message.data}');
-
     if (message.notification == null) return;
-
-    // debugPrint('push notification received');
 
     final notification = PushMessage(
       status: true,

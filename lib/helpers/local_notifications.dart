@@ -82,9 +82,5 @@ class LocalNotifications {
       AppRouteName.notificationsDetail,
       arguments: {'message_id': response.payload},
     );
-
-    // Get.to(
-    //   NotificationDetailsPage(pushMessageId: response.payload.toString()),
-    // );
   }
 }

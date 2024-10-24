@@ -45,7 +45,8 @@ class ResetPasswordOne extends StatelessWidget {
                   style: Get.textTheme.bodyLarge,
                 ),
                 TextSpan(
-                  text: '${ctrl.currentUser?.email}',
+                  text:
+                      '${ctrl.usernameController.text.isNotEmpty ? ctrl.usernameController.text : ctrl.currentUser?.email}',
                   style: Get.textTheme.bodyLarge
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),

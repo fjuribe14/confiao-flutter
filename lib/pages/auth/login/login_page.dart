@@ -1,3 +1,4 @@
+import 'package:confiao/pages/auth/claim_username/claim_username.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/helpers/index.dart';
@@ -88,19 +89,27 @@ class LoginPage extends StatelessWidget {
                                 topRight: Radius.circular(16.0 * 2))),
                         child: Obx(() {
                           return Column(
+                            // mainAxisAlignment: MainAxisAlignment.start,
+                            // crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(dotenv.env['APP_NAME']!,
+                              Center(
+                                child: Text(
+                                  dotenv.env['APP_NAME']!,
                                   style: Get.theme.textTheme.headlineMedium
                                       ?.copyWith(
                                           color: Get.theme.primaryColor,
-                                          fontWeight: FontWeight.bold)),
+                                          fontWeight: FontWeight.bold),
+                                ),
+                              ),
                               const SizedBox(height: 4.0),
-                              Text(
-                                'Inicia sesión para continuar',
-                                style: Get.theme.textTheme.titleMedium
-                                    ?.copyWith(
-                                        color: Get.theme.primaryColor
-                                            .withOpacity(0.8)),
+                              Center(
+                                child: Text(
+                                  'Inicia sesión para continuar',
+                                  style: Get.theme.textTheme.titleMedium
+                                      ?.copyWith(
+                                          color: Get.theme.primaryColor
+                                              .withOpacity(0.8)),
+                                ),
                               ),
                               const SizedBox(height: 16.0 * 2),
                               Container(
@@ -166,6 +175,32 @@ class LoginPage extends StatelessWidget {
                                           )),
                                     )
                                   ],
+                                ),
+                              ),
+                              const SizedBox(height: 16.0),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Get.bottomSheet(
+                                    const ClaimUsername(),
+                                    enableDrag: true,
+                                    isScrollControlled: true,
+                                    backgroundColor:
+                                        Get.theme.scaffoldBackgroundColor,
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.0,
+                                  padding: EdgeInsets.zero,
+                                  shadowColor: Colors.transparent,
+                                  overlayColor: Colors.transparent,
+                                  visualDensity: VisualDensity.compact,
+                                  backgroundColor: Colors.transparent,
+                                ),
+                                child: Text(
+                                  '¿ Olvidaste la contraseña ?',
+                                  style: Get.textTheme.titleSmall?.copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 16.0),

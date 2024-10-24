@@ -1,6 +1,6 @@
-import 'package:confiao/helpers/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:confiao/helpers/index.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:confiao/controllers/index.dart';
 
@@ -9,6 +9,8 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthCtrl authCtrl = Get.find<AuthCtrl>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Get.theme.colorScheme.onPrimary,
@@ -19,12 +21,22 @@ class SettingsPage extends StatelessWidget {
             color: Get.theme.colorScheme.primary,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 25.0),
+            child: Text(
+              '${authCtrl.appVersion}',
+              style: Get.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Get.theme.colorScheme.primary,
+              ),
+            ),
+          ),
+        ],
       ),
       body: GetBuilder<SettingsCtrl>(
           init: SettingsCtrl(),
           builder: (ctrl) {
-            AuthCtrl authCtrl = Get.find<AuthCtrl>();
-
             return Obx(
               () => SettingsList(
                 brightness: Brightness.light,
@@ -113,9 +125,8 @@ class SettingsPage extends StatelessWidget {
                     ),
                     tiles: <SettingsTile>[
                       SettingsTile.switchTile(
-                        onToggle: (value) async {
-                          await ctrl.toggleBiometricPermission(value);
-                        },
+                        onToggle: (value) async =>
+                            await ctrl.toggleBiometricPermission(value),
                         initialValue: ctrl.biometricPermission.value,
                         title: const Text('Biométrico'),
                         leading: const Icon(Icons.fingerprint_outlined),
@@ -138,10 +149,10 @@ class SettingsPage extends StatelessWidget {
                     ),
                     tiles: <SettingsTile>[
                       SettingsTile.switchTile(
-                        onToggle: (value) {
-                          // ctrl.tooglePushNotificationPermission();
-                          // ctrl.pushNotificationPermission.value = value;
-                          // ctrl.pushNotificationPermission.refresh();
+                        onToggle: (value) async {
+                          await ctrl.togglePushNotificationPermission(
+                            value: value,
+                          );
                         },
                         title: const Text('Notificaciones'),
                         leading: const Icon(Icons.notifications),
@@ -154,15 +165,6 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  CustomSettingsSection(
-                    child: Center(
-                      child: Text('${authCtrl.appVersion}',
-                          style: Get.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Get.theme.colorScheme.primary,
-                          )),
-                    ),
-                  )
                 ],
               ),
             );
