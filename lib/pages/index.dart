@@ -25,3 +25,7 @@ export 'financiamiento/financiamiento_list.dart';
 export 'financiamiento/financiamiento_card.dart';
 export 'cobro_servicio/cobro_servicio_list.dart';
 export 'financiamiento/financiamiento_detail.dart';
+export 'auth/reset_password/reset_password_one.dart';
+export 'auth/reset_password/reset_password_two.dart';
+export 'auth/reset_password/reset_password_page.dart';
+export 'auth/reset_password/reset_password_three.dart';

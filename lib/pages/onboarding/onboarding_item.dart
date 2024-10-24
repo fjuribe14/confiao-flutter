@@ -29,11 +29,7 @@ class OnboardingItem extends StatelessWidget {
                   end: Alignment.bottomRight,
                   colors: [
                     Get.theme.colorScheme.primary.withOpacity(0.5),
-                    Get.theme.colorScheme.primary.withOpacity(0.45),
-                    Get.theme.colorScheme.primary.withOpacity(0.3),
-                    Get.theme.colorScheme.primary.withOpacity(0.25),
                     Get.theme.colorScheme.primary.withOpacity(0.2),
-                    // Get.theme.colorScheme.primary,
                   ])),
           child: SvgPicture.asset(image,
               height: Responsive.width(80), width: Responsive.width(80)),

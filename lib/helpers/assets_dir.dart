@@ -8,6 +8,11 @@ class AssetsDir {
   static const String setup2 = 'assets/images/setup2.svg';
   static const String setup3 = 'assets/images/setup3.svg';
 
+  // Auth
+  static const String authResetPassword1 = 'assets/images/reset_password1.svg';
+  static const String authResetPassword2 = 'assets/images/reset_password2.svg';
+  static const String authResetPassword3 = 'assets/images/reset_password3.svg';
+
   static const String vposPolicies =
       'https://sencillo.com.ve/assets/docs/R4-SENCILLO-Politica-de-Privacidad-y-Uso-de-Datos.pdf';
   static const String vposTerminos =

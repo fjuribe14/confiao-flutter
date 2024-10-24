@@ -1,3 +1,4 @@
+import 'package:confiao/helpers/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -86,7 +87,9 @@ class SettingsPage extends StatelessWidget {
                   ),
                   CustomSettingsSection(
                     child: SettingsTile.navigation(
-                      onPressed: (context) {},
+                      onPressed: (context) {
+                        Get.toNamed(AppRouteName.authResetPassword);
+                      },
                       title: const Text('Cambiar contraseña'),
                       leading: const Icon(Icons.key_rounded),
                     ),
@@ -149,22 +152,17 @@ class SettingsPage extends StatelessWidget {
                               : 'Desactivado',
                         ),
                       ),
-                      // SettingsTile.switchTile(
-                      //   onToggle: (value) {
-                      //     ctrl.storagePermission.value = value;
-                      //     ctrl.storagePermission.refresh();
-                      //   },
-                      //   title: const Text('Almacenamiento'),
-                      //   leading: const Icon(Icons.save),
-                      //   initialValue: ctrl.storagePermission.value,
-                      //   description: Text(
-                      //     ctrl.storagePermission.value
-                      //         ? 'Activo'
-                      //         : 'Desactivado',
-                      //   ),
-                      // ),
                     ],
                   ),
+                  CustomSettingsSection(
+                    child: Center(
+                      child: Text('${authCtrl.appVersion}',
+                          style: Get.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Get.theme.colorScheme.primary,
+                          )),
+                    ),
+                  )
                 ],
               ),
             );

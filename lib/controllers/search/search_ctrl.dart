@@ -30,6 +30,9 @@ class SearchCtrl extends GetxController {
       queryParameters.addAllIf(isCredito.isTrue, {'nb_categoria': 'Crédito'});
 
       queryParameters
+          .addAllIf(isCredito.isFalse, {'nb_categoria_not': 'Crédito'});
+
+      queryParameters
           .addAllIf(item.idEmpresa != null, {'id_empresa': item.idEmpresa});
 
       queryParameters.addAllIf(

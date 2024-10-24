@@ -1,3 +1,4 @@
+import 'package:confiao/pages/auth/reset_password/reset_password_page.dart';
 import 'package:get/get.dart';
 import 'package:confiao/pages/index.dart';
 
@@ -10,6 +11,7 @@ class AppRouteName {
   // Auth
   static const String authLogin = '/login';
   static const String authRegister = '/register';
+  static const String authResetPassword = '/authResetPassword';
 
   // Protected
   static const String config = '/settings';
@@ -50,6 +52,10 @@ class AppRoutes {
     GetPage(
       name: AppRouteName.authRegister,
       page: () => const RegisterPage(),
+    ),
+    GetPage(
+      name: AppRouteName.authResetPassword,
+      page: () => const ResetPasswordPage(),
     ),
 
     /** Protected */

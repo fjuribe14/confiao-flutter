@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:confiao/pages/index.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,25 @@ class AuthCtrl extends GetxController {
   User? currentUser;
   RxBool loading = false.obs;
   RxBool textVisible = false.obs;
+  RxInt indexResetPassword = 0.obs;
   Rx<String> appVersion = '1.0.0'.obs;
+  RxBool textVisibleComfirm = false.obs;
+  ScrollController scrollController = ScrollController();
+  PageController pageControllerResetPassword = PageController();
 
   RxBool biometricPermission = false.obs;
   RxBool canAuthWithBiometric = false.obs;
 
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
+  final passwordConfirmController = TextEditingController();
+  final resetPasswordCodeController = TextEditingController();
+
+  List<Widget> pagesResetPassword = const [
+    ResetPasswordOne(),
+    ResetPasswordTwo(),
+    ResetPasswordThree(),
+  ];
 
   @override
   void onInit() async {
@@ -189,6 +202,128 @@ class AuthCtrl extends GetxController {
       body:
           'Por favor accede con tu contraseña, e intenta configurar la biometría nuevamente',
     );
+  }
+
+  Future<void> resetPasswordStepOne() async {
+    try {
+      alertService.showLoading(true);
+
+      await Dio().post(
+        '${dotenv.env['URL_API_AUTH']}${ApiUrl.authPasswordCreate}',
+        data: {
+          "username": currentUser?.email,
+        },
+      );
+    } catch (e) {
+      alertService.showSnackBar(title: 'Error', body: 'Código inválido');
+      debugPrint('$e');
+    } finally {
+      alertService.showLoading(false);
+    }
+  }
+
+  Future<void> resetPasswordStepTwo() async {
+    try {
+      alertService.showLoading(true);
+
+      await Dio().post(
+        '${dotenv.env['URL_API_AUTH']}${ApiUrl.authPasswordValidate}',
+        data: {
+          "username": currentUser?.email,
+          "token": resetPasswordCodeController.text,
+        },
+      );
+    } catch (e) {
+      debugPrint('$e');
+      alertService.showSnackBar(title: 'Error', body: 'Código inválido');
+      throw Exception('Código inválido');
+    } finally {
+      alertService.showLoading(false);
+    }
+  }
+
+  Future<void> resetPasswordStepThree() async {
+    try {
+      alertService.showLoading(true);
+
+      await Dio().post(
+        '${dotenv.env['URL_API_AUTH']}${ApiUrl.authPasswordReset}',
+        data: {
+          "username": currentUser?.email,
+          "token": resetPasswordCodeController.text,
+          "password": Helper().stringToBase64.encode(passwordController.text),
+          "password_confirmation":
+              Helper().stringToBase64.encode(passwordConfirmController.text),
+        },
+      );
+
+      bool authenticated = await LocalAuth().authenticate();
+
+      if (authenticated) {
+        await secureStorage.write(
+          key: StorageKeys.storageItemUserPassword,
+          value: passwordController.text,
+        );
+      }
+
+      alertService.showSnackBar(
+          title: 'Contraseña actualizada',
+          body: 'Tu contraseña ha sido actualizada');
+
+      alertService.showLoading(false);
+
+      textVisible.value = false;
+      textVisibleComfirm.value = false;
+
+      passwordController.clear();
+      passwordConfirmController.clear();
+      resetPasswordCodeController.clear();
+
+      await Get.toNamed(AppRouteName.home);
+    } catch (e) {
+      debugPrint('$e');
+      alertService.showLoading(false);
+      alertService.showSnackBar(
+          title: 'Error', body: 'No se pudo actualizar la contraseña');
+      throw Exception('No se pudo actualizar la contraseña');
+    }
+  }
+
+  skipResetPassword() {
+    Get.back();
+  }
+
+  backResetPassword() {
+    pageControllerResetPassword.previousPage(
+      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  nextResetPassword() async {
+    try {
+      if (indexResetPassword.value == 0) {
+        await resetPasswordStepOne();
+        pageControllerResetPassword.nextPage(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+
+      if (indexResetPassword.value == 1) {
+        await resetPasswordStepTwo();
+        pageControllerResetPassword.nextPage(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+
+      if (indexResetPassword.value == 2) {
+        await resetPasswordStepThree();
+      }
+    } catch (e) {
+      debugPrint('$e');
+    }
   }
 
   Future signUp({required Map<String, dynamic> data}) async {
