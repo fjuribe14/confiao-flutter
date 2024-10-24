@@ -1,4 +1,3 @@
-import 'package:confiao/pages/auth/reset_password/reset_password_page.dart';
 import 'package:get/get.dart';
 import 'package:confiao/pages/index.dart';
 
