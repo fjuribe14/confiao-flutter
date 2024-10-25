@@ -10,6 +10,13 @@ class FinanciadorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+    double tasa = 0.0;
+
+    if (comunesCtrl.tasas.isNotEmpty) {
+      tasa = double.parse(comunesCtrl.tasas[0].moMonto!);
+    }
+
     return GetBuilder<FinanciadorCtrl>(
       init: FinanciadorCtrl(),
       builder: (ctrl) {
@@ -92,7 +99,7 @@ class FinanciadorCard extends StatelessWidget {
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * 39.8)}',
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * tasa)}',
                                       textAlign: TextAlign.end,
                                       style: Get.textTheme.titleSmall)
                                 ],

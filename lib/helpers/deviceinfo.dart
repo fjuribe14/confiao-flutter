@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:confiao/helpers/index.dart';
 
@@ -81,7 +82,7 @@ class DeviceInfoService {
     }
 
     var jsonData = {
-      'nb_servicio': Environments.namePushNotificationNameService,
+      'nb_servicio': dotenv.env['APP_ALIAS'] ?? 'CONFIAO',
       'co_dispositivo': uniqueDeviceId,
       'st_dispositivo':
           ![null, '', 'null'].contains(tokenFirebase) ? 'ACTIVO' : 'INACTIVO',

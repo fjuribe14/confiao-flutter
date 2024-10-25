@@ -10,6 +10,9 @@ class FinanciamientoDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+    final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
+
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
       builder: (ctrl) {
@@ -83,7 +86,7 @@ class FinanciamientoDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moCuota!) * 39.8)}',
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moCuota!) * tasa)}',
                                   textAlign: TextAlign.end,
                                   style: Get.textTheme.bodyMedium,
                                 )
@@ -118,7 +121,7 @@ class FinanciamientoDetail extends StatelessWidget {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moCuotasSelected * 39.8)}',
+                          'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moCuotasSelected * tasa)}',
                           maxLines: 1,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,

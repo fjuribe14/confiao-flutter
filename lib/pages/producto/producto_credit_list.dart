@@ -11,6 +11,9 @@ class ProductoCreditList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+    final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
+
     return GetBuilder<SearchCtrl>(
       init: SearchCtrl(),
       builder: (ctrl) {
@@ -135,7 +138,7 @@ class ProductoCreditList extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.moMonto}') * 39.8)}',
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.moMonto}') * tasa)}',
                                       textAlign: TextAlign.end,
                                       style: Get.textTheme.titleSmall,
                                     ),
@@ -149,22 +152,6 @@ class ProductoCreditList extends StatelessWidget {
                     )
                   ],
                 );
-
-                // return SvgPicture.network(
-                //   '${item.txImagen}',
-
-                //    Container(
-                //     clipBehavior: Clip.hardEdge,
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(10),
-                //       border: Border.all(
-                //         width: 1,
-                //         color: Get.theme.colorScheme.surfaceContainerHighest,
-                //       ),
-
-                //     ),
-                //   ),
-                // );
               },
             );
           },

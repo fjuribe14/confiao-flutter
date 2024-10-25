@@ -13,7 +13,6 @@ export 'deviceinfo.dart';
 export 'responsive.dart';
 export 'storagekeys.dart';
 export 'validations.dart';
-export 'environment.dart';
 export 'localization.dart';
 export 'handle_errors.dart';
 export 'local_notifications.dart';

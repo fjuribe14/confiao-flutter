@@ -1,6 +1,6 @@
-import 'package:confiao/pages/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:confiao/pages/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
 
@@ -9,6 +9,9 @@ class FinanciamientoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+    final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
+
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
       builder: (ctrl) {
@@ -135,7 +138,7 @@ class FinanciamientoList extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!) * 39.8)}',
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!) * tasa)}',
                                   textAlign: TextAlign.end,
                                   style: Get.textTheme.bodyMedium,
                                 )
@@ -143,9 +146,49 @@ class FinanciamientoList extends StatelessWidget {
                             ),
                           ),
                         ),
+                      const SizedBox(height: 40.0),
                     ],
                   ),
                 ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: null,
+                    style: TextButton.styleFrom(
+                      backgroundColor: Get.theme.colorScheme.primary,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          '\$ ${Helper().getAmountFormatCompletDefault(1.0)}',
+                          style: Get.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Get.theme.colorScheme.onPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Icon(
+                          Icons.switch_left_rounded,
+                          color: Get.theme.colorScheme.onPrimary,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(comunesCtrl.tasas[0].moMonto!))}',
+                          style: Get.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Get.theme.colorScheme.onPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             );
           },

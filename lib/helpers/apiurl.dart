@@ -1,5 +1,3 @@
-import 'package:confiao/helpers/index.dart';
-
 class ApiUrl {
   /// Auth
   static String authLogin = '/api/v3/auth/login';
@@ -31,26 +29,24 @@ class ApiUrl {
   /// Pagar
   static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";
 
-  static String apiRestEndPointActivateRegister =
-      '${Environments.apiSeg}/api/v3/auth/signup';
-  static String apiRestEndPointResentCodeRegister =
-      '${Environments.apiSeg}/api/v3/auth/resend_code_register';
-  static String apiRestEndPointPasswordReset =
-      '${Environments.apiSeg}/api/v3/auth/password/reset';
-  static String apiRestEndPointPasswordResetValidate =
-      '${Environments.apiSeg}/api/v3/auth/password/validate';
-  static String apiRestEndPointLoginRefresh =
-      '${Environments.apiSeg}/api/v3/auth/refresh-session';
-  static String apiSegEndPointLoginRefreshProfile =
-      '${Environments.apiSeg}/api/v3/users';
+  // static String apiRestEndPointActivateRegister =
+  //     '${Environments.apiSeg}/api/v3/auth/signup';
+  // static String apiRestEndPointResentCodeRegister =
+  //     '${Environments.apiSeg}/api/v3/auth/resend_code_register';
+  // static String apiRestEndPointPasswordReset =
+  //     '${Environments.apiSeg}/api/v3/auth/password/reset';
+  // static String apiRestEndPointPasswordResetValidate =
+  //     '${Environments.apiSeg}/api/v3/auth/password/validate';
+  // static String apiRestEndPointLoginRefresh =
+  //     '${Environments.apiSeg}/api/v3/auth/refresh-session';
+  // static String apiSegEndPointLoginRefreshProfile =
+  //     '${Environments.apiSeg}/api/v3/users';
   static const String apiRestEndPointRegisterDeviceRecent =
-      '${Environments.apiSeg}/api/v3/dispositivo_reciente';
-  static const String apiRestEndpointDevices =
-      '${Environments.apiSeg}/api/v3/dispositivo';
+      '/api/v3/dispositivo_reciente';
+  // static const String apiRestEndpointDevices =
+  //     '${Environments.apiSeg}/api/v3/dispositivo';
 
   /// api comunes
-  static const String apiComunesTasaValor =
-      '${Environments.apiComunes}/api/v1/tasa_valor';
-  static const String apiComunesParticipantes =
-      '${Environments.apiComunes}/api/v1/participante';
+  static const String apiTasaValor = '/api/v1/tasa_valor';
+  static const String apiParticipantes = '/api/v1/participante';
 }

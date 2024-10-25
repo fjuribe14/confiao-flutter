@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
       child: RefreshIndicator(
         onRefresh: () async {
           Get.find<TiendaCtrl>().getData();
+          Get.find<ComunesCtrl>().getData();
           Get.find<FinanciadorCtrl>().getData();
           Get.find<FinanciamientoCtrl>().getData();
         },
