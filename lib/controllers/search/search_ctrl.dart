@@ -8,9 +8,9 @@ class SearchCtrl extends GetxController {
   String url = '/api/v1/public/buscar';
 
   RxBool loading = false.obs;
-  Tienda item = Get.arguments;
   RxBool isCredito = false.obs;
   final queryController = TextEditingController();
+  Tienda item = Get.arguments?['tienda'] ?? Tienda();
   List<SearchProducto> data = <SearchProducto>[].obs;
 
   @override

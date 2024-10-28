@@ -14,16 +14,9 @@ class AppRouteName {
 
   // Protected
   static const String config = '/settings';
-  // static const String socketPage = '/socketPage';
-  // static const String cuentaForm = '/cuentaForm';
-  // static const String payQuickPage = '/payQuickPage';
-  // static const String checkoutPage = '/checkoutPage';
-  // static const String authRegisterCode = '/register_code';
-  // static const String bpayPaymentPage = '/bpayPaymentPage';
-  // static const String authPasswordReset = '/password_reset';
-  // static const String permissionDevice = '/permissionDevice';
-
+  static const String shoppingCart = '/shoppingCart';
   static const String tiendaDetail = '/tiendaDetail';
+  static const String productoDetail = '/productoDetail';
   static const String cobroServicioList = '/cobroServicioList';
   static const String notificationsList = '/notificationsList';
   static const String financiamientoList = '/financiamientoList';
@@ -65,6 +58,14 @@ class AppRoutes {
     GetPage(
       name: AppRouteName.tiendaDetail,
       page: () => const TiendaDetail(),
+    ),
+    GetPage(
+      name: AppRouteName.productoDetail,
+      page: () => const ProductoDetail(),
+    ),
+    GetPage(
+      name: AppRouteName.shoppingCart,
+      page: () => const ShoppingCartPage(),
     ),
     GetPage(
       name: AppRouteName.notificationsList,

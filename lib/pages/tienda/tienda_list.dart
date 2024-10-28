@@ -75,7 +75,7 @@ class TiendaList extends StatelessWidget {
                           : GestureDetector(
                               onTap: () => Get.toNamed(
                                 AppRouteName.tiendaDetail,
-                                arguments: ctrl.data[index],
+                                arguments: {'tienda': ctrl.data[index]},
                               ),
                               child: Container(
                                 width: 100.0,

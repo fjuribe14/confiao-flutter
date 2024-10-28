@@ -19,6 +19,7 @@ class SearchProducto {
   String? moMonto;
   int? idSucursal;
   String? nbSucursal;
+  bool? selected = false;
 
   SearchProducto({
     this.idProducto,
@@ -34,6 +35,7 @@ class SearchProducto {
     this.moMonto,
     this.idSucursal,
     this.nbSucursal,
+    this.selected,
   });
 
   factory SearchProducto.fromJson(Map<String, dynamic> json) => SearchProducto(
@@ -50,6 +52,7 @@ class SearchProducto {
         moMonto: json["mo_monto"],
         idSucursal: json["id_sucursal"],
         nbSucursal: json["nb_sucursal"],
+        selected: false,
       );
 
   Map<String, dynamic> toJson() => {

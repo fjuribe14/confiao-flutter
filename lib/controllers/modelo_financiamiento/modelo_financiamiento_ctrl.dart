@@ -10,6 +10,7 @@ class ModeloFinanciamientoCtrl extends GetxController {
   RxBool loading = false.obs;
   ScrollController scrollController = ScrollController();
   RxList<ModeloFinanciamiento> data = <ModeloFinanciamiento>[].obs;
+  Rx<ModeloFinanciamiento> modeloFinanciamiento = ModeloFinanciamiento().obs;
 
   @override
   void onInit() async {
@@ -24,9 +25,10 @@ class ModeloFinanciamientoCtrl extends GetxController {
       data.clear();
 
       Map<String, dynamic>? queryParameters = {
-        'append': 'credito',
-        'st_empresa': 'ACTIVA',
-        'with': 'modelo_financiamiento'
+        // 'append': 'credito',
+        // 'with': 'modelo_financiamiento'
+        'per_page': '0',
+        'st_modelo_financiamiento': 'ACTIVO',
       };
 
       final response = await Http().http(showLoading: false).then(
@@ -39,6 +41,33 @@ class ModeloFinanciamientoCtrl extends GetxController {
       for (var item in response.data['data']) {
         data.add(ModeloFinanciamiento.fromJson(item));
       }
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  getDataById(dynamic id) async {
+    try {
+      loading.value = true;
+
+      Map<String, dynamic>? queryParameters = {
+        // 'append': 'credito',
+        // 'st_empresa': 'ACTIVA',
+        // 'with': 'modelo_financiamiento',
+        'per_page': '0',
+        'st_modelo_financiamiento': 'ACTIVO',
+      };
+
+      final response = await Http().http(showLoading: true).then(
+            (http) => http.get(
+              '${dotenv.env['URL_API_BASE']}$url/$id',
+              queryParameters: queryParameters,
+            ),
+          );
+
+      modeloFinanciamiento.value = ModeloFinanciamiento.fromJson(response.data);
     } catch (e) {
       debugPrint('$e');
     } finally {
