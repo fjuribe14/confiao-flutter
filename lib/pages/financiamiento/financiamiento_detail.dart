@@ -39,7 +39,7 @@ class FinanciamientoDetail extends StatelessWidget {
                     if (item.cuotas!.isNotEmpty)
                       ...item.cuotas!.map(
                         (cuota) {
-                          final isPagada = cuota.stCuota != 'PENDIENTE';
+                          final isPagada = cuota.stCuota == 'PAGADA';
 
                           return ListTile(
                             enabled: !isPagada,
@@ -47,8 +47,8 @@ class FinanciamientoDetail extends StatelessWidget {
                                 ? SizedBox(
                                     width: 50,
                                     child: Icon(
-                                      Icons.check,
-                                      color: Get.theme.colorScheme.primary,
+                                      ctrl.getIconCuota(cuota),
+                                      color: ctrl.getColorCuota(cuota),
                                     ),
                                   )
                                 : Checkbox(
@@ -68,6 +68,7 @@ class FinanciamientoDetail extends StatelessWidget {
                               '${cuota.stCuota}'.toCapitalized(),
                               style: Get.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
+                                color: ctrl.getColorCuota(cuota),
                               ),
                             ),
                             subtitle: Text(

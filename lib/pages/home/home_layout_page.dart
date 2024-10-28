@@ -8,8 +8,8 @@ class HomeLayoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ComunesCtrl());
-    Get.put(PermissionsCtrl());
+    Get.put(ComunesCtrl(), permanent: true);
+    Get.put(PermissionsCtrl(), permanent: true);
     final notificationCtrl = Get.put(NotificationCtrl(), permanent: true);
 
     return GetBuilder<HomeCtrl>(
@@ -37,8 +37,8 @@ class HomeLayoutPage extends StatelessWidget {
             },
             items: [
               FlashyTabBarItem(
-                icon: const Icon(Icons.home_filled),
                 title: const Text('Inicio'),
+                icon: const Icon(Icons.home_filled),
                 activeColor: Get.theme.primaryColor,
                 inactiveColor: Get.theme.colorScheme.secondaryFixedDim,
               ),

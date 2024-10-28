@@ -20,7 +20,7 @@ class FinanciamientoCtrl extends GetxController {
 
   @override
   void onInit() async {
-    // Inicializa los datos de configuración regional para el español
+    //
     initializeDateFormatting('es_ES');
     //
     _setDiasDelMes();
@@ -47,6 +47,28 @@ class FinanciamientoCtrl extends GetxController {
           .map((item) => double.parse('${item.moCuota}'))
           .reduce((a, b) => a + b)
       : 0.0;
+
+  IconData getIconCuota(Cuota item) {
+    switch (item.stCuota) {
+      case 'VENCIDA':
+        return Icons.close;
+      case 'PAGADA':
+        return Icons.check;
+      default:
+        return Icons.hourglass_empty;
+    }
+  }
+
+  Color getColorCuota(Cuota item) {
+    switch (item.stCuota) {
+      case 'VENCIDA':
+        return Get.theme.colorScheme.error;
+      case 'PAGADA':
+        return Get.theme.colorScheme.primary;
+      default:
+        return Get.theme.colorScheme.onSurface;
+    }
+  }
 
   _setDiasDelMes() {
     //

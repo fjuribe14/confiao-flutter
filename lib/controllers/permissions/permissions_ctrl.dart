@@ -6,8 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class PermissionsCtrl extends GetxController {
-  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   NotificationCtrl notificationCtrl = Get.put(NotificationCtrl());
+  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   @override
   void onInit() async {

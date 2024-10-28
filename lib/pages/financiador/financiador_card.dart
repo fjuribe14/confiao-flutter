@@ -124,8 +124,9 @@ class FinanciadorCard extends StatelessWidget {
                     if (item.inAfiliado!) const SizedBox(height: 10.0),
                     if (item.inAfiliado!)
                       LinearProgressIndicator(
-                        minHeight: 5.0,
-                        backgroundColor: Colors.grey.shade200,
+                        minHeight: 10.0,
+                        backgroundColor:
+                            Get.theme.colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(20.0),
                         value: double.parse(
                                 '${item.limiteCliente?.moDisponible}') /
