@@ -10,8 +10,10 @@ class FinanciadorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
     double tasa = 0.0;
+
+    Get.put(FinanciadorCtrl());
+    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
 
     if (comunesCtrl.tasas.isNotEmpty) {
       tasa = double.parse(comunesCtrl.tasas[0].moMonto!);

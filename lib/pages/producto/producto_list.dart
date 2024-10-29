@@ -10,9 +10,10 @@ class ProductoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Tienda tienda = Get.arguments['tienda'];
-
+    TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
     ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+
+    Tienda tienda = tiendaCtrl.tienda.value;
     final modeloFinanciamientoCtrl = Get.put(ModeloFinanciamientoCtrl());
 
     return GetBuilder<SearchCtrl>(
@@ -71,7 +72,6 @@ class ProductoList extends StatelessWidget {
                   Get.toNamed(AppRouteName.productoDetail, arguments: {
                     'tasa': tasa,
                     'producto': item,
-                    'tienda': tienda,
                     'modeloFinanciamiento':
                         modeloFinanciamientoCtrl.modeloFinanciamiento.value
                   });
@@ -113,7 +113,7 @@ class ProductoList extends StatelessWidget {
                         ),
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
                             '${item.nbProducto}',
@@ -124,36 +124,17 @@ class ProductoList extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '(${item.nuCantidad}) unidades',
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${item.moMonto}'))}',
-                                      textAlign: TextAlign.end,
-                                      style:
-                                          Get.textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.moMonto}') * tasa)}',
-                                      textAlign: TextAlign.end,
-                                      style: Get.textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                          Text(
+                            '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${item.moMonto}'))}',
+                            textAlign: TextAlign.end,
+                            style: Get.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.moMonto}') * tasa)}',
+                            textAlign: TextAlign.end,
+                            style: Get.textTheme.titleSmall,
                           ),
                         ],
                       ),

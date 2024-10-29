@@ -8,6 +8,7 @@ class TiendaCtrl extends GetxController {
   String url = ApiUrl.apiTienda;
 
   RxBool loading = false.obs;
+  Rx<Tienda> tienda = Tienda().obs;
   RxList<Tienda> data = <Tienda>[].obs;
   ScrollController scrollController = ScrollController();
 

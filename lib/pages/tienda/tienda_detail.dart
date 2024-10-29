@@ -14,7 +14,7 @@ class TiendaDetail extends StatelessWidget {
     return GetBuilder<TiendaCtrl>(
       init: TiendaCtrl(),
       builder: (ctrl) {
-        Tienda item = Get.arguments['tienda'];
+        Tienda item = ctrl.tienda.value;
         final comunesCtrl = Get.find<ComunesCtrl>();
         final shoppingCartCtrl = Get.put(ShoppingCartCtrl());
 
@@ -74,7 +74,10 @@ class TiendaDetail extends StatelessWidget {
                             onTap: () {
                               shoppingCartCtrl.clearCart();
                               Get.back();
-                              Get.back();
+                              Get.offAllNamed(AppRouteName.home)?.then((value) {
+                                Get.put(TiendaCtrl());
+                                Get.put(FinanciadorCtrl());
+                              });
                             },
                             child: Container(
                               width: double.infinity,
@@ -118,7 +121,10 @@ class TiendaDetail extends StatelessWidget {
                       label: Text('${shoppingCartCtrl.data.length}'),
                       isLabelVisible: shoppingCartCtrl.data.isNotEmpty,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(AppRouteName.shoppingCart,
+                              arguments: Get.arguments);
+                        },
                         icon: const Icon(Icons.shopping_cart_rounded),
                       ),
                     ),
@@ -254,37 +260,38 @@ class TiendaDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: null,
-                    style: TextButton.styleFrom(
-                      backgroundColor: Get.theme.colorScheme.primary,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '\$ ${Helper().getAmountFormatCompletDefault(1.0)}',
-                          style: Get.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                  if (comunesCtrl.tasas.isNotEmpty)
+                    TextButton(
+                      onPressed: null,
+                      style: TextButton.styleFrom(
+                        backgroundColor: Get.theme.colorScheme.primary,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '\$ ${Helper().getAmountFormatCompletDefault(1.0)}',
+                            style: Get.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Get.theme.colorScheme.onPrimary,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Icon(
+                            Icons.switch_left_rounded,
                             color: Get.theme.colorScheme.onPrimary,
                           ),
-                        ),
-                        const SizedBox(width: 5),
-                        Icon(
-                          Icons.switch_left_rounded,
-                          color: Get.theme.colorScheme.onPrimary,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(comunesCtrl.tasas[0].moMonto!))}',
-                          style: Get.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Get.theme.colorScheme.onPrimary,
+                          const SizedBox(width: 5),
+                          Text(
+                            'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(comunesCtrl.tasas.first.moMonto ?? '0.0'))}',
+                            style: Get.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Get.theme.colorScheme.onPrimary,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

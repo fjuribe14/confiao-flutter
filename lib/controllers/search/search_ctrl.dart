@@ -1,3 +1,4 @@
+import 'package:confiao/controllers/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
@@ -7,14 +8,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class SearchCtrl extends GetxController {
   String url = '/api/v1/public/buscar';
 
+  late Tienda item;
   RxBool loading = false.obs;
   RxBool isCredito = false.obs;
+  TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
   final queryController = TextEditingController();
-  Tienda item = Get.arguments?['tienda'] ?? Tienda();
   List<SearchProducto> data = <SearchProducto>[].obs;
 
   @override
   void onInit() async {
+    item = tiendaCtrl.tienda.value;
     await getData();
     super.onInit();
   }

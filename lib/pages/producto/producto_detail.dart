@@ -11,31 +11,51 @@ class ProductoDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double tasa = Get.arguments['tasa'];
+    double tasa = Get.arguments?['tasa'] ?? 0.0;
     List<Map<String, dynamic>> cuotas = [];
-    // Tienda tienda = Get.arguments['tienda'];
-    SearchProducto producto = Get.arguments['producto'];
+    SearchProducto producto = Get.arguments?['producto'] ?? SearchProducto();
     ModeloFinanciamiento modeloFinanciamiento =
-        Get.arguments['modeloFinanciamiento'];
+        Get.arguments?['modeloFinanciamiento'] ?? ModeloFinanciamiento();
     ShoppingCartCtrl shoppingCartCtrl = Get.find<ShoppingCartCtrl>();
 
-    bool isDisponible = producto.nuCantidad! > 0;
+    bool isDisponible = (producto.nuCantidad ?? 0) > 0;
 
-    for (var i = 0; i < modeloFinanciamiento.caCuotas!; i++) {
-      cuotas.add({
-        'nuCuota': i + 1,
-        'moMonto':
-            double.parse(producto.moMonto!) / modeloFinanciamiento.caCuotas!,
-        'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(Duration(
-            days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!)))),
-      });
+    if (modeloFinanciamiento.caCuotas != null) {
+      for (var i = 0; i < modeloFinanciamiento.caCuotas!; i++) {
+        cuotas.add({
+          'nuCuota': i + 1,
+          'moMonto':
+              double.parse(producto.moMonto!) / modeloFinanciamiento.caCuotas!,
+          'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
+              Duration(
+                  days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!)))),
+        });
+      }
     }
 
     return Obx(() {
-      bool inCarrito = shoppingCartCtrl.existInCart(producto);
+      bool inCarrito = shoppingCartCtrl.existInCart(SearchProducto());
 
       return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Badge(
+                offset: const Offset(0, 0),
+                label: Text('${shoppingCartCtrl.data.length}'),
+                isLabelVisible: shoppingCartCtrl.data.isNotEmpty,
+                child: IconButton(
+                  onPressed: () {
+                    Get.toNamed(AppRouteName.shoppingCart,
+                        arguments: Get.arguments);
+                  },
+                  icon: const Icon(Icons.shopping_cart_rounded),
+                ),
+              ),
+            )
+          ],
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             clipBehavior: Clip.hardEdge,
@@ -54,10 +74,10 @@ class ProductoDetail extends StatelessWidget {
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(image: imageProvider),
                         border: Border.all(
                           color: Get.theme.colorScheme.surfaceContainerHighest,
                         ),
-                        image: DecorationImage(image: imageProvider),
                       ),
                     ),
                   ),
@@ -100,14 +120,14 @@ class ProductoDetail extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${producto.moMonto}'))}',
+                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${producto.moMonto ?? 0.0}'))}',
                                   textAlign: TextAlign.end,
                                   style: Get.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${producto.moMonto}') * tasa)}',
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${producto.moMonto ?? 0.0}') * tasa)}',
                                   textAlign: TextAlign.end,
                                   style: Get.textTheme.titleMedium,
                                 ),
