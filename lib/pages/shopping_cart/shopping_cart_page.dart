@@ -423,6 +423,9 @@ class ShoppingCartPage extends StatelessWidget {
                           flex: 3,
                           child: ElevatedButton(
                             onPressed: () {
+                              // Get.put(FinanciamientoCtrl()).crearFinanciamiento(
+                              //   coIdentificacionEmpresa: tienda.coIdentificacion,
+                              // );
                               debugPrint({
                                 "mo_prestamo": ctrl.moTotal,
                                 "nb_empresa": tienda.nbEmpresa,
