@@ -41,8 +41,7 @@ class CuotaCtrl extends GetxController {
 
     setUltimoDiaMes();
     await getData();
-    // debugPrint(diasDelMes.toList().toString());
-    // debugPrint(DateTime(anioActual, mesActual + 1, 0).toString());
+
     super.onInit();
   }
 
@@ -62,7 +61,6 @@ class CuotaCtrl extends GetxController {
 
       for (var item in response.data['data']) {
         data.add(Cuota.fromJson(item));
-        debugPrint(item.toString());
       }
     } catch (e) {
       debugPrint('$e');

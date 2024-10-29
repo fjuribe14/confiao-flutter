@@ -13,13 +13,12 @@ class SearchCtrl extends GetxController {
   RxBool isCredito = false.obs;
   TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
   final queryController = TextEditingController();
+  Rx<SearchProducto> producto = SearchProducto().obs;
   List<SearchProducto> data = <SearchProducto>[].obs;
 
   @override
   void onInit() async {
     item = tiendaCtrl.tienda.value;
-
-    debugPrint(item.idEmpresa.toString());
 
     await getData();
     super.onInit();
@@ -30,8 +29,6 @@ class SearchCtrl extends GetxController {
       loading.value = true;
 
       data.clear();
-
-      debugPrint(item.toJson().toString());
 
       Map<String, dynamic>? queryParameters = {};
 

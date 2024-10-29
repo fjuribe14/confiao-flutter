@@ -11,21 +11,29 @@ class ProductoDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double tasa = Get.arguments?['tasa'] ?? 0.0;
     List<Map<String, dynamic>> cuotas = [];
-    SearchProducto producto = Get.arguments?['producto'] ?? SearchProducto();
-    ModeloFinanciamiento modeloFinanciamiento =
-        Get.arguments?['modeloFinanciamiento'] ?? ModeloFinanciamiento();
     ShoppingCartCtrl shoppingCartCtrl = Get.find<ShoppingCartCtrl>();
 
-    bool isDisponible = (producto.nuCantidad ?? 0) > 0;
+    // Modelo Financiamiento
+    ModeloFinanciamientoCtrl modeloFinanciamientoCtrl =
+        Get.find<ModeloFinanciamientoCtrl>();
+    ModeloFinanciamiento modeloFinanciamiento =
+        modeloFinanciamientoCtrl.modeloFinanciamiento.value;
+
+    // Tasa valor
+    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+    double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
+
+    // Producto
+    SearchCtrl searchCtrl = Get.find<SearchCtrl>();
+    SearchProducto producto = searchCtrl.producto.value;
 
     if (modeloFinanciamiento.caCuotas != null) {
       for (var i = 0; i < modeloFinanciamiento.caCuotas!; i++) {
         cuotas.add({
           'nuCuota': i + 1,
-          'moMonto':
-              double.parse(producto.moMonto!) / modeloFinanciamiento.caCuotas!,
+          'moMonto': double.parse(producto.moMonto ?? '0.0') /
+              modeloFinanciamiento.caCuotas!,
           'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
               Duration(
                   days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!)))),
@@ -34,7 +42,8 @@ class ProductoDetail extends StatelessWidget {
     }
 
     return Obx(() {
-      bool inCarrito = shoppingCartCtrl.existInCart(SearchProducto());
+      bool isDisponible = producto.nuCantidad! > 0;
+      bool inCarrito = shoppingCartCtrl.existInCart(producto);
 
       return Scaffold(
         appBar: AppBar(
@@ -47,8 +56,7 @@ class ProductoDetail extends StatelessWidget {
                 isLabelVisible: shoppingCartCtrl.data.isNotEmpty,
                 child: IconButton(
                   onPressed: () {
-                    Get.toNamed(AppRouteName.shoppingCart,
-                        arguments: Get.arguments);
+                    Get.toNamed(AppRouteName.shoppingCart);
                   },
                   icon: const Icon(Icons.shopping_cart_rounded),
                 ),
@@ -298,13 +306,10 @@ class ProductoDetail extends StatelessWidget {
                   onPressed: isDisponible
                       ? () {
                           if (inCarrito) {
-                            Get.toNamed(AppRouteName.shoppingCart,
-                                arguments: Get.arguments);
+                            Get.toNamed(AppRouteName.shoppingCart);
                           } else {
                             shoppingCartCtrl.addToCart(producto);
                           }
-                          debugPrint(
-                              'shoppingCartCtrl.data: ${shoppingCartCtrl.data.length}');
                         }
                       : null,
                   style: ElevatedButton.styleFrom(

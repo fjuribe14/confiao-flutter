@@ -19,7 +19,8 @@ class SearchProducto {
   String? moMonto;
   int? idSucursal;
   String? nbSucursal;
-  int caSelected = 0;
+  int caSelected;
+  double moMontoSelected;
 
   SearchProducto({
     this.idProducto,
@@ -36,6 +37,7 @@ class SearchProducto {
     this.idSucursal,
     this.nbSucursal,
     this.caSelected = 0,
+    this.moMontoSelected = 0.0,
   });
 
   factory SearchProducto.fromJson(Map<String, dynamic> json) => SearchProducto(
@@ -53,6 +55,7 @@ class SearchProducto {
         idSucursal: json["id_sucursal"],
         nbSucursal: json["nb_sucursal"],
         caSelected: 0,
+        moMontoSelected: double.parse(json["mo_monto"] ?? '0.0'),
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,5 +73,6 @@ class SearchProducto {
         "id_sucursal": idSucursal,
         "nb_sucursal": nbSucursal,
         "ca_selected": caSelected,
+        "mo_monto_selected": moMontoSelected,
       };
 }

@@ -62,7 +62,6 @@ class AlertService {
     );
 
     return await Get.dialog(
-        arguments: {'id': 8},
         AlertDialog(
           content: ConstrainedBox(
             constraints: BoxConstraints(

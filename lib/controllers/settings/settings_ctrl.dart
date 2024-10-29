@@ -38,8 +38,6 @@ class SettingsCtrl extends GetxController {
 
       final PermissionStatus status = await Permission.notification.request();
 
-      debugPrint('togglePushNotificationPermission $status');
-
       if (validation &&
           ![
             PermissionStatus.granted,

@@ -68,12 +68,10 @@ class ProductoList extends StatelessWidget {
                   await modeloFinanciamientoCtrl
                       .getDataById(idModeloFinanciamiento);
 
-                  Get.toNamed(AppRouteName.productoDetail, arguments: {
-                    'tasa': tasa,
-                    'producto': item,
-                    'modeloFinanciamiento':
-                        modeloFinanciamientoCtrl.modeloFinanciamiento.value
-                  });
+                  ctrl.producto.value = item;
+                  ctrl.producto.refresh();
+
+                  Get.toNamed(AppRouteName.productoDetail);
                 },
                 child: Column(
                   children: [

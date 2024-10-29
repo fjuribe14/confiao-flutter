@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
@@ -10,12 +11,32 @@ class ModeloFinanciamientoCtrl extends GetxController {
   RxBool loading = false.obs;
   ScrollController scrollController = ScrollController();
   RxList<ModeloFinanciamiento> data = <ModeloFinanciamiento>[].obs;
+  RxList<Map<String, dynamic>> cuotas = <Map<String, dynamic>>[].obs;
   Rx<ModeloFinanciamiento> modeloFinanciamiento = ModeloFinanciamiento().obs;
 
   @override
   void onInit() async {
     await getData();
     super.onInit();
+  }
+
+  getCuotas({required double moMonto}) {
+    cuotas.clear();
+
+    if (modeloFinanciamiento.value.caCuotas != null) {
+      for (var i = 0; i < modeloFinanciamiento.value.caCuotas!; i++) {
+        cuotas.add({
+          'nuCuota': i + 1,
+          'moMonto': moMonto / modeloFinanciamiento.value.caCuotas!,
+          'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
+              Duration(
+                  days: ((i + 1) *
+                      modeloFinanciamiento.value.nuDiasEntreCuotas!)))),
+        });
+      }
+    }
+
+    cuotas.refresh();
   }
 
   getData() async {

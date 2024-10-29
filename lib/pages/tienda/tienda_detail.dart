@@ -126,8 +126,7 @@ class TiendaDetail extends StatelessWidget {
                       isLabelVisible: shoppingCartCtrl.data.isNotEmpty,
                       child: IconButton(
                         onPressed: () {
-                          Get.toNamed(AppRouteName.shoppingCart,
-                              arguments: Get.arguments);
+                          Get.toNamed(AppRouteName.shoppingCart);
                         },
                         icon: const Icon(Icons.shopping_cart_rounded),
                       ),

@@ -114,21 +114,6 @@ class DeviceInfoService {
     var jsonData = await getMetaDataDevice(action,
         txUsuario: txUsuario, additionalData: additionalData);
 
-    /// todo:pendiente
-    // if (registerDevicePush) {
-    //   PushNotificationController pushNotificationController;
-    //   try {
-    //     pushNotificationController = Get.find<PushNotificationController>();
-    //     debugPrint('find PushNotificationController');
-    //   } catch (e) {
-    //     debugPrint('fail find PushNotificationController saveMetaDataApi');
-    //     pushNotificationController = Get.put(PushNotificationController());
-    //   }
-    //
-    //   /// await request permission notifications
-    //   pushNotificationController.registerDevice(jsonData);
-    // }
-
     final http = Http().http(showLoading: false);
 
     return await http.then(
