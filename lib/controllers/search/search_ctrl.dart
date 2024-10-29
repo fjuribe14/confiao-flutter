@@ -1,8 +1,8 @@
-import 'package:confiao/controllers/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:confiao/controllers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SearchCtrl extends GetxController {
@@ -18,6 +18,9 @@ class SearchCtrl extends GetxController {
   @override
   void onInit() async {
     item = tiendaCtrl.tienda.value;
+
+    debugPrint(item.idEmpresa.toString());
+
     await getData();
     super.onInit();
   }
@@ -27,6 +30,8 @@ class SearchCtrl extends GetxController {
       loading.value = true;
 
       data.clear();
+
+      debugPrint(item.toJson().toString());
 
       Map<String, dynamic>? queryParameters = {};
 

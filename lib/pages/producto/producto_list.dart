@@ -10,16 +10,15 @@ class ProductoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
-    ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
-
-    Tienda tienda = tiendaCtrl.tienda.value;
-    final modeloFinanciamientoCtrl = Get.put(ModeloFinanciamientoCtrl());
-
     return GetBuilder<SearchCtrl>(
       init: SearchCtrl(),
       builder: (ctrl) {
+        TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
+        ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
+        final modeloFinanciamientoCtrl = Get.put(ModeloFinanciamientoCtrl());
         final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
+
+        Tienda tienda = tiendaCtrl.tienda.value;
 
         return Obx(() {
           if (ctrl.data.isEmpty) {

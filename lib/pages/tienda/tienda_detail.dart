@@ -15,6 +15,7 @@ class TiendaDetail extends StatelessWidget {
       init: TiendaCtrl(),
       builder: (ctrl) {
         Tienda item = ctrl.tienda.value;
+        final searchCtrl = Get.put(SearchCtrl());
         final comunesCtrl = Get.find<ComunesCtrl>();
         final shoppingCartCtrl = Get.put(ShoppingCartCtrl());
 
@@ -29,7 +30,10 @@ class TiendaDetail extends StatelessWidget {
                 AlertDialog(
                   contentPadding: const EdgeInsets.all(16.0),
                   actionsPadding: const EdgeInsets.only(
-                      bottom: 16.0, left: 16.0, right: 16.0),
+                    left: 16.0,
+                    right: 16.0,
+                    bottom: 16.0,
+                  ),
                   titlePadding:
                       const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
                   title: Text(
@@ -200,8 +204,6 @@ class TiendaDetail extends StatelessWidget {
                                   const SizedBox(height: 5.0),
                                 if (item.credito == true)
                                   Obx(() {
-                                    final searchCtrl = Get.put(SearchCtrl());
-
                                     return Row(
                                       children: [
                                         Expanded(child: Container()),

@@ -8,6 +8,7 @@ class HomeLayoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(FinanciamientoCtrl());
     Get.put(ComunesCtrl(), permanent: true);
     Get.put(PermissionsCtrl(), permanent: true);
     final notificationCtrl = Get.put(NotificationCtrl(), permanent: true);
