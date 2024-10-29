@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FinanciamientoCtrl extends GetxController {
   String url = ApiUrl.apiFinanciamiento;
+  String urlPublic = ApiUrl.apiFinanciamientoPublic;
 
   RxBool loading = false.obs;
   RxInt statusSelected = 0.obs;
@@ -118,6 +119,36 @@ class FinanciamientoCtrl extends GetxController {
         //
         data.add(newFinanciamiento);
       }
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  crearFinanciamiento({
+    nbEmpresa,
+    moPrestamo,
+    idModeloFinanciamiento,
+    coIdentificacionEmpresa,
+  }) async {
+    try {
+      loading.value = true;
+
+      await Http().http(showLoading: false).then(
+            (http) => http
+                .post('${dotenv.env['URL_API_BASE']}$urlPublic/crear', data: {
+              "nb_empresa": nbEmpresa,
+              "mo_prestamo": moPrestamo,
+              "id_modelo_financiamiento": idModeloFinanciamiento,
+              "co_identificacion_empresa": coIdentificacionEmpresa,
+            }),
+          );
+
+      AlertService().showSnackBar(
+        title: 'Financiamiento creado',
+        body: 'Se ha creado el financiamiento',
+      );
     } catch (e) {
       debugPrint('$e');
     } finally {

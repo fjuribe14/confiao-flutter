@@ -7,6 +7,7 @@ String tiendaToJson(Tienda data) => json.encode(data.toJson());
 class Tienda {
   int? idEmpresa;
   String? nbEmpresa;
+  String? coIdentificacion;
   String? txDireccion;
   String? txDescripcion;
   bool? boFinanciamiento;
@@ -17,6 +18,7 @@ class Tienda {
   Tienda({
     this.idEmpresa,
     this.nbEmpresa,
+    this.coIdentificacion,
     this.txDireccion,
     this.txDescripcion,
     this.boFinanciamiento,
@@ -28,6 +30,7 @@ class Tienda {
   factory Tienda.fromJson(Map<String, dynamic> json) => Tienda(
         idEmpresa: json["id_empresa"],
         nbEmpresa: json["nb_empresa"],
+        coIdentificacion: json["co_identificacion"],
         txDireccion: json["tx_direccion"],
         txDescripcion: json["tx_descripcion"],
         boFinanciamiento: json["bo_financiamiento"],
@@ -44,6 +47,7 @@ class Tienda {
   Map<String, dynamic> toJson() => {
         "id_empresa": idEmpresa,
         "nb_empresa": nbEmpresa,
+        "co_identificacion": coIdentificacion,
         "tx_direccion": txDireccion,
         "tx_descripcion": txDescripcion,
         "bo_financiamiento": boFinanciamiento,

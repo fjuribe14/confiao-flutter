@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
 
 class ShoppingCartPage extends StatelessWidget {
   const ShoppingCartPage({super.key});
@@ -15,6 +15,10 @@ class ShoppingCartPage extends StatelessWidget {
       init: ShoppingCartCtrl(),
       builder: (ctrl) {
         List<Map<String, dynamic>> cuotas = [];
+
+        // Tienda
+        TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
+        Tienda tienda = tiendaCtrl.tienda.value;
 
         // Modelo Financiamiento
         ModeloFinanciamientoCtrl modeloFinanciamientoCtrl =
@@ -35,10 +39,11 @@ class ShoppingCartPage extends StatelessWidget {
               cuotas.add({
                 'nuCuota': i + 1,
                 'moMonto': ctrl.moTotal / modeloFinanciamiento.caCuotas!,
-                'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
-                    Duration(
-                        days: ((i + 1) *
-                            modeloFinanciamiento.nuDiasEntreCuotas!)))),
+                'feCuota': Intl()
+                    .date('yyyy-MM-dd')
+                    .format(DateTime.now().add(Duration(
+                      days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!),
+                    ))),
               });
             }
           }
@@ -417,7 +422,16 @@ class ShoppingCartPage extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              debugPrint({
+                                "mo_prestamo": ctrl.moTotal,
+                                "nb_empresa": tienda.nbEmpresa,
+                                "co_identificacion_empresa":
+                                    tienda.coIdentificacion,
+                                "id_modelo_financiamiento":
+                                    modeloFinanciamiento.idModeloFinanciamiento,
+                              }.toString());
+                            },
                             style: ElevatedButton.styleFrom(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 10.0),
