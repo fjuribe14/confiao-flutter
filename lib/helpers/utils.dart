@@ -1,11 +1,12 @@
 import 'dart:math';
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Helper {
   final _random = Random();
@@ -110,6 +111,23 @@ class Helper {
   Future<String?> getToken() async {
     return await const FlutterSecureStorage()
         .read(key: StorageKeys.storageItemUserToken);
+  }
+
+  Future<String?> getRefreshToken() async {
+    return await const FlutterSecureStorage()
+        .read(key: StorageKeys.storageItemUserRefreshToken);
+  }
+
+  Future getTokenAud() async {
+    final token = await getToken();
+    JWT jwt = JWT.decode(token!);
+    return jwt.payload['aud'];
+  }
+
+  Future getTokenSub() async {
+    final token = await getToken();
+    JWT jwt = JWT.decode(token!);
+    return jwt.payload['sub'];
   }
 
   /// parse jwt token and return data

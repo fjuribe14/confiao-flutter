@@ -422,18 +422,17 @@ class ShoppingCartPage extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Get.put(FinanciamientoCtrl()).crearFinanciamiento(
-                              //   coIdentificacionEmpresa: tienda.coIdentificacion,
-                              // );
-                              debugPrint({
-                                "mo_prestamo": ctrl.moTotal,
-                                "nb_empresa": tienda.nbEmpresa,
-                                "co_identificacion_empresa":
-                                    tienda.coIdentificacion,
-                                "id_modelo_financiamiento":
-                                    modeloFinanciamiento.idModeloFinanciamiento,
-                              }.toString());
+                            onPressed: () async {
+                              await Get.put(FinanciamientoCtrl())
+                                  .crearFinanciamiento(
+                                productos: ctrl.data,
+                                moPrestamo: ctrl.moTotal,
+                                nbEmpresa: tienda.nbEmpresa!,
+                                coIdentificacionEmpresa:
+                                    tienda.coIdentificacion!,
+                                idModeloFinanciamiento: modeloFinanciamiento
+                                    .idModeloFinanciamiento!,
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               padding:

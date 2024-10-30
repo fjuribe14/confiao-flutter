@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -127,23 +128,38 @@ class FinanciamientoCtrl extends GetxController {
   }
 
   crearFinanciamiento({
-    nbEmpresa,
-    moPrestamo,
-    idModeloFinanciamiento,
-    coIdentificacionEmpresa,
+    required String nbEmpresa,
+    required double moPrestamo,
+    required int idModeloFinanciamiento,
+    required String coIdentificacionEmpresa,
+    required List<SearchProducto> productos,
   }) async {
     try {
       loading.value = true;
 
-      await Http().http(showLoading: false).then(
-            (http) => http
-                .post('${dotenv.env['URL_API_BASE']}$urlPublic/crear', data: {
-              "nb_empresa": nbEmpresa,
-              "mo_prestamo": moPrestamo,
-              "id_modelo_financiamiento": idModeloFinanciamiento,
-              "co_identificacion_empresa": coIdentificacionEmpresa,
-            }),
-          );
+      final sub = await Helper().getTokenSub();
+
+      Map<String, dynamic> data = {
+        "id_usuario": sub,
+        "nb_empresa": nbEmpresa,
+        "mo_prestamo": moPrestamo,
+        "id_modelo_financiamiento": idModeloFinanciamiento,
+        "co_identificacion_empresa": coIdentificacionEmpresa,
+        "productos": productos
+            .map((item) => {
+                  "id_producto": item.idProducto,
+                  "ca_producto": item.caSelected,
+                  "id_sucursal": item.idSucursal,
+                })
+            .toList(),
+      };
+
+      debugPrint(jsonEncode(data));
+
+      // await Http().http(showLoading: false).then(
+      //       (http) => http
+      //           .post('${dotenv.env['URL_API_BASE']}$urlPublic/crear', data: ),
+      //     );
 
       AlertService().showSnackBar(
         title: 'Financiamiento creado',
