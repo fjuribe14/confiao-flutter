@@ -15,6 +15,7 @@ class ApiUrl {
 
   /// Businness
   static String apiTienda = '/api/v1/public/tienda';
+  static String apiCheckout = '/api/v1/public/confiao/checkout';
 
   /// Notifications
   static String apiRegistrarDispositivo = '/api/v2/pna/registrar_dispositivo';

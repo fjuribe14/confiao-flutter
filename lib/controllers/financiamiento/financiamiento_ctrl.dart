@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FinanciamientoCtrl extends GetxController {
   String url = ApiUrl.apiFinanciamiento;
+  String urlCheckout = ApiUrl.apiCheckout;
   String urlPublic = ApiUrl.apiFinanciamientoPublic;
 
   RxBool loading = false.obs;
@@ -102,7 +102,9 @@ class FinanciamientoCtrl extends GetxController {
       cuotas.clear();
 
       Map<String, dynamic>? queryParameters = {
+        'per_page': 0,
         'with': 'cuotas',
+        'order_by': 'id_financiamiento:desc',
         'st_financiamiento': status[statusSelected.value],
       };
 
@@ -128,6 +130,7 @@ class FinanciamientoCtrl extends GetxController {
   }
 
   crearFinanciamiento({
+    required int idEmpresa,
     required String nbEmpresa,
     required double moPrestamo,
     required int idModeloFinanciamiento,
@@ -137,10 +140,12 @@ class FinanciamientoCtrl extends GetxController {
     try {
       loading.value = true;
 
+      final user = await Helper().getUser();
       final sub = await Helper().getTokenSub();
 
-      Map<String, dynamic> data = {
+      Map<String, dynamic> dataCheckout = {
         "id_usuario": sub,
+        "id_empresa": idEmpresa,
         "nb_empresa": nbEmpresa,
         "mo_prestamo": moPrestamo,
         "id_modelo_financiamiento": idModeloFinanciamiento,
@@ -154,17 +159,38 @@ class FinanciamientoCtrl extends GetxController {
             .toList(),
       };
 
-      debugPrint(jsonEncode(data));
+      final response = await Http().http(showLoading: true).then(
+            (http) => http.post(
+              '${dotenv.env['URL_API_MARKET']}$urlCheckout',
+              data: dataCheckout,
+            ),
+          );
 
-      // await Http().http(showLoading: false).then(
-      //       (http) => http
-      //           .post('${dotenv.env['URL_API_BASE']}$urlPublic/crear', data: ),
-      //     );
+      debugPrint('response.data: ${response.data}');
 
-      AlertService().showSnackBar(
-        title: 'Financiamiento creado',
-        body: 'Se ha creado el financiamiento',
-      );
+      Map<String, dynamic> dataFinanciamiento = {
+        "id_conectado": sub,
+        "mo_prestamo": moPrestamo,
+        "nu_documento": response.data['id_factura'],
+        "id_modelo_financiamiento": idModeloFinanciamiento,
+        "co_identificacion_empresa": coIdentificacionEmpresa,
+        "tx_identificacion_cliente":
+            '${user['tx_atributo']['co_identificacion']}',
+      };
+
+      await Http().http(showLoading: true).then(
+            (http) => http.post(
+              '${dotenv.env['URL_API_BASE']}$urlPublic/crear',
+              data: dataFinanciamiento,
+            ),
+          );
+
+      Get.offAndToNamed(AppRouteName.home)?.then((value) {
+        AlertService().showSnackBar(
+          title: 'Felicidades 🎉',
+          body: 'Se ha creado el financiamiento',
+        );
+      });
     } catch (e) {
       debugPrint('$e');
     } finally {

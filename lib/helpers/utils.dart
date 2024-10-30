@@ -102,9 +102,7 @@ class Helper {
   }
 
   String getAmountFormatCompletDefault(double val) => getAmountFormatComplet(
-        getNumberFormat().format(
-          val,
-        ),
+        getNumberFormat().format(val.toPrecision(2)),
         decimalSeparator: ',',
       );
 
@@ -128,6 +126,12 @@ class Helper {
     final token = await getToken();
     JWT jwt = JWT.decode(token!);
     return jwt.payload['sub'];
+  }
+
+  Future getUser() async {
+    final token = await getToken();
+    JWT jwt = JWT.decode(token!);
+    return jwt.payload['user'];
   }
 
   /// parse jwt token and return data

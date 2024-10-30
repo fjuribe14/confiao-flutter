@@ -30,7 +30,10 @@ class SearchCtrl extends GetxController {
 
       data.clear();
 
-      Map<String, dynamic>? queryParameters = {};
+      Map<String, dynamic>? queryParameters = {
+        'per_page': 0,
+        'nu_cantidad_gte': 1,
+      };
 
       queryParameters.addAllIf(isCredito.isTrue, {'nb_categoria': 'Crédito'});
 

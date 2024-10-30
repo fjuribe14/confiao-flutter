@@ -25,6 +25,8 @@ class ShoppingCartPage extends StatelessWidget {
             Get.find<ModeloFinanciamientoCtrl>();
         ModeloFinanciamiento modeloFinanciamiento =
             modeloFinanciamientoCtrl.modeloFinanciamiento.value;
+        final intereses =
+            double.parse(modeloFinanciamiento.pcTasaInteres!) / 100;
 
         // Tasa valor
         ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
@@ -303,6 +305,71 @@ class ShoppingCartPage extends StatelessWidget {
                               color: Get.theme.colorScheme.surfaceContainer,
                             ),
                             const SizedBox(height: 10.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Intereses',
+                                        style:
+                                            Get.textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '+${modeloFinanciamiento.pcTasaInteres ?? 0}%',
+                                        style:
+                                            Get.textTheme.bodySmall?.copyWith(
+                                          color: Get.theme.colorScheme.onSurface
+                                              .withOpacity(0.5),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '\$ ${Helper().getAmountFormatCompletDefault(
+                                        double.parse('${ctrl.moTotal}')
+                                                .toPrecision(2) *
+                                            intereses,
+                                      )}',
+                                      style: Get.textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2.0),
+                                    Text(
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(
+                                        (double.parse('${ctrl.moTotal}') *
+                                                tasa) *
+                                            intereses,
+                                      )}',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface
+                                            .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            Divider(
+                              height: 1.0,
+                              color: Get.theme.colorScheme.surfaceContainer,
+                            ),
+                            const SizedBox(height: 10.0),
                             ...cuotas.map((cuota) {
                               bool isUltima = cuota['nuCuota'] == cuotas.length;
 
@@ -401,7 +468,7 @@ class ShoppingCartPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moTotal)}',
+                                '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moTotal + (ctrl.moTotal * intereses))}',
                                 maxLines: 1,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
@@ -409,7 +476,7 @@ class ShoppingCartPage extends StatelessWidget {
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moTotal * tasa)}',
+                                'Bs. ${Helper().getAmountFormatCompletDefault((ctrl.moTotal + (ctrl.moTotal * intereses)) * tasa)}',
                                 maxLines: 1,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
@@ -427,6 +494,7 @@ class ShoppingCartPage extends StatelessWidget {
                                   .crearFinanciamiento(
                                 productos: ctrl.data,
                                 moPrestamo: ctrl.moTotal,
+                                idEmpresa: tienda.idEmpresa!,
                                 nbEmpresa: tienda.nbEmpresa!,
                                 coIdentificacionEmpresa:
                                     tienda.coIdentificacion!,
