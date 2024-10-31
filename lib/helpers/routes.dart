@@ -68,12 +68,12 @@ class AppRoutes {
       page: () => const ShoppingCartPage(),
     ),
     GetPage(
-      name: AppRouteName.notificationsList,
-      page: () => const NotificationsList(),
+      name: AppRouteName.cobroServicioList,
+      page: () => const PagoServicioList(),
     ),
     GetPage(
-      name: AppRouteName.cobroServicioList,
-      page: () => const CobroServicioList(),
+      name: AppRouteName.notificationsList,
+      page: () => const NotificationsList(),
     ),
     GetPage(
       name: AppRouteName.financiamientoList,

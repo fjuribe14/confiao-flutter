@@ -3,6 +3,7 @@ class ApiUrl {
   static String authLogin = '/api/v3/auth/login';
   static String authSignup = '/api/v3/auth/signup';
   static String authLogout = '/api/v3/auth/logout';
+  static String authRefreshSession = '/api/v3/auth/refresh-session';
   static String authCheckCredentials = '/api/v3/auth/user/credenciales/check';
 
   /// Reset password
@@ -39,8 +40,7 @@ class ApiUrl {
   //     '${Environments.apiSeg}/api/v3/auth/password/reset';
   // static String apiRestEndPointPasswordResetValidate =
   //     '${Environments.apiSeg}/api/v3/auth/password/validate';
-  // static String apiRestEndPointLoginRefresh =
-  //     '${Environments.apiSeg}/api/v3/auth/refresh-session';
+
   // static String apiSegEndPointLoginRefreshProfile =
   //     '${Environments.apiSeg}/api/v3/users';
   static const String apiRestEndPointRegisterDeviceRecent =

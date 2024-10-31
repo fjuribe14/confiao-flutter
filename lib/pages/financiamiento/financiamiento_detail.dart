@@ -135,8 +135,11 @@ class FinanciamientoDetail extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
-                      onPressed:
-                          !ctrl.hasCuotasSelectedAndPendientes ? null : () {},
+                      onPressed: !ctrl.hasCuotasSelectedAndPendientes
+                          ? null
+                          : () {
+                              ctrl.pay(item);
+                            },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         backgroundColor: Get.theme.colorScheme.primary,

@@ -10,6 +10,7 @@ export 'onboarding/onboarding_ctrl.dart';
 export 'financiador/financiador_ctrl.dart';
 export 'permissions/permissions_ctrl.dart';
 export 'notification/notification_ctrl.dart';
+export 'pago_servicio/pago_servicio_ctrl.dart';
 export 'shopping_cart/shopping_cart_ctrl.dart';
 export 'financiamiento/financiamiento_ctrl.dart';
 export 'modelo_financiamiento/modelo_financiamiento_ctrl.dart';

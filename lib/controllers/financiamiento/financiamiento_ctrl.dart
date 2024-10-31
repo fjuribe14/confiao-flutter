@@ -197,4 +197,16 @@ class FinanciamientoCtrl extends GetxController {
       loading.value = false;
     }
   }
+
+  pay(Financiamiento item) async {
+    try {
+      loading.value = true;
+
+      debugPrint('${item}');
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
+    }
+  }
 }
