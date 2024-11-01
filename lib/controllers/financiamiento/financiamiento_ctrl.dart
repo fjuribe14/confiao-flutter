@@ -18,6 +18,7 @@ class FinanciamientoCtrl extends GetxController {
   List<DateTime> dias = <DateTime>[].obs;
   RxList<Financiamiento> data = <Financiamiento>[].obs;
   ScrollController scrollController = ScrollController();
+  Rx<Financiamiento> financiamiento = Financiamiento().obs;
   List<String> status = <String>['ACEPTADO', 'INACTIVO', 'PENDIENTE'];
 
   @override
@@ -68,7 +69,7 @@ class FinanciamientoCtrl extends GetxController {
       case 'PAGADA':
         return Get.theme.colorScheme.primary;
       default:
-        return Get.theme.colorScheme.onSurface;
+        return Get.theme.colorScheme.onSurface.withOpacity(0.3);
     }
   }
 
@@ -198,11 +199,11 @@ class FinanciamientoCtrl extends GetxController {
     }
   }
 
-  pay(Financiamiento item) async {
+  checkout(Financiamiento item) async {
     try {
       loading.value = true;
-
-      debugPrint('${item}');
+      financiamiento.value = item;
+      Get.toNamed(AppRouteName.checkout);
     } catch (e) {
       debugPrint('$e');
     } finally {

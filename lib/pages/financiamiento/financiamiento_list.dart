@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/pages/index.dart';
@@ -111,35 +112,51 @@ class FinanciamientoList extends StatelessWidget {
                               horizontal: 20.0,
                               vertical: 10.0,
                             ),
-                            leading: Icon(
-                              Icons.monetization_on_outlined,
-                              color: Get.theme.colorScheme.primary,
-                              size: 40.0,
-                            ),
+                            leading: SvgPicture.asset(AssetsDir.logo,
+                                height: 30, width: 30),
                             title: Text(
                               '#${item.idFinanciamiento}',
                               style: Get.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text(
-                              'Cuotas ${item.cuotas?.length}',
-                              style: Get.textTheme.bodyMedium?.copyWith(),
+                            subtitle: SizedBox(
+                              height: 5,
+                              child: ListView.separated(
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(width: 5),
+                                itemCount: item.cuotas!.length,
+                                scrollDirection: Axis.horizontal,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) => Container(
+                                  height: 5,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        ctrl.getColorCuota(item.cuotas![index]),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ),
                             ),
                             trailing: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!))}',
+                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moTotalFinanc!))}',
+                                  maxLines: 1,
                                   textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
                                   style: Get.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo!) * tasa)}',
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moTotalFinanc!) * tasa)}',
+                                  maxLines: 1,
                                   textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
                                   style: Get.textTheme.bodyMedium,
                                 )
                               ],

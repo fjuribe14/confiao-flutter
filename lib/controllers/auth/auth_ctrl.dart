@@ -53,11 +53,11 @@ class AuthCtrl extends GetxController {
     if (user == null && Get.currentRoute != AppRouteName.authLogin) {
       Get.offAllNamed(AppRouteName.authLogin);
     } else if (user != null && Get.currentRoute != AppRouteName.home) {
-      if (user.stVerificado == 'VERIFICADO') {
-        Get.offAllNamed(AppRouteName.home);
-      } else {
-        Get.offAllNamed(AppRouteName.setup);
-      }
+      // if (user.stVerificado == 'VERIFICADO') {
+      Get.offAllNamed(AppRouteName.home);
+      // } else {
+      //   Get.offAllNamed(AppRouteName.setup);
+      // }
     }
   }
 

@@ -42,7 +42,6 @@ class FinanciamientoDetail extends StatelessWidget {
                           final isPagada = cuota.stCuota == 'PAGADA';
 
                           return ListTile(
-                            enabled: !isPagada,
                             leading: isPagada
                                 ? SizedBox(
                                     width: 50,
@@ -63,7 +62,42 @@ class FinanciamientoDetail extends StatelessWidget {
                                     cuota.selected = !cuota.selected!;
                                     ctrl.update();
                                   }
-                                : null,
+                                : () {
+                                    // Get.back();
+                                    Get.dialog(
+                                      AlertDialog(
+                                        title: Text(
+                                          'Pagada',
+                                          style: Get.textTheme.titleLarge,
+                                        ),
+                                        content: SizedBox(
+                                          height: 100.0,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Ref ${cuota.txReferencia!.substring(cuota.txReferencia!.length - 8, cuota.txReferencia!.length)}',
+                                                style: Get.textTheme.titleMedium
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Fecha ${cuota.fePagoCuota}',
+                                                style: Get.textTheme.titleMedium
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                             title: Text(
                               '${cuota.stCuota}'.toCapitalized(),
                               style: Get.textTheme.titleMedium?.copyWith(
@@ -80,14 +114,14 @@ class FinanciamientoDetail extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moCuota!))}',
+                                  '\$ ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moTotalCuota!))}',
                                   textAlign: TextAlign.end,
                                   style: Get.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moCuota!) * tasa)}',
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moTotalCuota!) * tasa)}',
                                   textAlign: TextAlign.end,
                                   style: Get.textTheme.bodyMedium,
                                 )
@@ -137,9 +171,7 @@ class FinanciamientoDetail extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: !ctrl.hasCuotasSelectedAndPendientes
                           ? null
-                          : () {
-                              ctrl.pay(item);
-                            },
+                          : () => ctrl.checkout(item),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         backgroundColor: Get.theme.colorScheme.primary,

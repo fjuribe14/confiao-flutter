@@ -104,15 +104,12 @@ class Financiamiento {
   Map<String, dynamic> toJson() => {
         "id_financiamiento": idFinanciamiento,
         "nu_documento": nuDocumento,
-        "fe_financiamiento":
-            "${feFinanciamiento!.year.toString().padLeft(4, '0')}-${feFinanciamiento!.month.toString().padLeft(2, '0')}-${feFinanciamiento!.day.toString().padLeft(2, '0')}",
+        "fe_financiamiento": fe1RaCuota,
         "id_cliente": idCliente,
         "tx_direccion_financiamiento": txDireccionFinanciamiento,
         "mo_prestamo": moPrestamo,
-        "fe_1ra_cuota":
-            "${fe1RaCuota!.year.toString().padLeft(4, '0')}-${fe1RaCuota!.month.toString().padLeft(2, '0')}-${fe1RaCuota!.day.toString().padLeft(2, '0')}",
-        "fe_vencimiento":
-            "${feVencimiento!.year.toString().padLeft(4, '0')}-${feVencimiento!.month.toString().padLeft(2, '0')}-${feVencimiento!.day.toString().padLeft(2, '0')}",
+        "fe_1ra_cuota": fe1RaCuota,
+        "fe_vencimiento": feVencimiento,
         "nu_cuotas": nuCuotas,
         "nu_dias_entre_cuotas": nuDiasEntreCuotas,
         "mo_cuota": moCuota,

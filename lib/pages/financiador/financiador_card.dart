@@ -100,10 +100,11 @@ class FinanciadorCard extends StatelessWidget {
                                     style: Get.textTheme.titleLarge
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
-                                      'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * tasa)}',
-                                      textAlign: TextAlign.end,
-                                      style: Get.textTheme.titleSmall)
+                                  if (tasa > 0)
+                                    Text(
+                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * tasa)}',
+                                        textAlign: TextAlign.end,
+                                        style: Get.textTheme.titleSmall)
                                 ],
                               )
                             : Expanded(

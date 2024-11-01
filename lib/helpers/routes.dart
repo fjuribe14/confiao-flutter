@@ -1,3 +1,4 @@
+import 'package:confiao/pages/checkout/checkout_page.dart';
 import 'package:get/get.dart';
 import 'package:confiao/pages/index.dart';
 
@@ -14,6 +15,7 @@ class AppRouteName {
 
   // Protected
   static const String config = '/settings';
+  static const String checkout = '/checkout';
   static const String shoppingCart = '/shoppingCart';
   static const String tiendaDetail = '/tiendaDetail';
   static const String productoDetail = '/productoDetail';
@@ -54,6 +56,10 @@ class AppRoutes {
     GetPage(
       name: AppRouteName.home,
       page: () => const HomeLayoutPage(),
+    ),
+    GetPage(
+      name: AppRouteName.checkout,
+      page: () => const CheckoutPage(),
     ),
     GetPage(
       name: AppRouteName.tiendaDetail,

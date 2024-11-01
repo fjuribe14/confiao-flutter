@@ -14,6 +14,7 @@ class Cuota {
   String? stCuota;
   int? nuCuota;
   int? inNotificada;
+  String? txReferencia;
   bool? selected;
 
   Cuota({
@@ -26,6 +27,7 @@ class Cuota {
     this.stCuota,
     this.nuCuota,
     this.inNotificada,
+    this.txReferencia,
     this.selected = false,
   });
 
@@ -42,21 +44,21 @@ class Cuota {
         stCuota: json["st_cuota"],
         nuCuota: json["nu_cuota"],
         inNotificada: json["in_notificada"],
+        txReferencia: json["tx_referencia"],
         selected: false,
       );
 
   Map<String, dynamic> toJson() => {
         "id_cuota": idCuota,
         "id_financiamiento": idFinanciamiento,
-        "fe_cuota":
-            "${feCuota!.year.toString().padLeft(4, '0')}-${feCuota!.month.toString().padLeft(2, '0')}-${feCuota!.day.toString().padLeft(2, '0')}",
+        "fe_cuota": feCuota,
         "mo_cuota": moCuota,
-        "fe_pago_cuota":
-            "${fePagoCuota!.year.toString().padLeft(4, '0')}-${fePagoCuota!.month.toString().padLeft(2, '0')}-${fePagoCuota!.day.toString().padLeft(2, '0')}",
+        "fe_pago_cuota": fePagoCuota,
         "mo_total_cuota": moTotalCuota,
         "st_cuota": stCuota,
         "nu_cuota": nuCuota,
         "in_notificada": inNotificada,
+        'tx_referencia': txReferencia,
         "selected": selected,
       };
 }
