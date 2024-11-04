@@ -11,6 +11,7 @@ class ComunesCtrl extends GetxController {
 
   RxBool loading = false.obs;
   RxList<TasaValor> tasas = <TasaValor>[].obs;
+  RxList<Participante> participantes = <Participante>[].obs;
 
   @override
   void onInit() async {
@@ -20,6 +21,7 @@ class ComunesCtrl extends GetxController {
 
   Future<void> getData() async {
     await getTasaValor();
+    await getParticipantes();
   }
 
   Future<void> getTasaValor() async {
@@ -42,8 +44,37 @@ class ComunesCtrl extends GetxController {
             ),
           );
 
-      for (var tasa in response.data['data']) {
-        tasas.add(TasaValor.fromJson(tasa));
+      for (var item in response.data['data']) {
+        tasas.add(TasaValor.fromJson(item));
+      }
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> getParticipantes() async {
+    try {
+      loading.value = true;
+
+      participantes.clear();
+
+      Map<String, dynamic>? queryParameters = {
+        'per_page': '0',
+        'st_participante': 'ACTIVO',
+        'order_by': 'co_participante:desc',
+      };
+
+      final response = await Http().http(showLoading: false).then(
+            (http) => http.get(
+              '${dotenv.env['URL_API_COMUNES']}$urlParticipantes',
+              queryParameters: queryParameters,
+            ),
+          );
+
+      for (var item in response.data['data']) {
+        participantes.add(Participante.fromJson(item));
       }
     } catch (e) {
       debugPrint('$e');

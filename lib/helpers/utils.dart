@@ -40,6 +40,15 @@ class Helper {
         '';
   }
 
+  Future<List?> getAcctTp() async {
+    final resultJson = await readJsonFromLocaly('assets/other/data_form'
+        '.json');
+
+    List? acctpTpJson = resultJson['acct_tp'];
+
+    return acctpTpJson;
+  }
+
   Future<String> getAcctTpLabel(String type) async {
     final resultJson = await readJsonFromLocaly('assets/other/data_form'
         '.json');

@@ -46,4 +46,31 @@ class TiendaCtrl extends GetxController {
       loading.value = false;
     }
   }
+
+  getDataBy({Map<String, dynamic>? queryParameters}) async {
+    try {
+      tienda.value = Tienda();
+
+      queryParameters ??= {};
+
+      queryParameters.addAll({
+        'append': 'credito',
+        'st_empresa': 'ACTIVA',
+        'with': 'empresa_modelo_financiamiento'
+      });
+
+      final response = await Http().http(showLoading: true).then((value) {
+        return value.get(
+          '${dotenv.env['URL_API_MARKET']}$url',
+          queryParameters: queryParameters,
+        );
+      });
+
+      if (response.data['data'] != null) {
+        tienda.value = Tienda.fromJson(response.data['data'][0]);
+      }
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
 }

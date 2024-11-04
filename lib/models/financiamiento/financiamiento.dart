@@ -30,6 +30,7 @@ class Financiamiento {
   String? moInteres;
   dynamic coIdentificacionCliente;
   String? txIdentificacionCliente;
+  String? coIdentificacionEmpresa;
   int? idUsuarioCreador;
   String? moFlat;
   String? pcComisionFlat;
@@ -58,6 +59,7 @@ class Financiamiento {
     this.moInteres,
     this.coIdentificacionCliente,
     this.txIdentificacionCliente,
+    this.coIdentificacionEmpresa,
     this.idUsuarioCreador,
     this.moFlat,
     this.pcComisionFlat,
@@ -93,6 +95,7 @@ class Financiamiento {
         moInteres: json["mo_interes"],
         coIdentificacionCliente: json["co_identificacion_cliente"],
         txIdentificacionCliente: json["tx_identificacion_cliente"],
+        coIdentificacionEmpresa: json["co_identificacion_empresa"],
         idUsuarioCreador: json["id_usuario_creador"],
         moFlat: json["mo_flat"],
         pcComisionFlat: json["pc_comision_flat"],
@@ -124,6 +127,7 @@ class Financiamiento {
         "mo_interes": moInteres,
         "co_identificacion_cliente": coIdentificacionCliente,
         "tx_identificacion_cliente": txIdentificacionCliente,
+        "co_identificacion_empresa": coIdentificacionEmpresa,
         "id_usuario_creador": idUsuarioCreador,
         "mo_flat": moFlat,
         "pc_comision_flat": pcComisionFlat,

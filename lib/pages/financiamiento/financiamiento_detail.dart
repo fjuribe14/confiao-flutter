@@ -1,3 +1,4 @@
+import 'package:confiao/pages/index.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class FinanciamientoDetail extends StatelessWidget {
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
       builder: (ctrl) {
-        Financiamiento item = Get.arguments;
+        Financiamiento item = ctrl.financiamiento.value;
 
         return Column(
           children: [
@@ -36,6 +37,7 @@ class FinanciamientoDetail extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
+                    const TiendaCard(),
                     if (item.cuotas!.isNotEmpty)
                       ...item.cuotas!.map(
                         (cuota) {
@@ -148,7 +150,7 @@ class FinanciamientoDetail extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moCuotasSelected)}',
+                          '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moTotalCuotasSelected)}',
                           maxLines: 1,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
@@ -156,7 +158,7 @@ class FinanciamientoDetail extends StatelessWidget {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moCuotasSelected * tasa)}',
+                          'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moTotalCuotasSelected * tasa)}',
                           maxLines: 1,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
@@ -171,7 +173,10 @@ class FinanciamientoDetail extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: !ctrl.hasCuotasSelectedAndPendientes
                           ? null
-                          : () => ctrl.checkout(item),
+                          : () => ctrl.checkout(
+                                tasa: tasa,
+                                newFinanciamiento: item,
+                              ),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         backgroundColor: Get.theme.colorScheme.primary,

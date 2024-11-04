@@ -1,5 +1,6 @@
 class ApiUrl {
   /// Auth
+  static String authProfile = '/api/v3/users';
   static String authLogin = '/api/v3/auth/login';
   static String authSignup = '/api/v3/auth/signup';
   static String authLogout = '/api/v3/auth/logout';
@@ -7,18 +8,18 @@ class ApiUrl {
   static String authCheckCredentials = '/api/v3/auth/user/credenciales/check';
 
   /// Reset password
-  // Step 1
-  static String authPasswordCreate = '/api/v3/auth/password/create';
-  // Step 2
-  static String authPasswordValidate = '/api/v3/auth/password/validate';
-  // Step 3
   static String authPasswordReset = '/api/v3/auth/password/reset';
+  static String authPasswordCreate = '/api/v3/auth/password/create';
+  static String authPasswordValidate = '/api/v3/auth/password/validate';
 
   /// Businness
   static String apiTienda = '/api/v1/public/tienda';
   static String apiCheckout = '/api/v1/public/confiao/checkout';
 
   /// Notifications
+  static const String apiRestEndPointRegisterDeviceRecent =
+      '/api/v3/dispositivo_reciente';
+  static const String apiRestEndpointDevices = '/api/v3/dispositivo';
   static String apiRegistrarDispositivo = '/api/v2/pna/registrar_dispositivo';
 
   /// Confiao
@@ -30,23 +31,9 @@ class ApiUrl {
       '/api/v1/public/modelo_financiamiento';
 
   /// Pagar
+  static String apiClavePago = "/api/v1/servicios/pagar/clave_pago";
   static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";
-
-  // static String apiRestEndPointActivateRegister =
-  //     '${Environments.apiSeg}/api/v3/auth/signup';
-  // static String apiRestEndPointResentCodeRegister =
-  //     '${Environments.apiSeg}/api/v3/auth/resend_code_register';
-  // static String apiRestEndPointPasswordReset =
-  //     '${Environments.apiSeg}/api/v3/auth/password/reset';
-  // static String apiRestEndPointPasswordResetValidate =
-  //     '${Environments.apiSeg}/api/v3/auth/password/validate';
-
-  // static String apiSegEndPointLoginRefreshProfile =
-  //     '${Environments.apiSeg}/api/v3/users';
-  static const String apiRestEndPointRegisterDeviceRecent =
-      '/api/v3/dispositivo_reciente';
-  // static const String apiRestEndpointDevices =
-  //     '${Environments.apiSeg}/api/v3/dispositivo';
+  static String apiEstatusRequest = "/coremfibp/api/v1/json/bcorec/stsrqt";
 
   /// api comunes
   static const String apiTasaValor = '/api/v1/tasa_valor';

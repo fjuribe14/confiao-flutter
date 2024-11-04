@@ -3,6 +3,7 @@ import 'package:confiao/models/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/controllers/index.dart';
+import 'package:intl/intl.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
@@ -10,8 +11,6 @@ class CheckoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FinanciamientoCtrl financiamientoCtrl = Get.find<FinanciamientoCtrl>();
-
-    debugPrint('${financiamientoCtrl.financiamiento.value.toJson()}');
 
     return GetBuilder<PagoServicioCtrl>(
       init: PagoServicioCtrl(),
@@ -109,15 +108,142 @@ class CheckoutPage extends StatelessWidget {
               ),
             );
           },
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Checkout'),
-            ),
-            body: const SafeArea(
+          child: Obx(() {
+            final tasa = ctrl.tasa.value;
+
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Checkout'),
+              ),
+              body: SafeArea(
                 child: Column(
-              children: [],
-            )),
-          ),
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: SingleChildScrollView(
+                          clipBehavior: Clip.hardEdge,
+                          scrollDirection: Axis.vertical,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Column(
+                            children: [
+                              ...financiamientoCtrl.cuotasSelected.map(
+                                (cuota) => ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                  ),
+                                  title: Text(
+                                    'Cuota #${cuota.nuCuota}'.toCapitalized(),
+                                    style: Get.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: financiamientoCtrl
+                                          .getColorCuota(cuota),
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    Intl()
+                                        .date('dd-MM-yyyy')
+                                        .format(cuota.feCuota!),
+                                    style: Get.textTheme.bodyMedium,
+                                  ),
+                                  trailing: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '\$ ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moTotalCuota!))}',
+                                        textAlign: TextAlign.end,
+                                        style:
+                                            Get.textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(cuota.moTotalCuota!) * tasa)}',
+                                        textAlign: TextAlign.end,
+                                        style: Get.textTheme.bodyMedium,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              'Total'.toCapitalized(),
+                              style: Get.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '\$ ${Helper().getAmountFormatCompletDefault(financiamientoCtrl.moTotalCuotasSelected)}',
+                                  textAlign: TextAlign.end,
+                                  style: Get.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(financiamientoCtrl.moTotalCuotasSelected * tasa)}',
+                                  textAlign: TextAlign.end,
+                                  style: Get.textTheme.bodyMedium,
+                                )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20.0),
+                          ...ctrl.metodosPago.map((e) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await ctrl.checkout(e['type']);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15.0),
+                                    backgroundColor:
+                                        Get.theme.colorScheme.primary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                  ),
+                                  child: Text(
+                                    '${e['label']}',
+                                    style: Get.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Get.theme.colorScheme.onPrimary,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
         );
       },
     );

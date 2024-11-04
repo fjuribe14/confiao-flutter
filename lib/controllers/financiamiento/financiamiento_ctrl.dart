@@ -1,3 +1,4 @@
+import 'package:confiao/controllers/index.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class FinanciamientoCtrl extends GetxController {
   RxList<Financiamiento> data = <Financiamiento>[].obs;
   ScrollController scrollController = ScrollController();
   Rx<Financiamiento> financiamiento = Financiamiento().obs;
+
   List<String> status = <String>['ACEPTADO', 'INACTIVO', 'PENDIENTE'];
 
   @override
@@ -48,6 +50,13 @@ class FinanciamientoCtrl extends GetxController {
       ? cuotas
           .where((item) => item.stCuota == 'PENDIENTE' && item.selected!)
           .map((item) => double.parse('${item.moCuota}'))
+          .reduce((a, b) => a + b)
+      : 0.0;
+
+  double get moTotalCuotasSelected => hasCuotasSelectedAndPendientes
+      ? cuotas
+          .where((item) => item.stCuota == 'PENDIENTE' && item.selected!)
+          .map((item) => double.parse('${item.moTotalCuota}'))
           .reduce((a, b) => a + b)
       : 0.0;
 
@@ -199,10 +208,22 @@ class FinanciamientoCtrl extends GetxController {
     }
   }
 
-  checkout(Financiamiento item) async {
+  checkout({
+    required double tasa,
+    required Financiamiento newFinanciamiento,
+  }) async {
     try {
       loading.value = true;
-      financiamiento.value = item;
+
+      TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
+      PagoServicioCtrl pagoServicioCtrl = Get.put(PagoServicioCtrl());
+
+      pagoServicioCtrl.tasa.value = tasa;
+      financiamiento.value = newFinanciamiento;
+      pagoServicioCtrl.tienda.value = tiendaCtrl.tienda.value;
+      pagoServicioCtrl.moSubTotal.value = moCuotasSelected * tasa;
+      pagoServicioCtrl.moTotal.value = moTotalCuotasSelected * tasa;
+
       Get.toNamed(AppRouteName.checkout);
     } catch (e) {
       debugPrint('$e');

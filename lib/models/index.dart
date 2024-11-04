@@ -6,5 +6,7 @@ export './tasa_valor/tasa_valor.dart';
 export './financiador/financiador.dart';
 export './search/producto/producto.dart';
 export './push_message/push_message.dart';
+export './participante/participante.dart';
+export './solicitud_otp/solicitud_otp.dart';
 export './financiamiento/financiamiento.dart';
 export './modelo_financiamiento/modelo_financiamiento.dart';

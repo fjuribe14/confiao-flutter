@@ -1,3 +1,4 @@
+import 'package:confiao/models/financiamiento/financiamiento.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -98,16 +99,22 @@ class FinanciamientoList extends StatelessWidget {
                         ...ctrl.data.map(
                           (item) => ListTile(
                             dense: true,
-                            onTap: () => Get.bottomSheet(
-                              const FinanciamientoDetail(),
-                              enableDrag: true,
-                              backgroundColor:
-                                  Get.theme.scaffoldBackgroundColor,
-                              settings: RouteSettings(
-                                arguments: item,
-                                name: AppRouteName.financiamientoDetail,
-                              ),
-                            ),
+                            onTap: () {
+                              ctrl.financiamiento.value = item;
+
+                              Get.bottomSheet(
+                                const FinanciamientoDetail(),
+                                enableDrag: true,
+                                backgroundColor:
+                                    Get.theme.scaffoldBackgroundColor,
+                                settings: const RouteSettings(
+                                  name: AppRouteName.financiamientoDetail,
+                                ),
+                              ).whenComplete(() {
+                                debugPrint("whenComplete");
+                                ctrl.financiamiento.value = Financiamiento();
+                              });
+                            },
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 20.0,
                               vertical: 10.0,
