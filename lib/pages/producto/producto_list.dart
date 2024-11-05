@@ -56,11 +56,9 @@ class ProductoList extends StatelessWidget {
                   final idModeloFinanciamiento =
                       tienda.empresaModeloFinanciamiento
                           ?.where((e) {
-                            if (isCredito) {
-                              return e.txTipoModeloFinanciamiento == 'CREDITO';
-                            }
-
-                            return e.txTipoModeloFinanciamiento == 'PUBLICO';
+                            return isCredito
+                                ? e.txTipoModeloFinanciamiento == 'CREDITO'
+                                : e.txTipoModeloFinanciamiento == 'PUBLICO';
                           })
                           .first
                           .idModeloFinanciamiento;

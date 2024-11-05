@@ -27,7 +27,8 @@ class TiendaCtrl extends GetxController {
       Map<String, dynamic>? queryParameters = {
         'append': 'credito',
         'st_empresa': 'ACTIVA',
-        'with': 'empresa_modelo_financiamiento'
+        'bo_financiamiento': true,
+        'with': 'empresa_modelo_financiamiento',
       };
 
       final response = await Http().http(showLoading: false).then(
@@ -56,6 +57,7 @@ class TiendaCtrl extends GetxController {
       queryParameters.addAll({
         'append': 'credito',
         'st_empresa': 'ACTIVA',
+        'bo_financiamiento': true,
         'with': 'empresa_modelo_financiamiento'
       });
 

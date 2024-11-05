@@ -1,15 +1,12 @@
-import 'dart:convert';
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-enum TypeMetodoPago { debitoInmediato, sencillo }
+enum TypeMetodoPago { solicitudClave, debitoInmediato, sencillo }
 
 class PagoServicioCtrl extends GetxController {
   String url = ApiUrl.apiPagarPersonal;
@@ -33,7 +30,7 @@ class PagoServicioCtrl extends GetxController {
     {
       'selected': false,
       'label': 'Débito C2P',
-      'type': TypeMetodoPago.debitoInmediato
+      'type': TypeMetodoPago.solicitudClave
     },
     {'selected': false, 'label': 'R4 Sencillo', 'type': TypeMetodoPago.sencillo}
   ].obs;
@@ -47,7 +44,12 @@ class PagoServicioCtrl extends GetxController {
       final cuotas =
           financiamientoCtrl.cuotasSelected.map((e) => e.idCuota).toList();
 
-      await claimClientData();
+      late bool claimClavePagoResult = false;
+      late bool claimClientDataResult = false;
+
+      if (typePago != TypeMetodoPago.debitoInmediato) {
+        claimClientDataResult = await claimClientData(typePago);
+      }
 
       final data = {
         "id_cuotas": cuotas,
@@ -71,53 +73,86 @@ class PagoServicioCtrl extends GetxController {
       // debugPrint('acctClienteController: ${acctClienteController.text}');
       // debugPrint('coClavePagoController: ${coClavePagoController.text}');
 
-      debugPrint('data: ${jsonEncode(data)}');
-      if (typePago == TypeMetodoPago.debitoInmediato &&
-          coClavePagoController.text.isEmpty) {
+      // debugPrint('claimClientDataResult: $claimClientDataResult');
+      // debugPrint(
+      //     'Validation: ${typePago == TypeMetodoPago.solicitudClave && claimClientDataResult}');
+      // debugPrint('data: ${jsonEncode(data)}');
+
+      if (typePago == TypeMetodoPago.solicitudClave && claimClientDataResult) {
         await Http().http(showLoading: true).then((value) => value.post(
             '${dotenv.env['URL_API_SERVICIO']}$urlClavePago',
             data: data));
+
+        claimClavePagoResult = await claimClavePago();
+
+        // debugPrint('claimClavePagoResult: $claimClavePagoResult');
+
+        if (claimClavePagoResult) {
+          await checkout(TypeMetodoPago.debitoInmediato);
+        }
       } else {
+        // debugPrint('Pagar: ${jsonEncode(data)}');
+
         await Http().http(showLoading: true).then((value) =>
             value.post('${dotenv.env['URL_API_SERVICIO']}$url', data: data));
+
+        Get.offAndToNamed(AppRouteName.home)?.then((value) {
+          AlertService().showSnackBar(
+            title: 'Se ha enviado el pago',
+            body:
+                'Sele enviará una notificación con la respuesta de la operación',
+          );
+        });
       }
     } catch (e) {
       debugPrint('$e');
+    } finally {
+      idClienteController.clear();
+      agtClienteController.clear();
+      acctClienteController.clear();
+      coClavePagoController.clear();
+      schemaAcctClienteController.clear();
     }
   }
 
   Future<dynamic> claimClavePago() async {
-    await Get.dialog(AlertDialog(
-      content: Column(
-        children: [
-          TextField(
-            controller: coClavePagoController,
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              coClavePagoController.text = value.toUpperCase();
-            },
-            decoration: InputDecoration(
-              labelText: 'Clave de pago',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+    return await Get.dialog(AlertDialog(
+      content: SizedBox(
+        width: Get.width * 0.8,
+        height: Get.height * 0.3,
+        child: Column(
+          children: [
+            TextField(
+              controller: coClavePagoController,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                coClavePagoController.text = value.toUpperCase();
+              },
+              decoration: InputDecoration(
+                labelText: 'Clave de pago',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
             ),
-          ),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              checkout(TypeMetodoPago.debitoInmediato);
-            },
-            child: const Text('Continuar'),
-          ),
-        ],
+            const Spacer(),
+            ElevatedButton(
+              onPressed: () => Get.back(result: true),
+              child: const Text('Continuar'),
+            ),
+          ],
+        ),
       ),
     ));
   }
 
-  Future<dynamic> claimClientData() async {
+  Future<dynamic> claimClientData(TypeMetodoPago typePago) async {
     final acctTp = await Helper().getAcctTp();
+
+    if (typePago == TypeMetodoPago.sencillo) {
+      agtClienteController.text = '0169';
+      schemaAcctClienteController.text = 'ALIS';
+    }
 
     return await Get.dialog(
       AlertDialog(
@@ -128,76 +163,85 @@ class PagoServicioCtrl extends GetxController {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              DropdownButtonFormField(
-                isDense: true,
-                hint: const Text('Seleccione Banco'),
-                items: comunesCtrl.participantes.map((e) {
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Text(
-                      '${'${e.coParticipante}'.padLeft(4, '0')} - ${e.txAlias}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              if (typePago != TypeMetodoPago.sencillo)
+                DropdownButtonFormField(
+                  isDense: true,
+                  hint: const Text('Seleccione Banco'),
+                  items: comunesCtrl.participantes.map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(
+                        '${'${e.coParticipante}'.padLeft(4, '0')} - ${e.txAlias}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      agtClienteController.text =
+                          '${value.coParticipante}'.padLeft(4, '0');
+                    }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Banco',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    agtClienteController.text =
-                        '${value.coParticipante}'.padLeft(4, '0');
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: 'Banco',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10.0),
-              DropdownButtonFormField(
-                isDense: true,
-                hint: const Text('Tipo de cuenta'),
-                items: acctTp?.map((e) {
-                  return DropdownMenuItem(
-                    value: e['acct_type'],
-                    child: Text(
-                      '${e['acct_label']}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              if (typePago != TypeMetodoPago.sencillo)
+                const SizedBox(height: 10.0),
+              if (typePago != TypeMetodoPago.sencillo)
+                DropdownButtonFormField(
+                  isDense: true,
+                  hint: const Text('Tipo de cuenta'),
+                  items: acctTp?.map((e) {
+                    return DropdownMenuItem(
+                      value: e['acct_type'],
+                      child: Text(
+                        '${e['acct_label']}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    schemaAcctClienteController.text = '$value';
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Tipo de cuenta',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  schemaAcctClienteController.text = '$value';
-                },
-                decoration: InputDecoration(
-                  labelText: 'Tipo de cuenta',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10.0),
-              TextField(
-                controller: acctClienteController,
-                keyboardType: TextInputType.text,
-                onChanged: (value) {
-                  acctClienteController.text = value.toUpperCase();
-                },
-                decoration: InputDecoration(
-                  labelText: 'Cuenta',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+              if (typePago != TypeMetodoPago.sencillo)
+                const SizedBox(height: 10.0),
+              if (typePago != TypeMetodoPago.sencillo)
+                TextField(
+                  controller: acctClienteController,
+                  keyboardType: TextInputType.text,
+                  onChanged: (value) {
+                    acctClienteController.text = value.toUpperCase();
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Cuenta',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10.0),
+              if (typePago != TypeMetodoPago.sencillo)
+                const SizedBox(height: 10.0),
               TextField(
                 controller: idClienteController,
                 keyboardType: TextInputType.text,
                 onChanged: (value) {
                   idClienteController.text = value.toUpperCase();
+                  if (typePago == TypeMetodoPago.sencillo) {
+                    acctClienteController.text = value.toUpperCase();
+                  }
                 },
                 decoration: InputDecoration(
                   labelText: 'Identidad',
@@ -206,16 +250,31 @@ class PagoServicioCtrl extends GetxController {
                   ),
                 ),
               ),
+              const SizedBox(height: 10.0),
+              if (typePago == TypeMetodoPago.sencillo)
+                TextField(
+                  controller: coClavePagoController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    coClavePagoController.text = value.toUpperCase();
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Clave de pago',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => Get.back(),
+                onPressed: () => Get.back(result: true),
                 child: const Text('Continuar'),
               ),
             ],
           ),
         ),
       ),
-      barrierDismissible: false,
+      barrierDismissible: true,
     );
   }
 }

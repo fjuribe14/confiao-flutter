@@ -1,4 +1,7 @@
 class ApiUrl {
+  static String uriVersion =
+      'https://confiao.sencillo.com.ve/environments/environment.json';
+
   /// Auth
   static String authProfile = '/api/v3/users';
   static String authLogin = '/api/v3/auth/login';

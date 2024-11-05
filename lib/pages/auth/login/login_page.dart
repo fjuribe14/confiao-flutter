@@ -11,6 +11,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(PackageInfoController());
     AuthCtrl ctrl = Get.put(AuthCtrl(), permanent: true);
 
     // Set initial values

@@ -176,8 +176,6 @@ class FinanciamientoCtrl extends GetxController {
             ),
           );
 
-      debugPrint('response.data: ${response.data}');
-
       Map<String, dynamic> dataFinanciamiento = {
         "id_conectado": sub,
         "mo_prestamo": moPrestamo,

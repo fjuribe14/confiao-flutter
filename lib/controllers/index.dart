@@ -13,4 +13,5 @@ export 'notification/notification_ctrl.dart';
 export 'pago_servicio/pago_servicio_ctrl.dart';
 export 'shopping_cart/shopping_cart_ctrl.dart';
 export 'financiamiento/financiamiento_ctrl.dart';
+export 'package_info/package_info.controller.dart';
 export 'modelo_financiamiento/modelo_financiamiento_ctrl.dart';
