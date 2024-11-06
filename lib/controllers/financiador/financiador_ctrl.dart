@@ -42,4 +42,20 @@ class FinanciadorCtrl extends GetxController {
       loading.value = false;
     }
   }
+
+  Future cotizar() async {
+    try {
+      loading.value = true;
+
+      await Http().http(showLoading: true).then((value) => value.post(
+          '${dotenv.env['URL_API_BASE']}$url/solicitar',
+          data: {'id_financiador': 1}));
+
+      await getData();
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
+    }
+  }
 }

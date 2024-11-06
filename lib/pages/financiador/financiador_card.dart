@@ -62,8 +62,8 @@ class FinanciadorCard extends StatelessWidget {
               return SizedBox(
                 width: double.infinity,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -85,45 +85,60 @@ class FinanciadorCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        item.inAfiliado!
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                    item.inAfiliado!
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}'))}',
+                                textAlign: TextAlign.end,
+                                style: Get.textTheme.titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              if (tasa > 0)
+                                Text(
+                                    'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * tasa)}',
+                                    textAlign: TextAlign.end,
+                                    style: Get.textTheme.titleSmall)
+                            ],
+                          )
+                        : InkWell(
+                            onTap: () async => await ctrl.cotizar(),
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Get.theme.primaryColor,
+                                      Get.theme.colorScheme.secondary,
+                                    ],
+                                  )),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}'))}',
-                                    textAlign: TextAlign.end,
-                                    style: Get.textTheme.titleLarge
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  if (tasa > 0)
-                                    Text(
-                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}') * tasa)}',
-                                        textAlign: TextAlign.end,
-                                        style: Get.textTheme.titleSmall)
-                                ],
-                              )
-                            : Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Get.theme.colorScheme.primary,
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    'Cotizar',
-                                    style: Get.textTheme.bodyLarge?.copyWith(
+                                    'Te damos la bienvenida a Confio',
+                                    textAlign: TextAlign.start,
+                                    style: Get.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
                                       color: Get.theme.colorScheme.onPrimary,
                                     ),
                                   ),
-                                ),
+                                  Text(
+                                    'Cotiza tu financiamiento dando clic aquí',
+                                    style: Get.textTheme.titleSmall?.copyWith(
+                                      color: Get.theme.colorScheme.onPrimary,
+                                    ),
+                                  ),
+                                ],
                               ),
-                      ],
-                    ),
+                            ),
+                          ),
                     if (item.inAfiliado!) const SizedBox(height: 10.0),
                     if (item.inAfiliado!)
                       LinearProgressIndicator(

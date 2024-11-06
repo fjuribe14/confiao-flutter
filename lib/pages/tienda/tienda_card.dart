@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/controllers/index.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TiendaCard extends StatelessWidget {
   const TiendaCard({super.key});
@@ -68,18 +68,27 @@ class TiendaCard extends StatelessWidget {
                       },
                     ),
                     const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${ctrl.tienda.value.nbEmpresa}',
-                          style: Get.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${ctrl.tienda.value.nbEmpresa}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Get.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text('${ctrl.tienda.value.coIdentificacion}'),
-                      ],
+                          Text(
+                            '${ctrl.tienda.value.coIdentificacion}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

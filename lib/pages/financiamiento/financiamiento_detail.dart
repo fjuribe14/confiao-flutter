@@ -1,7 +1,7 @@
-import 'package:confiao/pages/index.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:confiao/pages/index.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
