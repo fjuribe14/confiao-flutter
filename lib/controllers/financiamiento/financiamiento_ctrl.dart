@@ -38,24 +38,24 @@ class FinanciamientoCtrl extends GetxController {
   get totalCuotas => cuotas.length;
 
   List<Cuota> get cuotasPendientes =>
-      cuotas.where((item) => item.stCuota == 'PENDIENTE').toList();
+      cuotas.where((item) => item.stCuota != 'PAGADA').toList();
 
   List<Cuota> get cuotasSelected =>
       cuotas.where((item) => item.selected!).toList();
 
   bool get hasCuotasSelectedAndPendientes =>
-      cuotas.any((item) => item.stCuota == 'PENDIENTE' && item.selected!);
+      cuotas.any((item) => item.stCuota != 'PAGADA' && item.selected!);
 
   double get moCuotasSelected => hasCuotasSelectedAndPendientes
       ? cuotas
-          .where((item) => item.stCuota == 'PENDIENTE' && item.selected!)
+          .where((item) => item.stCuota != 'PAGADA' && item.selected!)
           .map((item) => double.parse('${item.moCuota}'))
           .reduce((a, b) => a + b)
       : 0.0;
 
   double get moTotalCuotasSelected => hasCuotasSelectedAndPendientes
       ? cuotas
-          .where((item) => item.stCuota == 'PENDIENTE' && item.selected!)
+          .where((item) => item.stCuota != 'PAGADA' && item.selected!)
           .map((item) => double.parse('${item.moTotalCuota}'))
           .reduce((a, b) => a + b)
       : 0.0;
@@ -100,7 +100,8 @@ class FinanciamientoCtrl extends GetxController {
   hasCuotaDia(DateTime fecha) {
     return cuotas.any((item) {
       return DateFormat('dd-MM-yyyy').format(item.feCuota!) ==
-          DateFormat('dd-MM-yyyy').format(fecha);
+              DateFormat('dd-MM-yyyy').format(fecha) &&
+          ['PENDIENTE', 'VENCIDA'].contains(item.stCuota);
     });
   }
 
@@ -111,15 +112,19 @@ class FinanciamientoCtrl extends GetxController {
       data.clear();
       cuotas.clear();
 
+      AuthCtrl authCtrl = Get.find<AuthCtrl>();
+
       Map<String, dynamic>? queryParameters = {
         'per_page': 0,
         'with': 'cuotas',
         'order_by': 'id_financiamiento:desc',
         'st_financiamiento': status[statusSelected.value],
+        'tx_identificacion_cliente':
+            authCtrl.currentUser?.txAtributo['co_identificacion'],
       };
 
       final response = await Http().http(showLoading: false).then((http) =>
-          http.get('${dotenv.env['URL_API_BASE']}$url',
+          http.get('${dotenv.env['URL_API_BASE']}$urlPublic/consultar',
               queryParameters: queryParameters));
 
       for (var item in response.data['data']) {

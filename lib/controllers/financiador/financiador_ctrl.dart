@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:confiao/controllers/auth/auth_ctrl.dart';
 
 class FinanciadorCtrl extends GetxController {
   String url = ApiUrl.apiFinanciador;
 
   RxBool loading = false.obs;
+  AuthCtrl authCtrl = Get.find<AuthCtrl>();
   RxList<Financiador> data = <Financiador>[].obs;
 
   @override
@@ -25,6 +27,8 @@ class FinanciadorCtrl extends GetxController {
       Map<String, String> queryParameters = {
         'st_financiador': 'ACTIVO',
         'append': 'in_afiliado,limite_cliente',
+        'tx_identificacion_cliente':
+            authCtrl.currentUser?.txAtributo['co_identificacion'],
       };
 
       final response = await Http().http(showLoading: false).then((value) =>
@@ -47,9 +51,12 @@ class FinanciadorCtrl extends GetxController {
     try {
       loading.value = true;
 
-      await Http().http(showLoading: true).then((value) => value.post(
-          '${dotenv.env['URL_API_BASE']}$url/solicitar',
-          data: {'id_financiador': 1}));
+      await Http().http(showLoading: true).then((value) =>
+          value.post('${dotenv.env['URL_API_BASE']}$url/solicitar', data: {
+            'id_financiador': 1,
+            'tx_identificacion_cliente':
+                authCtrl.currentUser?.txAtributo['co_identificacion'],
+          }));
 
       await getData();
     } catch (e) {

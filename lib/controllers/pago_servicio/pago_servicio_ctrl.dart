@@ -96,16 +96,23 @@ class PagoServicioCtrl extends GetxController {
         await Http().http(showLoading: true).then((value) =>
             value.post('${dotenv.env['URL_API_SERVICIO']}$url', data: data));
 
-        Get.offAndToNamed(AppRouteName.home)?.then((value) {
-          AlertService().showSnackBar(
-            title: 'Se ha enviado el pago',
-            body:
-                'Sele enviará una notificación con la respuesta de la operación',
-          );
-        });
+        AlertService().showSnackBar(
+          title: 'Se ha enviado el pago',
+          body:
+              'Se le enviará una notificación con la respuesta de la operación',
+        );
+
+        Get.offAndToNamed(AppRouteName.home);
       }
     } catch (e) {
       debugPrint('$e');
+
+      AlertService().showSnackBar(
+        title: 'Ha ocurrido un error',
+        body: 'Intente nuevamente, por favor.',
+      );
+
+      Get.back(result: false);
     } finally {
       idClienteController.clear();
       agtClienteController.clear();
@@ -133,6 +140,7 @@ class PagoServicioCtrl extends GetxController {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
+                hintText: 'Ingrese clave de pago',
               ),
             ),
             const Spacer(),
@@ -230,6 +238,7 @@ class PagoServicioCtrl extends GetxController {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
+                    hintText: '042412345678, 0169123456..., etc.',
                   ),
                 ),
               if (typePago != TypeMetodoPago.sencillo)
@@ -248,6 +257,7 @@ class PagoServicioCtrl extends GetxController {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
+                  hintText: 'V12345678, E12345678, etc.',
                 ),
               ),
               const SizedBox(height: 10.0),

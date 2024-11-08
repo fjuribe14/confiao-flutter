@@ -231,7 +231,7 @@ class TiendaDetail extends StatelessWidget {
                                           label: Text(
                                             searchCtrl.isCredito.value
                                                 ? 'Volver'
-                                                : 'Céditos',
+                                                : 'Créditos',
                                             style: Get.textTheme.titleMedium
                                                 ?.copyWith(
                                               fontWeight: FontWeight.bold,

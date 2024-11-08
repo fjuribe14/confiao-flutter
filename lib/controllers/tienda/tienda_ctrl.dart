@@ -27,7 +27,6 @@ class TiendaCtrl extends GetxController {
       Map<String, dynamic>? queryParameters = {
         'append': 'credito',
         'st_empresa': 'ACTIVA',
-        'bo_financiamiento': true,
         'with': 'empresa_modelo_financiamiento',
       };
 

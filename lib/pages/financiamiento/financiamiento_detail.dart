@@ -65,7 +65,6 @@ class FinanciamientoDetail extends StatelessWidget {
                                     ctrl.update();
                                   }
                                 : () {
-                                    // Get.back();
                                     Get.dialog(
                                       AlertDialog(
                                         title: Text(
