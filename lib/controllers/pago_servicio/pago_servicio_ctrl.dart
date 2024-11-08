@@ -234,7 +234,7 @@ class PagoServicioCtrl extends GetxController {
                     acctClienteController.text = value.toUpperCase();
                   },
                   decoration: InputDecoration(
-                    labelText: 'Cuenta',
+                    labelText: 'Número',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),

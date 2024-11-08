@@ -157,6 +157,7 @@ class FinanciamientoCtrl extends GetxController {
 
       final user = await Helper().getUser();
       final sub = await Helper().getTokenSub();
+      final inFinancia = productos.first.inFinancia;
 
       Map<String, dynamic> dataCheckout = {
         "id_usuario": sub,
@@ -183,6 +184,7 @@ class FinanciamientoCtrl extends GetxController {
 
       Map<String, dynamic> dataFinanciamiento = {
         "id_conectado": sub,
+        'in_credito': inFinancia,
         "mo_prestamo": moPrestamo,
         "nu_documento": response.data['id_factura'],
         "id_modelo_financiamiento": idModeloFinanciamiento,
@@ -198,14 +200,18 @@ class FinanciamientoCtrl extends GetxController {
             ),
           );
 
-      Get.offAndToNamed(AppRouteName.home)?.then((value) {
-        AlertService().showSnackBar(
-          title: 'Felicidades 🎉',
-          body: 'Se ha creado el financiamiento',
-        );
-      });
+      AlertService().showSnackBar(
+        title: 'Felicidades 🎉',
+        body: 'Se ha creado el financiamiento',
+      );
+
+      Get.offAndToNamed(AppRouteName.home);
     } catch (e) {
       debugPrint('$e');
+      AlertService().showSnackBar(
+        title: 'Error',
+        body: 'Por favor intenta nuevamente, más tarde',
+      );
     } finally {
       loading.value = false;
     }

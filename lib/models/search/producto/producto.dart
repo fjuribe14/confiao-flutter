@@ -19,6 +19,7 @@ class SearchProducto {
   String? moMonto;
   int? idSucursal;
   String? nbSucursal;
+  bool? inFinancia;
   int caSelected;
   double moMontoSelected;
 
@@ -36,6 +37,7 @@ class SearchProducto {
     this.moMonto,
     this.idSucursal,
     this.nbSucursal,
+    this.inFinancia,
     this.caSelected = 0,
     this.moMontoSelected = 0.0,
   });
@@ -54,6 +56,7 @@ class SearchProducto {
         moMonto: json["mo_monto"],
         idSucursal: json["id_sucursal"],
         nbSucursal: json["nb_sucursal"],
+        inFinancia: json["in_financia"],
         caSelected: 0,
         moMontoSelected: double.parse(json["mo_monto"] ?? '0.0'),
       );
@@ -72,6 +75,7 @@ class SearchProducto {
         "mo_monto": moMonto,
         "id_sucursal": idSucursal,
         "nb_sucursal": nbSucursal,
+        "in_financia": inFinancia,
         "ca_selected": caSelected,
         "mo_monto_selected": moMontoSelected,
       };
