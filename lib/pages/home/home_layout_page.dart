@@ -13,13 +13,15 @@ class HomeLayoutPage extends StatelessWidget {
     Get.put(PermissionsCtrl(), permanent: true);
     final notificationCtrl = Get.put(NotificationCtrl(), permanent: true);
 
+    final PageController pageController = PageController();
+
     return GetBuilder<HomeCtrl>(
       init: HomeCtrl(),
       builder: (ctrl) => Obx(() {
         return Scaffold(
           body: PageView(
             allowImplicitScrolling: false,
-            controller: ctrl.pageController,
+            controller: pageController,
             scrollDirection: Axis.horizontal,
             scrollBehavior: const ScrollBehavior(),
             physics: const NeverScrollableScrollPhysics(),
@@ -30,7 +32,7 @@ class HomeLayoutPage extends StatelessWidget {
             selectedIndex: ctrl.currentPage.value,
             onItemSelected: (index) {
               ctrl.currentPage.value = index;
-              ctrl.pageController.animateToPage(
+              pageController.animateToPage(
                 ctrl.currentPage.value,
                 curve: Curves.easeOutCirc,
                 duration: const Duration(milliseconds: 500),

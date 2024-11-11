@@ -63,7 +63,7 @@ class ComunesCtrl extends GetxController {
       Map<String, dynamic>? queryParameters = {
         'per_page': '0',
         'st_participante': 'ACTIVO',
-        'order_by': 'co_participante:desc',
+        'order_by': 'tx_alias:asc',
       };
 
       final response = await Http().http(showLoading: false).then(

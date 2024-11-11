@@ -24,6 +24,9 @@ class TiendaCard extends StatelessWidget {
           width: double.infinity,
           child: Obx(
             () {
+              if (ctrl.loading.value &&
+                  ctrl.tienda.value.coIdentificacion == null) {}
+
               if (ctrl.tienda.value.coIdentificacion == null) {
                 return Shimmer.fromColors(
                   baseColor: Get.theme.colorScheme.surfaceContainerHigh,

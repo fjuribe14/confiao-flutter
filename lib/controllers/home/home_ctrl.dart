@@ -6,8 +6,6 @@ import 'package:confiao/pages/settings/settings_page.dart';
 class HomeCtrl extends GetxController {
   RxInt currentPage = 0.obs;
 
-  final PageController pageController = PageController();
-
   List<Widget> pages = [
     const HomePage(),
     const NotificationsList(),

@@ -50,19 +50,20 @@ class OnboardingCtrl extends GetxController {
   void onInit() async {
     // await secureStorage.write(
     //     key: StorageKeys.storageItemOnboarding, value: 'false');
-    Future.delayed(
-      const Duration(seconds: 2),
-      () => secureStorage.read(key: StorageKeys.storageItemOnboarding).then(
-        (value) {
-          //
-          if (value == 'true') {
-            Get.offAllNamed(AppRouteName.authLogin);
-          } else {
-            viewed.value = false;
-            loading.value = false;
-          }
-        },
-      ),
+    // Future.delayed(
+    //   const Duration(seconds: 2),
+    //   () =>
+    // );
+    secureStorage.read(key: StorageKeys.storageItemOnboarding).then(
+      (value) {
+        //
+        if (value == 'true') {
+          Get.offAllNamed(AppRouteName.authLogin);
+        } else {
+          viewed.value = false;
+          loading.value = false;
+        }
+      },
     );
 
     super.onInit();

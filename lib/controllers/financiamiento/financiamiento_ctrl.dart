@@ -205,7 +205,7 @@ class FinanciamientoCtrl extends GetxController {
         body: 'Se ha creado el financiamiento',
       );
 
-      Get.offAndToNamed(AppRouteName.home);
+      Get.offAndToNamed(AppRouteName.onboarding);
     } catch (e) {
       debugPrint('$e');
       AlertService().showSnackBar(

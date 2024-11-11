@@ -1,3 +1,5 @@
+// import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class PagoServicioCtrl extends GetxController {
   RxDouble moSubTotal = 0.0.obs;
   String uuid = const Uuid().v4();
   Rx<Tienda> tienda = Tienda().obs;
+  AuthCtrl authCtrl = Get.find<AuthCtrl>();
   ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
   FinanciamientoCtrl financiamientoCtrl = Get.find<FinanciamientoCtrl>();
 
@@ -29,7 +32,7 @@ class PagoServicioCtrl extends GetxController {
   List<Map<String, dynamic>> metodosPago = [
     {
       'selected': false,
-      'label': 'Débito C2P',
+      'label': 'Débito Inmediato',
       'type': TypeMetodoPago.solicitudClave
     },
     {'selected': false, 'label': 'R4 Sencillo', 'type': TypeMetodoPago.sencillo}
@@ -45,27 +48,37 @@ class PagoServicioCtrl extends GetxController {
           financiamientoCtrl.cuotasSelected.map((e) => e.idCuota).toList();
 
       late bool claimClavePagoResult = false;
+      late bool verificationByClient = false;
       late bool claimClientDataResult = false;
 
-      if (typePago != TypeMetodoPago.debitoInmediato) {
+      if (![TypeMetodoPago.debitoInmediato, TypeMetodoPago.sencillo]
+          .contains(typePago)) {
         claimClientDataResult = await claimClientData(typePago);
+      }
+
+      final coIdentificacion =
+          authCtrl.currentUser?.txAtributo['co_identificacion'];
+
+      if (idClienteController.text.isEmpty) {
+        idClienteController.text = coIdentificacion;
       }
 
       final data = {
         "id_cuotas": cuotas,
         "co_producto": "050",
         "tx_referencia": uuid,
-        "co_sub_producto": "002",
         "mo_monto": moTotal.value,
-        "nb_cliente": tienda.value.nbEmpresa,
         "id_cliente": idClienteController.text,
+        "nb_cliente": authCtrl.currentUser?.name,
         "agt_cliente": agtClienteController.text,
         "acct_cliente": acctClienteController.text,
         "co_clave_pago": coClavePagoController.text,
+        "tx_concepto": "Pago de Cuotas ${cuotas.join(', ')}",
         "co_servicio": financiamiento.coIdentificacionEmpresa,
         "schema_acct_cliente": schemaAcctClienteController.text,
-        "schema_id_cliente":
+        'schema_id_cliente':
             await Helper().getSchemeName(idClienteController.text),
+        "co_sub_producto": TypeMetodoPago.sencillo == typePago ? "003" : "002",
       };
 
       // debugPrint('idClienteController: ${idClienteController.text}');
@@ -93,16 +106,22 @@ class PagoServicioCtrl extends GetxController {
       } else {
         // debugPrint('Pagar: ${jsonEncode(data)}');
 
-        await Http().http(showLoading: true).then((value) =>
-            value.post('${dotenv.env['URL_API_SERVICIO']}$url', data: data));
+        verificationByClient = await getVerificationByClient();
 
-        AlertService().showSnackBar(
-          title: 'Se ha enviado el pago',
-          body:
-              'Se le enviará una notificación con la respuesta de la operación',
-        );
+        // debugPrint('verificationByClient: $verificationByClient');
 
-        Get.offAndToNamed(AppRouteName.home);
+        if (verificationByClient) {
+          await Http().http(showLoading: true).then((value) =>
+              value.post('${dotenv.env['URL_API_SERVICIO']}$url', data: data));
+
+          AlertService().showSnackBar(
+            title: 'Se ha enviado el pago',
+            body:
+                'Se le enviará una notificación con la respuesta de la operación.',
+          );
+
+          Get.offAndToNamed(AppRouteName.onboarding);
+        }
       }
     } catch (e) {
       debugPrint('$e');
@@ -144,9 +163,32 @@ class PagoServicioCtrl extends GetxController {
               ),
             ),
             const Spacer(),
-            ElevatedButton(
-              onPressed: () => Get.back(result: true),
-              child: const Text('Continuar'),
+            InkWell(
+              onTap: () => Get.back(result: true),
+              child: Container(
+                width: double.infinity,
+                height: Get.height * 0.075,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Get.theme.primaryColor,
+                      Get.theme.colorScheme.secondary,
+                    ],
+                    end: Alignment.topRight,
+                    begin: Alignment.bottomLeft,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Text(
+                    'Enviar pago',
+                    style: Get.textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -276,15 +318,126 @@ class PagoServicioCtrl extends GetxController {
                   ),
                 ),
               const Spacer(),
-              ElevatedButton(
-                onPressed: () => Get.back(result: true),
-                child: const Text('Continuar'),
+              InkWell(
+                onTap: () => Get.back(result: true),
+                child: Container(
+                  width: double.infinity,
+                  height: Get.height * 0.075,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Get.theme.primaryColor,
+                        Get.theme.colorScheme.secondary,
+                      ],
+                      end: Alignment.topRight,
+                      begin: Alignment.bottomLeft,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Continuar',
+                      style: Get.textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
       barrierDismissible: true,
+    );
+  }
+
+  Future<bool> getVerificationByClient() async {
+    final financiamiento = financiamientoCtrl.financiamiento.value;
+    final cuotas =
+        financiamientoCtrl.cuotasSelected.map((e) => e.idCuota).toList();
+
+    return await Get.dialog(
+      barrierDismissible: false,
+      AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        actionsPadding: const EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+          bottom: 16.0,
+        ),
+        titlePadding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+        title: Text(
+          '¿ Seguro que desea realizar este pago ?',
+          textAlign: TextAlign.center,
+          style: Get.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'Pagará el financiamiento #${financiamiento.idFinanciamiento} con (${cuotas.length}) cuotas.',
+          textAlign: TextAlign.center,
+          style: Get.textTheme.bodyMedium,
+        ),
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => Get.back(result: false),
+                  child: Container(
+                    width: double.infinity,
+                    height: Get.height * 0.075,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Get.theme.primaryColor.withOpacity(0.1),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Cancelar',
+                        style: Get.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: InkWell(
+                  onTap: () => Get.back(result: true),
+                  child: Container(
+                    width: double.infinity,
+                    height: Get.height * 0.075,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Get.theme.primaryColor,
+                          Get.theme.colorScheme.secondary,
+                        ],
+                        end: Alignment.topRight,
+                        begin: Alignment.bottomLeft,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Continuar',
+                        style: Get.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

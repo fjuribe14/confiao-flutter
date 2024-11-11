@@ -1,9 +1,9 @@
-import 'package:confiao/helpers/index.dart';
-import 'package:confiao/models/index.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:confiao/controllers/index.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:confiao/models/index.dart';
+import 'package:confiao/helpers/index.dart';
+import 'package:confiao/controllers/index.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
