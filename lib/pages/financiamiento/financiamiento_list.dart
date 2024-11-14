@@ -43,49 +43,77 @@ class FinanciamientoList extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     children: [
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: ctrl.status.length,
-                          scrollDirection: Axis.horizontal,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(width: 10.0),
-                          itemBuilder: (context, index) {
-                            String item = ctrl.status[index];
-                            bool itemSelected =
-                                ctrl.statusSelected.value == index;
+                      Row(children: [
+                        Expanded(
+                          child: Container(
+                            height: 50,
+                            width: double.infinity,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: ctrl.status.length,
+                              scrollDirection: Axis.horizontal,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(width: 10.0),
+                              itemBuilder: (context, index) {
+                                String item = ctrl.status[index];
+                                bool itemSelected =
+                                    ctrl.statusSelected.value == index;
 
-                            return GestureDetector(
-                              onTap: () {
-                                ctrl.statusSelected.value = index;
-                                ctrl.getData();
-                              },
-                              child: Chip(
-                                clipBehavior: Clip.antiAlias,
-                                label: Text(
-                                  item.toCapitalized(),
-                                  style: Get.textTheme.bodyMedium?.copyWith(
-                                    color: itemSelected
-                                        ? Get.theme.colorScheme.onPrimary
-                                        : Get.theme.colorScheme.onSurface,
+                                return GestureDetector(
+                                  onTap: () {
+                                    ctrl.showHistorial.value = false;
+                                    ctrl.statusSelected.value = index;
+                                    ctrl.getData();
+                                  },
+                                  child: Chip(
+                                    clipBehavior: Clip.antiAlias,
+                                    label: Text(
+                                      item.toCapitalized(),
+                                      style: Get.textTheme.bodyMedium?.copyWith(
+                                        color: itemSelected
+                                            ? Get.theme.colorScheme.onPrimary
+                                            : Get.theme.colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    backgroundColor: itemSelected
+                                        ? Get.theme.colorScheme.primary
+                                        : Get.theme.colorScheme.onPrimary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    side: BorderSide(
+                                        color: Get.theme.colorScheme.primary),
                                   ),
-                                ),
-                                backgroundColor: itemSelected
-                                    ? Get.theme.colorScheme.primary
-                                    : Get.theme.colorScheme.onPrimary,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                side: BorderSide(
-                                    color: Get.theme.colorScheme.primary),
-                              ),
-                            );
-                          },
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 20.0),
+                        IconButton(
+                          onPressed: () {
+                            ctrl.showHistorial.value =
+                                !ctrl.showHistorial.value;
+                            ctrl.statusSelected.value = 0;
+                            ctrl.getData();
+                          },
+                          style: IconButton.styleFrom(
+                            backgroundColor: ctrl.showHistorial.isTrue
+                                ? Get.theme.colorScheme.primary
+                                : Get.theme.colorScheme.onPrimary,
+                          ),
+                          icon: Icon(
+                            Icons.history_rounded,
+                            color: ctrl.showHistorial.isTrue
+                                ? Get.theme.colorScheme.onPrimary
+                                : Get.theme.colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 20.0),
+                      ]),
                       const SizedBox(height: 20.0),
                       if (ctrl.loading.isTrue)
                         SizedBox(
@@ -96,7 +124,10 @@ class FinanciamientoList extends StatelessWidget {
                           ),
                         ),
                       if (ctrl.loading.isFalse)
-                        ...ctrl.data.map(
+                        ...(ctrl.showHistorial.isTrue
+                                ? ctrl.dataHistorial
+                                : ctrl.data)
+                            .map(
                           (item) => ListTile(
                             dense: true,
                             onTap: () {
@@ -176,7 +207,7 @@ class FinanciamientoList extends StatelessWidget {
                 ),
               ),
               floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
+                  FloatingActionButtonLocation.centerFloat,
               floatingActionButton: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

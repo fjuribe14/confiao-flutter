@@ -16,6 +16,14 @@ class ShoppingCartPage extends StatelessWidget {
       builder: (ctrl) {
         List<Map<String, dynamic>> cuotas = [];
 
+        // Producto de crédito
+        final bool inFinancia = ctrl.data.first.inFinancia ?? false;
+
+        // Financiador
+        FinanciadorCtrl financiadorCtrl = Get.find<FinanciadorCtrl>();
+        final moDisponible = double.parse(
+            financiadorCtrl.data.first.limiteCliente?.moDisponible ?? '0.0');
+
         // Tienda
         TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
         Tienda tienda = tiendaCtrl.tienda.value;
@@ -52,6 +60,7 @@ class ShoppingCartPage extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
+              title: const Text('Carrito de compras'),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 15.0),
@@ -75,6 +84,28 @@ class ShoppingCartPage extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Get.theme.colorScheme.surfaceContainer,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Disponible'),
+                          Text(
+                            '\$ ${Helper().getAmountFormatCompletDefault(moDisponible)}',
+                            style: Get.theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
                     ListView.separated(
                       shrinkWrap: true,
                       itemCount: ctrl.data.length,
@@ -490,17 +521,19 @@ class ShoppingCartPage extends StatelessWidget {
                           flex: 3,
                           child: ElevatedButton(
                             onPressed: () async {
-                              await Get.put(FinanciamientoCtrl())
-                                  .crearFinanciamiento(
-                                productos: ctrl.data,
-                                moPrestamo: ctrl.moTotal,
-                                idEmpresa: tienda.idEmpresa!,
-                                nbEmpresa: tienda.nbEmpresa!,
-                                coIdentificacionEmpresa:
-                                    tienda.coIdentificacion!,
-                                idModeloFinanciamiento: modeloFinanciamiento
-                                    .idModeloFinanciamiento!,
-                              );
+                              if (moDisponible.isGreaterThan(ctrl.moTotal)) {
+                                await Get.put(FinanciamientoCtrl())
+                                    .crearFinanciamiento(
+                                  productos: ctrl.data,
+                                  moPrestamo: ctrl.moTotal,
+                                  idEmpresa: tienda.idEmpresa!,
+                                  nbEmpresa: tienda.nbEmpresa!,
+                                  coIdentificacionEmpresa:
+                                      tienda.coIdentificacion!,
+                                  idModeloFinanciamiento: modeloFinanciamiento
+                                      .idModeloFinanciamiento!,
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               padding:
@@ -511,7 +544,7 @@ class ShoppingCartPage extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              'Continuar',
+                              inFinancia ? 'Solicitar' : 'Finalizar',
                               style: Get.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Get.theme.colorScheme.onPrimary,

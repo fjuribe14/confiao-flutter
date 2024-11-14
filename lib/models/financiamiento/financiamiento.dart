@@ -34,7 +34,9 @@ class Financiamiento {
   int? idUsuarioCreador;
   String? moFlat;
   String? pcComisionFlat;
+  bool? inCredito;
   List<Cuota>? cuotas;
+  bool? hasCuotasPendientes;
 
   Financiamiento({
     this.idFinanciamiento,
@@ -63,7 +65,9 @@ class Financiamiento {
     this.idUsuarioCreador,
     this.moFlat,
     this.pcComisionFlat,
+    this.inCredito,
     this.cuotas,
+    this.hasCuotasPendientes,
   });
 
   factory Financiamiento.fromJson(Map<String, dynamic> json) => Financiamiento(
@@ -98,10 +102,15 @@ class Financiamiento {
         coIdentificacionEmpresa: json["co_identificacion_empresa"],
         idUsuarioCreador: json["id_usuario_creador"],
         moFlat: json["mo_flat"],
+        inCredito: json["in_credito"],
         pcComisionFlat: json["pc_comision_flat"],
         cuotas: json["cuotas"] == null
             ? []
             : List<Cuota>.from(json["cuotas"]!.map((x) => Cuota.fromJson(x))),
+        hasCuotasPendientes: json["cuotas"] == null
+            ? false
+            : List<Cuota>.from(json["cuotas"]!.map((x) => Cuota.fromJson(x)))
+                .any((x) => ['PENDIENTE', 'VENCIDA'].contains(x.stCuota)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -130,6 +139,7 @@ class Financiamiento {
         "co_identificacion_empresa": coIdentificacionEmpresa,
         "id_usuario_creador": idUsuarioCreador,
         "mo_flat": moFlat,
+        'in_credito': inCredito,
         "pc_comision_flat": pcComisionFlat,
         "cuotas": cuotas == null
             ? []

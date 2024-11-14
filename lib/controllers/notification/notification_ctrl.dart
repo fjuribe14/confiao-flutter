@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
@@ -46,23 +47,22 @@ class NotificationCtrl extends GetxController {
 
       debugPrint('fcmToken: $fcmToken');
 
-      await Http().http(showLoading: false).then(
-        (http) async {
-          var deviceInfo = await DeviceInfoService().getDeviceInfo;
-          final authCtrl = Get.find<AuthCtrl>();
+      var deviceInfo = await DeviceInfoService().getDeviceInfo;
+      final authCtrl = Get.find<AuthCtrl>();
 
-          await http.post(
-            '${dotenv.env['URL_API_GTW']}${ApiUrl.apiRegistrarDispositivo}',
-            data: {
-              "tx_data": '',
-              "nb_servicio": 'CONFIAO',
-              "tx_token_firebase": fcmToken,
-              "tx_usuario": authCtrl.currentUser?.username,
-              "co_dispositivo": Platform.isAndroid
-                  ? deviceInfo['id']
-                  : deviceInfo['identifierForVendor'],
-            },
-          );
+      await Dio().post(
+        '${dotenv.env['URL_API_GTW']}${ApiUrl.apiRegistrarDispositivo}',
+        options: Options(contentType: 'application/json', headers: {
+          'Authorization': 'Bearer ${await Helper().getToken()}',
+        }),
+        data: {
+          "tx_data": '',
+          "nb_servicio": 'CONFIAO',
+          "tx_token_firebase": fcmToken,
+          "tx_usuario": authCtrl.currentUser?.username,
+          "co_dispositivo": Platform.isAndroid
+              ? deviceInfo['id']
+              : deviceInfo['identifierForVendor'],
         },
       );
 

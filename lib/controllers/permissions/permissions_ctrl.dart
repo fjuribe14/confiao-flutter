@@ -37,6 +37,10 @@ class PermissionsCtrl extends GetxController {
   }
 
   requestPermissionNotifications() async {
-    await notificationCtrl.requestPermissions();
+    try {
+      await notificationCtrl.requestPermissions();
+    } catch (e) {
+      debugPrint('$e');
+    }
   }
 }

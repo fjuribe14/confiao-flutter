@@ -37,9 +37,8 @@ class FinanciamientoCard extends StatelessWidget {
           }
 
           return Container(
-            color: Get.theme.colorScheme.surfaceContainerLow,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            color: Get.theme.colorScheme.surfaceContainerLowest,
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,30 +52,35 @@ class FinanciamientoCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Adelanta y gana',
-                          style: Get.textTheme.titleMedium,
+                          '⭐ Adelanta y gana',
+                          style: Get.textTheme.titleSmall,
                         ),
+                        const SizedBox(height: 5.0),
                         Text(
                           '(${ctrl.cuotasPendientes.length}) Cuotas pendientes',
-                          style: Get.textTheme.titleSmall,
+                          style: Get.textTheme.bodySmall,
                         ),
                       ],
                     ),
                     const Spacer(),
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       onPressed: () {
                         Get.toNamed(AppRouteName.financiamientoList);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Get.theme.colorScheme.primary,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.all(0.0),
+                        backgroundColor: Colors.transparent,
                       ),
-                      child: Text(
-                        'Pagar',
+                      iconAlignment: IconAlignment.end,
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: Get.textTheme.titleSmall?.fontSize,
+                      ),
+                      label: Text(
+                        'Ver todos',
                         style: Get.textTheme.titleSmall?.copyWith(
-                          color: Get.theme.colorScheme.onPrimary,
+                          color: Get.theme.colorScheme.primary,
                         ),
                       ),
                     )

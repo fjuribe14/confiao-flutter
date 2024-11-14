@@ -17,9 +17,9 @@ class FinanciamientoDetail extends StatelessWidget {
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
       builder: (ctrl) {
-        Financiamiento item = ctrl.financiamiento.value;
-
         return Obx(() {
+          Financiamiento item = ctrl.financiamiento.value;
+
           return Column(
             children: [
               Container(
@@ -39,7 +39,8 @@ class FinanciamientoDetail extends StatelessWidget {
                   child: Column(
                     children: [
                       const TiendaCard(),
-                      if (item.cuotas?.isNotEmpty ?? false)
+                      if (((item.cuotas?.isNotEmpty ?? false) &&
+                          item.inCredito != true))
                         ...item.cuotas!.map(
                           (cuota) {
                             final isPagada = cuota.stCuota == 'PAGADA';
@@ -81,7 +82,7 @@ class FinanciamientoDetail extends StatelessWidget {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  'Ref ${cuota.txReferencia!.substring(cuota.txReferencia!.length - 8, cuota.txReferencia!.length)}',
+                                                  'Ref #${cuota.txReferencia != null ? cuota.txReferencia!.substring(cuota.txReferencia!.length - 8, cuota.txReferencia!.length) : '00000000'}',
                                                   style: Get
                                                       .textTheme.titleMedium
                                                       ?.copyWith(
@@ -89,7 +90,7 @@ class FinanciamientoDetail extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Text(
-                                                  'Fecha ${cuota.fePagoCuota}',
+                                                  'Fecha ${Intl().date('dd-MM-yyyy').format(cuota.fePagoCuota!)}',
                                                   style: Get
                                                       .textTheme.titleMedium
                                                       ?.copyWith(
@@ -135,7 +136,10 @@ class FinanciamientoDetail extends StatelessWidget {
                               ),
                             );
                           },
-                        )
+                        ),
+                      if (!((item.cuotas?.isNotEmpty ?? false) &&
+                          item.inCredito != true))
+                        ...[]
                     ],
                   ),
                 ),
@@ -144,61 +148,91 @@ class FinanciamientoDetail extends StatelessWidget {
                 height: 100.0,
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                child: item.inCredito != true
+                    ? Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moTotalCuotasSelected)}',
-                            maxLines: 1,
-                            textAlign: TextAlign.end,
-                            overflow: TextOverflow.ellipsis,
-                            style: Get.textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moTotalCuotasSelected)}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Get.textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moTotalCuotasSelected * tasa)}',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Get.textTheme.bodyMedium,
+                                )
+                              ],
+                            ),
                           ),
-                          Text(
-                            'Bs. ${Helper().getAmountFormatCompletDefault(ctrl.moTotalCuotasSelected * tasa)}',
-                            maxLines: 1,
-                            textAlign: TextAlign.end,
-                            overflow: TextOverflow.ellipsis,
-                            style: Get.textTheme.bodyMedium,
-                          )
+                          const SizedBox(width: 20.0),
+                          Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                              onPressed: !ctrl.hasCuotasSelectedAndPendientes
+                                  ? null
+                                  : () => ctrl.checkout(
+                                        tasa: tasa,
+                                        newFinanciamiento: item,
+                                      ),
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                backgroundColor: Get.theme.colorScheme.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              child: Text(
+                                'Pagar',
+                                style: Get.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Get.theme.colorScheme.onPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: ElevatedButton(
+                              onPressed: () => ctrl.checkout(
+                                tasa: tasa,
+                                newFinanciamiento: item,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                backgroundColor: Get.theme.colorScheme.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              child: Text(
+                                'Solicitar',
+                                style: Get.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Get.theme.colorScheme.onPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    const SizedBox(width: 20.0),
-                    Expanded(
-                      flex: 2,
-                      child: ElevatedButton(
-                        onPressed: !ctrl.hasCuotasSelectedAndPendientes
-                            ? null
-                            : () => ctrl.checkout(
-                                  tasa: tasa,
-                                  newFinanciamiento: item,
-                                ),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          backgroundColor: Get.theme.colorScheme.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Text(
-                          'Pagar',
-                          style: Get.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Get.theme.colorScheme.onPrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ],
           );

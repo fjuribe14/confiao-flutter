@@ -44,6 +44,7 @@ class ProductoDetail extends StatelessWidget {
     return Obx(() {
       bool isDisponible = producto.nuCantidad! > 0;
       bool inCarrito = shoppingCartCtrl.existInCart(producto);
+      final intereses = double.parse(modeloFinanciamiento.pcTasaInteres!) / 100;
 
       return Scaffold(
         appBar: AppBar(
@@ -108,7 +109,6 @@ class ProductoDetail extends StatelessWidget {
                       const SizedBox(height: 5.0),
                       Text(
                         '${producto.txDescripcion}',
-                        maxLines: 2,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: Get.textTheme.bodyMedium,
@@ -198,6 +198,75 @@ class ProductoDetail extends StatelessWidget {
                                   Text(
                                     'Cada ${modeloFinanciamiento.nuDiasEntreCuotas} días',
                                     style: Get.textTheme.bodyLarge?.copyWith(),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 10.0),
+                              Divider(
+                                height: 1.0,
+                                color: Get.theme.colorScheme.surfaceContainer,
+                              ),
+                              const SizedBox(height: 10.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Intereses',
+                                          style:
+                                              Get.textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '+${modeloFinanciamiento.pcTasaInteres ?? 0}%',
+                                          style:
+                                              Get.textTheme.bodySmall?.copyWith(
+                                            color: Get
+                                                .theme.colorScheme.onSurface
+                                                .withOpacity(0.5),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '\$ ${Helper().getAmountFormatCompletDefault(
+                                          double.parse('${producto.moMonto}')
+                                                  .toPrecision(2) *
+                                              intereses,
+                                        )}',
+                                        style:
+                                            Get.textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2.0),
+                                      Text(
+                                        'Bs. ${Helper().getAmountFormatCompletDefault(
+                                          (double.parse('${producto.moMonto}') *
+                                                  tasa) *
+                                              intereses,
+                                        )}',
+                                        style:
+                                            Get.textTheme.bodySmall?.copyWith(
+                                          color: Get.theme.colorScheme.onSurface
+                                              .withOpacity(0.5),
+                                        ),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),

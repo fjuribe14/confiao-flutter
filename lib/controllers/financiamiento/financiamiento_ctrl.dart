@@ -1,9 +1,9 @@
-import 'package:confiao/controllers/index.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:confiao/controllers/index.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -15,13 +15,17 @@ class FinanciamientoCtrl extends GetxController {
   RxBool loading = false.obs;
   RxInt statusSelected = 0.obs;
   DateTime hoy = DateTime.now();
+  RxBool showHistorial = false.obs;
   RxList<Cuota> cuotas = <Cuota>[].obs;
   List<DateTime> dias = <DateTime>[].obs;
   RxList<Financiamiento> data = <Financiamiento>[].obs;
   ScrollController scrollController = ScrollController();
+  List<String> status = <String>['ACEPTADO', 'PENDIENTE'];
   Rx<Financiamiento> financiamiento = Financiamiento().obs;
+  RxList<Financiamiento> dataHistorial = <Financiamiento>[].obs;
 
-  List<String> status = <String>['ACEPTADO', 'INACTIVO', 'PENDIENTE'];
+  // TODO: Solicitar credito
+  PagoServicioCtrl pagoservicioCtrl = Get.put(PagoServicioCtrl());
 
   @override
   void onInit() async {
@@ -111,6 +115,7 @@ class FinanciamientoCtrl extends GetxController {
 
       data.clear();
       cuotas.clear();
+      dataHistorial.clear();
 
       AuthCtrl authCtrl = Get.find<AuthCtrl>();
 
@@ -130,12 +135,17 @@ class FinanciamientoCtrl extends GetxController {
       for (var item in response.data['data']) {
         // Financiamiento
         final newFinanciamiento = Financiamiento.fromJson(item);
-        // Cuotas
-        for (var cuota in newFinanciamiento.cuotas!) {
-          cuotas.add(cuota);
+
+        if (newFinanciamiento.hasCuotasPendientes == true) {
+          // Cuotas
+          for (var cuota in newFinanciamiento.cuotas!) {
+            cuotas.add(cuota);
+          }
+          //
+          data.add(newFinanciamiento);
+        } else {
+          dataHistorial.add(newFinanciamiento);
         }
-        //
-        data.add(newFinanciamiento);
       }
     } catch (e) {
       debugPrint('$e');
@@ -205,7 +215,13 @@ class FinanciamientoCtrl extends GetxController {
         body: 'Se ha creado el financiamiento',
       );
 
-      Get.offAndToNamed(AppRouteName.onboarding);
+      if (inFinancia == true) {
+        await Get.offAndToNamed(AppRouteName.financiamientoList);
+        statusSelected.value = 1;
+        await getData();
+      } else {
+        Get.offAndToNamed(AppRouteName.onboarding);
+      }
     } catch (e) {
       debugPrint('$e');
       AlertService().showSnackBar(

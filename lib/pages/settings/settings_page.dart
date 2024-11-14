@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:confiao/controllers/index.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -100,15 +101,6 @@ class SettingsPage extends StatelessWidget {
                   CustomSettingsSection(
                     child: SettingsTile.navigation(
                       onPressed: (context) {
-                        Get.toNamed(AppRouteName.authResetPassword);
-                      },
-                      title: const Text('Cambiar contraseña'),
-                      leading: const Icon(Icons.key_rounded),
-                    ),
-                  ),
-                  CustomSettingsSection(
-                    child: SettingsTile.navigation(
-                      onPressed: (context) {
                         AuthCtrl().logout();
                       },
                       title: const Text('Cerrar Sesión'),
@@ -124,6 +116,13 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     tiles: <SettingsTile>[
+                      SettingsTile(
+                        onPressed: (context) {
+                          Get.toNamed(AppRouteName.authResetPassword);
+                        },
+                        title: const Text('Cambiar contraseña'),
+                        leading: const Icon(Icons.key_rounded),
+                      ),
                       SettingsTile.switchTile(
                         onToggle: (value) async =>
                             await ctrl.toggleBiometricPermission(value),
@@ -162,6 +161,39 @@ class SettingsPage extends StatelessWidget {
                               ? 'Activo'
                               : 'Desactivado',
                         ),
+                      ),
+                    ],
+                  ),
+                  SettingsSection(
+                    title: Text(
+                      'Políticas',
+                      style: Get.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Get.theme.colorScheme.primary,
+                      ),
+                    ),
+                    tiles: [
+                      SettingsTile(
+                        onPressed: (context) {
+                          launchUrl(
+                            Uri.parse(
+                              'https://confiao.sencillo.com.ve/assets/docs/terminos.html',
+                            ),
+                          );
+                        },
+                        title: const Text('Términos y condiciones'),
+                        leading: const Icon(Icons.policy_outlined),
+                      ),
+                      SettingsTile(
+                        onPressed: (context) {
+                          launchUrl(
+                            Uri.parse(
+                              'https://confiao.sencillo.com.ve/assets/docs/privacidad.html',
+                            ),
+                          );
+                        },
+                        title: const Text('Políticas de privacidad'),
+                        leading: const Icon(Icons.privacy_tip_outlined),
                       ),
                     ],
                   ),
