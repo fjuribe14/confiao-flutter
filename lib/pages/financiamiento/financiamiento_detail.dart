@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/pages/index.dart';
 import 'package:confiao/models/index.dart';
@@ -11,9 +12,9 @@ class FinanciamientoDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uuid = const Uuid().v4().toString();
     ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
     final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
-
     // ctrl.pagoservicioCtrl.schemaAcctClienteController
 
     return GetBuilder<FinanciamientoCtrl>(
@@ -320,6 +321,7 @@ class FinanciamientoDetail extends StatelessWidget {
                                   ? null
                                   : () => ctrl.withdraw(
                                         tasa: tasa,
+                                        txReferencia: uuid,
                                         newFinanciamiento: item,
                                       ),
                               style: ElevatedButton.styleFrom(

@@ -22,6 +22,7 @@ class LoginPage extends StatelessWidget {
       body: SingleChildScrollView(
         clipBehavior: Clip.hardEdge,
         scrollDirection: Axis.vertical,
+        physics: const AlwaysScrollableScrollPhysics(),
         child: SizedBox(
           width: Get.width,
           height: Get.height,
@@ -64,7 +65,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 5,
+                  flex: 6,
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -115,7 +116,6 @@ class LoginPage extends StatelessWidget {
                               const SizedBox(height: 16.0 * 2),
                               Container(
                                 width: double.infinity,
-                                height: Responsive.width(16.0),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16.0),
                                   color:
@@ -136,7 +136,6 @@ class LoginPage extends StatelessWidget {
                               const SizedBox(height: 16.0),
                               Container(
                                 width: double.infinity,
-                                height: Responsive.width(16.0),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16.0),
                                   color:

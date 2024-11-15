@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:uuid/uuid.dart';
 
 class FinanciamientoCtrl extends GetxController {
   String url = ApiUrl.apiFinanciamiento;
@@ -220,8 +217,10 @@ class FinanciamientoCtrl extends GetxController {
       );
 
       if (inFinancia == true) {
-        await Get.offAndToNamed(AppRouteName.financiamientoList);
-        statusSelected.value = 1;
+        await Get.offAndToNamed(
+          AppRouteName.financiamientoList,
+          arguments: {'status': 1},
+        );
         await getData();
       } else {
         Get.offAndToNamed(AppRouteName.onboarding);
@@ -263,17 +262,20 @@ class FinanciamientoCtrl extends GetxController {
 
   withdraw({
     required double tasa,
+    required String txReferencia,
     required Financiamiento newFinanciamiento,
   }) async {
     try {
       loading.value = true;
 
+      pagoservicioCtrl.schemaAcctClienteController.text = 'CELE';
+
       await Http().http(showLoading: true).then(
             (http) async => http.post(
                 '${dotenv.env['URL_API_SERVICIO']}${ApiUrl.apiCobrarCredito}',
                 data: {
+                  "tx_referencia": txReferencia,
                   "mo_monto": newFinanciamiento.moPrestamo,
-                  "tx_referencia": const Uuid().v4().toString(),
                   "id_cliente": pagoservicioCtrl.idClienteController.text,
                   "co_servicio": newFinanciamiento.coIdentificacionEmpresa,
                   "nb_cliente": pagoservicioCtrl.authCtrl.currentUser?.name,
@@ -285,7 +287,7 @@ class FinanciamientoCtrl extends GetxController {
                   "schema_acct_cliente":
                       pagoservicioCtrl.schemaAcctClienteController.text,
                   "tx_concepto":
-                      "Solicitud de pago del financiamiento #${newFinanciamiento.idFinanciamiento}",
+                      "Solicitud de crédito del financiamiento #${newFinanciamiento.idFinanciamiento}",
                 }),
           );
 
@@ -293,8 +295,7 @@ class FinanciamientoCtrl extends GetxController {
       Get.offAndToNamed(AppRouteName.onboarding);
       AlertService().showSnackBar(
           title: 'Felicidades 🎉',
-          body:
-              'Se ha enviado la solicitud, el dinero será transferido a la cuenta que indicó.');
+          body: 'Se ha enviado la solicitud, esto puede tardar unos minutos.');
     } catch (e) {
       debugPrint('$e');
     } finally {

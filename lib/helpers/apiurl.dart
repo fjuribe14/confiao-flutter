@@ -35,7 +35,7 @@ class ApiUrl {
 
   /// Pagar
   static String apiClavePago = "/api/v1/servicios/pagar/clave_pago";
-  static String apiCobrarCredito = "api/v1/servicios/cobrar/credito";
+  static String apiCobrarCredito = "/api/v1/servicios/cobrar/credito";
   static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";
   static String apiEstatusRequest = "/coremfibp/api/v1/json/bcorec/stsrqt";
 
