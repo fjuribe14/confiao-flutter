@@ -275,13 +275,14 @@ class FinanciamientoCtrl extends GetxController {
                 '${dotenv.env['URL_API_SERVICIO']}${ApiUrl.apiCobrarCredito}',
                 data: {
                   "tx_referencia": txReferencia,
-                  "mo_monto": newFinanciamiento.moPrestamo,
                   "id_cliente": pagoservicioCtrl.idClienteController.text,
                   "co_servicio": newFinanciamiento.coIdentificacionEmpresa,
                   "nb_cliente": pagoservicioCtrl.authCtrl.currentUser?.name,
                   "agt_cliente": pagoservicioCtrl.agtClienteController.text,
                   "acct_cliente": pagoservicioCtrl.acctClienteController.text,
                   "id_financiamiento": '${newFinanciamiento.idFinanciamiento}',
+                  "mo_monto":
+                      double.parse(newFinanciamiento.moPrestamo ?? '0') * tasa,
                   'schema_id_cliente': await Helper()
                       .getSchemeName(pagoservicioCtrl.idClienteController.text),
                   "schema_acct_cliente":
