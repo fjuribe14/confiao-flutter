@@ -212,9 +212,10 @@ class CheckoutPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () async {
-                                    await ctrl.checkout(e['type']);
-                                  },
+                                  onPressed: ctrl.loading.value
+                                      ? null
+                                      : () async =>
+                                          await ctrl.checkout(e['type']),
                                   style: ElevatedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 15.0),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:uuid/uuid.dart';
 
 class FinanciamientoCtrl extends GetxController {
   String url = ApiUrl.apiFinanciamiento;
@@ -24,8 +27,7 @@ class FinanciamientoCtrl extends GetxController {
   Rx<Financiamiento> financiamiento = Financiamiento().obs;
   RxList<Financiamiento> dataHistorial = <Financiamiento>[].obs;
 
-  // TODO: Solicitar credito
-  PagoServicioCtrl pagoservicioCtrl = Get.put(PagoServicioCtrl());
+  late PagoServicioCtrl pagoservicioCtrl;
 
   @override
   void onInit() async {
@@ -37,6 +39,8 @@ class FinanciamientoCtrl extends GetxController {
     super.onInit();
     //
     await getData();
+    //
+    pagoservicioCtrl = PagoServicioCtrl();
   }
 
   get totalCuotas => cuotas.length;
@@ -254,6 +258,51 @@ class FinanciamientoCtrl extends GetxController {
       debugPrint('$e');
     } finally {
       loading.value = false;
+    }
+  }
+
+  withdraw({
+    required double tasa,
+    required Financiamiento newFinanciamiento,
+  }) async {
+    try {
+      loading.value = true;
+
+      await Http().http(showLoading: true).then(
+            (http) async => http.post(
+                '${dotenv.env['URL_API_SERVICIO']}${ApiUrl.apiCobrarCredito}',
+                data: {
+                  "mo_monto": newFinanciamiento.moPrestamo,
+                  "tx_referencia": const Uuid().v4().toString(),
+                  "id_cliente": pagoservicioCtrl.idClienteController.text,
+                  "co_servicio": newFinanciamiento.coIdentificacionEmpresa,
+                  "nb_cliente": pagoservicioCtrl.authCtrl.currentUser?.name,
+                  "agt_cliente": pagoservicioCtrl.agtClienteController.text,
+                  "acct_cliente": pagoservicioCtrl.acctClienteController.text,
+                  "id_financiamiento": '${newFinanciamiento.idFinanciamiento}',
+                  'schema_id_cliente': await Helper()
+                      .getSchemeName(pagoservicioCtrl.idClienteController.text),
+                  "schema_acct_cliente":
+                      pagoservicioCtrl.schemaAcctClienteController.text,
+                  "tx_concepto":
+                      "Solicitud de pago del financiamiento #${newFinanciamiento.idFinanciamiento}",
+                }),
+          );
+
+      Get.back();
+      Get.offAndToNamed(AppRouteName.onboarding);
+      AlertService().showSnackBar(
+          title: 'Felicidades 🎉',
+          body:
+              'Se ha enviado la solicitud, el dinero será transferido a la cuenta que indicó.');
+    } catch (e) {
+      debugPrint('$e');
+    } finally {
+      loading.value = false;
+      pagoservicioCtrl.idClienteController.clear();
+      pagoservicioCtrl.agtClienteController.clear();
+      pagoservicioCtrl.acctClienteController.clear();
+      pagoservicioCtrl.schemaAcctClienteController.clear();
     }
   }
 }

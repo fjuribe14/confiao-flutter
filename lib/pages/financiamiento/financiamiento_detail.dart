@@ -14,6 +14,8 @@ class FinanciamientoDetail extends StatelessWidget {
     ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
     final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
 
+    // ctrl.pagoservicioCtrl.schemaAcctClienteController
+
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
       builder: (ctrl) {
@@ -139,7 +141,111 @@ class FinanciamientoDetail extends StatelessWidget {
                         ),
                       if (!((item.cuotas?.isNotEmpty ?? false) &&
                           item.inCredito != true))
-                        ...[]
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            children: [
+                              DropdownButtonFormField(
+                                isDense: true,
+                                hint: const Text('Seleccione Banco'),
+                                items: ctrl
+                                    .pagoservicioCtrl.comunesCtrl.participantes
+                                    .map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      '${'${e.coParticipante}'.padLeft(4, '0')} - ${e.txAlias}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    ctrl.pagoservicioCtrl.agtClienteController
+                                            .text =
+                                        '${value.coParticipante}'
+                                            .padLeft(4, '0');
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Banco',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              TextField(
+                                controller:
+                                    ctrl.pagoservicioCtrl.acctClienteController,
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  ctrl.pagoservicioCtrl.acctClienteController
+                                      .text = value.toUpperCase();
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Télefono',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  hintText: '0424, 0416, 0412, etc.',
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              TextField(
+                                controller:
+                                    ctrl.pagoservicioCtrl.idClienteController,
+                                keyboardType: TextInputType.text,
+                                onChanged: (value) {
+                                  ctrl.pagoservicioCtrl.idClienteController
+                                      .text = value.toUpperCase();
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Identidad',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  hintText: 'V12345678, E12345678, etc.',
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color:
+                                        Get.theme.colorScheme.surfaceContainer,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Monto a solicitar'.toCapitalized(),
+                                        style: Get.textTheme.bodyMedium
+                                            ?.copyWith(),
+                                      ),
+                                      Text(
+                                        '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moTotalFinanc ?? '0'))}',
+                                        textAlign: TextAlign.center,
+                                        style:
+                                            Get.textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moTotalFinanc ?? '0') * tasa)}',
+                                        textAlign: TextAlign.center,
+                                        style: Get.textTheme.bodyMedium,
+                                      ),
+                                    ],
+                                  ))
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -210,10 +316,12 @@ class FinanciamientoDetail extends StatelessWidget {
                           Expanded(
                             flex: 1,
                             child: ElevatedButton(
-                              onPressed: () => ctrl.checkout(
-                                tasa: tasa,
-                                newFinanciamiento: item,
-                              ),
+                              onPressed: ctrl.loading.value
+                                  ? null
+                                  : () => ctrl.withdraw(
+                                        tasa: tasa,
+                                        newFinanciamiento: item,
+                                      ),
                               style: ElevatedButton.styleFrom(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10.0),

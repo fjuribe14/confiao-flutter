@@ -15,6 +15,7 @@ class PagoServicioCtrl extends GetxController {
   String urlClavePago = ApiUrl.apiClavePago;
 
   RxDouble tasa = 0.0.obs;
+  RxBool loading = false.obs;
   RxDouble moTotal = 0.0.obs;
   RxDouble moSubTotal = 0.0.obs;
   String uuid = const Uuid().v4();
@@ -43,6 +44,7 @@ class PagoServicioCtrl extends GetxController {
 
   checkout(TypeMetodoPago typePago) async {
     try {
+      loading.value = true;
       final financiamiento = financiamientoCtrl.financiamiento.value;
       final cuotas =
           financiamientoCtrl.cuotasSelected.map((e) => e.idCuota).toList();
@@ -73,12 +75,13 @@ class PagoServicioCtrl extends GetxController {
         "agt_cliente": agtClienteController.text,
         "acct_cliente": acctClienteController.text,
         "co_clave_pago": coClavePagoController.text,
-        "tx_concepto": "Pago de Cuotas ${cuotas.join(', ')}",
         "co_servicio": financiamiento.coIdentificacionEmpresa,
         "schema_acct_cliente": schemaAcctClienteController.text,
         'schema_id_cliente':
             await Helper().getSchemeName(idClienteController.text),
         "co_sub_producto": TypeMetodoPago.sencillo == typePago ? "003" : "002",
+        "tx_concepto":
+            "Pago de #${financiamiento.idFinanciamiento} Cuotas ${cuotas.join(', ')}",
       };
 
       // debugPrint('idClienteController: ${idClienteController.text}');
@@ -133,6 +136,7 @@ class PagoServicioCtrl extends GetxController {
 
       Get.back(result: false);
     } finally {
+      loading.value = false;
       idClienteController.clear();
       agtClienteController.clear();
       acctClienteController.clear();
