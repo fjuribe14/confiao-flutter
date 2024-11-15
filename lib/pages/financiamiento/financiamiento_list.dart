@@ -17,8 +17,8 @@ class FinanciamientoList extends StatelessWidget {
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
       builder: (ctrl) {
-        if (Get.arguments['status'] != null) {
-          ctrl.statusSelected.value = Get.arguments['status'];
+        if (Get.arguments?['status'] != null) {
+          ctrl.statusSelected.value = Get.arguments?['status'];
         }
 
         return Obx(() {

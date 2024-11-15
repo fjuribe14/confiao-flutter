@@ -1,8 +1,8 @@
-import 'package:confiao/helpers/index.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:confiao/helpers/index.dart';
 import 'package:confiao/controllers/index.dart';
 
 class FinanciamientoCard extends StatelessWidget {
@@ -69,7 +69,9 @@ class FinanciamientoCard extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: Colors.transparent,
+                        overlayColor: Colors.transparent,
                         padding: const EdgeInsets.all(0.0),
+                        foregroundColor: Colors.transparent,
                         backgroundColor: Colors.transparent,
                       ),
                       iconAlignment: IconAlignment.end,
