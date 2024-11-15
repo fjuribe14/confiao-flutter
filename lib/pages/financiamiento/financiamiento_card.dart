@@ -32,10 +32,6 @@ class FinanciamientoCard extends StatelessWidget {
             );
           }
 
-          if (ctrl.data.isEmpty) {
-            return Container();
-          }
-
           return Container(
             color: Get.theme.colorScheme.surfaceContainerLowest,
             padding: const EdgeInsets.all(20.0),

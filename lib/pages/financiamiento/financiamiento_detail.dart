@@ -42,8 +42,8 @@ class FinanciamientoDetail extends StatelessWidget {
                   child: Column(
                     children: [
                       const TiendaCard(),
-                      if (((item.cuotas?.isNotEmpty ?? false) &&
-                          item.inCredito != true))
+                      if ((item.cuotas?.isNotEmpty ?? false) &&
+                          item.stFinanciamiento == 'ACEPTADO')
                         ...item.cuotas!.map(
                           (cuota) {
                             final isPagada = cuota.stCuota == 'PAGADA';
@@ -140,8 +140,8 @@ class FinanciamientoDetail extends StatelessWidget {
                             );
                           },
                         ),
-                      if (!((item.cuotas?.isNotEmpty ?? false) &&
-                          item.inCredito != true))
+                      if (item.stFinanciamiento == 'PENDIENTE' &&
+                          item.inCredito == true)
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Column(

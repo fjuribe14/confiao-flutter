@@ -137,12 +137,12 @@ class FinanciamientoCtrl extends GetxController {
         // Financiamiento
         final newFinanciamiento = Financiamiento.fromJson(item);
 
+        // Cuotas
+        for (var cuota in newFinanciamiento.cuotas!) {
+          cuotas.add(cuota);
+        }
+
         if (newFinanciamiento.hasCuotasPendientes == true) {
-          // Cuotas
-          for (var cuota in newFinanciamiento.cuotas!) {
-            cuotas.add(cuota);
-          }
-          //
           data.add(newFinanciamiento);
         } else {
           dataHistorial.add(newFinanciamiento);

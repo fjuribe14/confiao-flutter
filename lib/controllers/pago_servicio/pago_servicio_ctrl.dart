@@ -65,6 +65,12 @@ class PagoServicioCtrl extends GetxController {
         idClienteController.text = coIdentificacion;
       }
 
+      if (TypeMetodoPago.sencillo == typePago) {
+        agtClienteController.text = '0169';
+        schemaAcctClienteController.text = 'ALIS';
+        acctClienteController.text = coIdentificacion;
+      }
+
       final data = {
         "id_cuotas": cuotas,
         "co_producto": "050",
