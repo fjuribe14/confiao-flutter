@@ -15,7 +15,6 @@ class FinanciamientoDetail extends StatelessWidget {
     final uuid = const Uuid().v4().toString();
     ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
     final double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
-    // ctrl.pagoservicioCtrl.schemaAcctClienteController
 
     return GetBuilder<FinanciamientoCtrl>(
       init: FinanciamientoCtrl(),
@@ -146,6 +145,7 @@ class FinanciamientoDetail extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Column(
                             children: [
+                              const SizedBox(height: 10.0),
                               DropdownButtonFormField(
                                 isDense: true,
                                 hint: const Text('Seleccione Banco'),
@@ -193,23 +193,23 @@ class FinanciamientoDetail extends StatelessWidget {
                                   hintText: '0424, 0416, 0412, etc.',
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
-                              TextField(
-                                controller:
-                                    ctrl.pagoservicioCtrl.idClienteController,
-                                keyboardType: TextInputType.text,
-                                onChanged: (value) {
-                                  ctrl.pagoservicioCtrl.idClienteController
-                                      .text = value.toUpperCase();
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Identidad',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  hintText: 'V12345678, E12345678, etc.',
-                                ),
-                              ),
+                              // const SizedBox(height: 10.0),
+                              // TextField(
+                              //   controller:
+                              //       ctrl.pagoservicioCtrl.idClienteController,
+                              //   keyboardType: TextInputType.text,
+                              //   onChanged: (value) {
+                              //     ctrl.pagoservicioCtrl.idClienteController
+                              //         .text = value.toUpperCase();
+                              //   },
+                              //   decoration: InputDecoration(
+                              //     labelText: 'Identidad',
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(10.0),
+                              //     ),
+                              //     hintText: 'V12345678, E12345678, etc.',
+                              //   ),
+                              // ),
                               const SizedBox(height: 10.0),
                               Container(
                                   width: double.infinity,
@@ -230,7 +230,7 @@ class FinanciamientoDetail extends StatelessWidget {
                                             ?.copyWith(),
                                       ),
                                       Text(
-                                        '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moTotalFinanc ?? '0'))}',
+                                        '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo ?? '0'))}',
                                         textAlign: TextAlign.center,
                                         style:
                                             Get.textTheme.titleMedium?.copyWith(
@@ -238,9 +238,14 @@ class FinanciamientoDetail extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moTotalFinanc ?? '0') * tasa)}',
+                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo ?? '0') * tasa)}',
                                         textAlign: TextAlign.center,
                                         style: Get.textTheme.bodyMedium,
+                                      ),
+                                      Text(
+                                        '(comisiones) Bs. - ${Helper().getAmountFormatCompletDefault(double.parse(item.moFlat ?? '0') * tasa)}',
+                                        textAlign: TextAlign.center,
+                                        style: Get.textTheme.bodySmall,
                                       ),
                                     ],
                                   ))
@@ -255,7 +260,7 @@ class FinanciamientoDetail extends StatelessWidget {
                 height: 100.0,
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 10.0),
-                child: item.inCredito != true
+                child: item.stFinanciamiento != 'PENDIENTE'
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [

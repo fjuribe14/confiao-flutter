@@ -268,7 +268,13 @@ class FinanciamientoCtrl extends GetxController {
     try {
       loading.value = true;
 
+      AuthCtrl authCtrl = Get.find<AuthCtrl>();
+
+      pagoservicioCtrl.idClienteController.text =
+          authCtrl.currentUser?.txAtributo['co_identificacion'];
       pagoservicioCtrl.schemaAcctClienteController.text = 'CELE';
+
+      final moFlat = double.parse(newFinanciamiento.moFlat ?? '0') * tasa;
 
       await Http().http(showLoading: true).then(
             (http) async => http.post(
@@ -282,7 +288,9 @@ class FinanciamientoCtrl extends GetxController {
                   "acct_cliente": pagoservicioCtrl.acctClienteController.text,
                   "id_financiamiento": '${newFinanciamiento.idFinanciamiento}',
                   "mo_monto":
-                      double.parse(newFinanciamiento.moPrestamo ?? '0') * tasa,
+                      ((double.parse(newFinanciamiento.moPrestamo ?? '0') *
+                              tasa) -
+                          moFlat),
                   'schema_id_cliente': await Helper()
                       .getSchemeName(pagoservicioCtrl.idClienteController.text),
                   "schema_acct_cliente":
@@ -295,8 +303,9 @@ class FinanciamientoCtrl extends GetxController {
       Get.back();
       Get.offAndToNamed(AppRouteName.onboarding);
       AlertService().showSnackBar(
-          title: 'Felicidades 🎉',
-          body: 'Se ha enviado la solicitud, esto puede tardar unos minutos.');
+        title: 'Felicidades 🎉',
+        body: 'Se ha enviado la solicitud, esto puede tardar unos minutos.',
+      );
     } catch (e) {
       debugPrint('$e');
     } finally {
