@@ -40,8 +40,10 @@ class CuotaPendientesList extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return ctrl.loading.value
                             ? Shimmer.fromColors(
-                                baseColor: Colors.grey.shade200,
-                                highlightColor: Colors.grey.shade300,
+                                baseColor:
+                                    Get.theme.colorScheme.surfaceContainer,
+                                highlightColor:
+                                    Get.theme.colorScheme.surfaceContainerHigh,
                                 child: Container(
                                   width: 100.0,
                                   height: 100.0,

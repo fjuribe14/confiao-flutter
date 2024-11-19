@@ -44,8 +44,9 @@ class TiendaList extends StatelessWidget {
                       const SizedBox(width: 10.0),
                   itemBuilder: (context, index) => ctrl.loading.value
                       ? Shimmer.fromColors(
-                          baseColor: Colors.grey.shade200,
-                          highlightColor: Colors.grey.shade300,
+                          baseColor: Get.theme.colorScheme.surfaceContainer,
+                          highlightColor:
+                              Get.theme.colorScheme.surfaceContainerHigh,
                           child: Container(
                             width: 100.0,
                             height: 100.0,
@@ -76,6 +77,8 @@ class TiendaList extends StatelessWidget {
                               fit: BoxFit.contain,
                               cacheKey: ctrl.data[index].txImagen,
                               imageUrl: '${ctrl.data[index].txImagen}',
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(

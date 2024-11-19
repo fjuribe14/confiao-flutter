@@ -18,8 +18,8 @@ class FinanciamientoCard extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade200,
-                highlightColor: Colors.grey.shade300,
+                baseColor: Get.theme.colorScheme.surfaceContainer,
+                highlightColor: Get.theme.colorScheme.surfaceContainerHigh,
                 child: Container(
                   height: 100,
                   width: double.infinity,

@@ -118,7 +118,7 @@ class FinanciamientoList extends StatelessWidget {
                     const SizedBox(height: 20.0),
                     if (ctrl.loading.isTrue)
                       SizedBox(
-                        height: Get.height / 2,
+                        height: Get.height / 1.5,
                         width: double.infinity,
                         child: const Center(
                           child: CircularProgressIndicator(),
@@ -135,15 +135,17 @@ class FinanciamientoList extends StatelessWidget {
                             ctrl.financiamiento.value = item;
 
                             Get.bottomSheet(
-                              const FinanciamientoDetail(),
+                              SizedBox(
+                                  height: Get.height / 1.5,
+                                  child: const FinanciamientoDetail()),
                               enableDrag: true,
+                              isScrollControlled: true,
                               backgroundColor:
                                   Get.theme.scaffoldBackgroundColor,
                               settings: const RouteSettings(
                                 name: AppRouteName.financiamientoDetail,
                               ),
                             ).whenComplete(() {
-                              debugPrint("whenComplete");
                               ctrl.financiamiento.value = Financiamiento();
                             });
                           },
@@ -154,7 +156,7 @@ class FinanciamientoList extends StatelessWidget {
                           leading: SvgPicture.asset(AssetsDir.logo,
                               height: 30, width: 30),
                           title: Text(
-                            '#${item.idFinanciamiento}',
+                            '#${item.idFinanciamiento} - ${(item.inCredito ?? false) ? 'Crédito' : 'Producto'}',
                             style: Get.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),

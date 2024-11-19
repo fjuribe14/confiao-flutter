@@ -2,6 +2,7 @@ export './user/user.dart';
 export './cuota/cuota.dart';
 export './client/client.dart';
 export './tienda/tienda.dart';
+export './factura/factura.dart';
 export './sucursal/sucursal.dart';
 export './producto/producto.dart';
 export './tasa_valor/tasa_valor.dart';

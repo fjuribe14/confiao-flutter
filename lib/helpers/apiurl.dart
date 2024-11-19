@@ -17,13 +17,14 @@ class ApiUrl {
 
   /// Businness
   static String apiTienda = '/api/v1/public/tienda';
+  static String apiFactura = '/api/v1/public/factura';
   static String apiCheckout = '/api/v1/public/confiao/checkout';
 
   /// Notifications
-  static const String apiRestEndPointRegisterDeviceRecent =
-      '/api/v3/dispositivo_reciente';
   static const String apiRestEndpointDevices = '/api/v3/dispositivo';
   static String apiRegistrarDispositivo = '/api/v2/pna/registrar_dispositivo';
+  static const String apiResgistrarDispositivoReciente =
+      '/api/v3/dispositivo_reciente';
 
   /// Confiao
   static String apiCuota = '/api/v1/cuota';
@@ -39,7 +40,7 @@ class ApiUrl {
   static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";
   static String apiEstatusRequest = "/coremfibp/api/v1/json/bcorec/stsrqt";
 
-  /// api comunes
+  /// Comunes
   static const String apiTasaValor = '/api/v1/tasa_valor';
   static const String apiParticipantes = '/api/v1/participante';
 }

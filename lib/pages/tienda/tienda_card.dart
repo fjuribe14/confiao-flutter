@@ -20,7 +20,7 @@ class TiendaCard extends StatelessWidget {
         });
 
         return SizedBox(
-          height: 100,
+          height: 120,
           width: double.infinity,
           child: Obx(
             () {
@@ -51,8 +51,10 @@ class TiendaCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CachedNetworkImage(
-                      cacheKey: '${ctrl.tienda.value.txImagen}',
                       imageUrl: '${ctrl.tienda.value.txImagen}',
+                      cacheKey: '${ctrl.tienda.value.txImagen}',
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                       imageBuilder: (context, imageProvider) {
                         return Container(
                           width: 70,
@@ -78,8 +80,8 @@ class TiendaCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${ctrl.tienda.value.nbEmpresa}',
-                            maxLines: 1,
+                            '${ctrl.tienda.value.nbEmpresa}'.toUpperCase(),
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: Get.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,

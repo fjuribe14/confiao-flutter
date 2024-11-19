@@ -28,8 +28,8 @@ class FinanciadorCard extends StatelessWidget {
             () {
               if (ctrl.loading.isTrue) {
                 return Shimmer.fromColors(
-                  baseColor: Colors.grey.shade200,
-                  highlightColor: Colors.grey.shade300,
+                  baseColor: Get.theme.colorScheme.surfaceContainer,
+                  highlightColor: Get.theme.colorScheme.surfaceContainerHigh,
                   child: Container(
                     height: 100,
                     width: double.infinity,

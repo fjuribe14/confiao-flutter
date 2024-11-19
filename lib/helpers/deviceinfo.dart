@@ -118,7 +118,7 @@ class DeviceInfoService {
 
     return await http.then(
       (value) => value.post(
-        ApiUrl.apiRestEndPointRegisterDeviceRecent,
+        ApiUrl.apiResgistrarDispositivoReciente,
         data: jsonData,
       ),
     );

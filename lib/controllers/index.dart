@@ -5,6 +5,7 @@ export 'search/search_ctrl.dart';
 export 'auth/register_ctrl.dart';
 export 'tienda/tienda_ctrl.dart';
 export 'comunes/comunes_ctrl.dart';
+export 'factura/factura_ctrl.dart';
 export 'settings/settings_ctrl.dart';
 export 'onboarding/onboarding_ctrl.dart';
 export 'financiador/financiador_ctrl.dart';

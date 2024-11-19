@@ -80,6 +80,8 @@ class ProductoDetail extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: '${producto.txImagen}',
                     cacheKey: '${producto.txImagen}',
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),

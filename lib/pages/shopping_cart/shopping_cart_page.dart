@@ -521,7 +521,7 @@ class ShoppingCartPage extends StatelessWidget {
                           flex: 3,
                           child: ElevatedButton(
                             onPressed: () async {
-                              if (moDisponible.isGreaterThan(ctrl.moTotal)) {
+                              if (moDisponible >= ctrl.moTotal) {
                                 await Get.put(FinanciamientoCtrl())
                                     .crearFinanciamiento(
                                   productos: ctrl.data,

@@ -272,15 +272,17 @@ class FinanciamientoCtrl extends GetxController {
 
       pagoservicioCtrl.idClienteController.text =
           authCtrl.currentUser?.txAtributo['co_identificacion'];
-      pagoservicioCtrl.schemaAcctClienteController.text = 'CELE';
-
-      final moFlat = double.parse(newFinanciamiento.moFlat ?? '0') * tasa;
+      pagoservicioCtrl.schemaAcctClienteController.text = 'ALIS';
+      pagoservicioCtrl.agtClienteController.text = '0169';
+      pagoservicioCtrl.acctClienteController.text =
+          pagoservicioCtrl.idClienteController.text;
 
       await Http().http(showLoading: true).then(
             (http) async => http.post(
                 '${dotenv.env['URL_API_SERVICIO']}${ApiUrl.apiCobrarCredito}',
                 data: {
                   "tx_referencia": txReferencia,
+                  'pc_flat': newFinanciamiento.pcComisionFlat,
                   "id_cliente": pagoservicioCtrl.idClienteController.text,
                   "co_servicio": newFinanciamiento.coIdentificacionEmpresa,
                   "nb_cliente": pagoservicioCtrl.authCtrl.currentUser?.name,
@@ -288,9 +290,8 @@ class FinanciamientoCtrl extends GetxController {
                   "acct_cliente": pagoservicioCtrl.acctClienteController.text,
                   "id_financiamiento": '${newFinanciamiento.idFinanciamiento}',
                   "mo_monto":
-                      ((double.parse(newFinanciamiento.moPrestamo ?? '0') *
-                              tasa) -
-                          moFlat),
+                      (double.parse(newFinanciamiento.moPrestamo ?? '0') *
+                          tasa),
                   'schema_id_cliente': await Helper()
                       .getSchemeName(pagoservicioCtrl.idClienteController.text),
                   "schema_acct_cliente":

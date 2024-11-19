@@ -41,6 +41,14 @@ class FinanciamientoDetail extends StatelessWidget {
                   child: Column(
                     children: [
                       const TiendaCard(),
+                      const SizedBox(height: 10),
+                      FacturaCard(
+                        idFactura: item.nuDocumento,
+                        fecha: DateFormat('dd/MM/yyyy').format(
+                          item.feFinanciamiento ?? DateTime.now(),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       if ((item.cuotas?.isNotEmpty ?? false) &&
                           item.stFinanciamiento == 'ACEPTADO')
                         ...item.cuotas!.map(
@@ -142,116 +150,198 @@ class FinanciamientoDetail extends StatelessWidget {
                       if (item.stFinanciamiento == 'PENDIENTE' &&
                           item.inCredito == true)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 40.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withOpacity(0.2),
+                          ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 10.0),
-                              DropdownButtonFormField(
-                                isDense: true,
-                                hint: const Text('Seleccione Banco'),
-                                items: ctrl
-                                    .pagoservicioCtrl.comunesCtrl.participantes
-                                    .map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(
-                                      '${'${e.coParticipante}'.padLeft(4, '0')} - ${e.txAlias}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.warning,
+                                    color: Colors.amber.shade900,
+                                  ),
+                                  const SizedBox(width: 5.0),
+                                  Text(
+                                    'Alerta',
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.amber.shade900,
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    ctrl.pagoservicioCtrl.agtClienteController
-                                            .text =
-                                        '${value.coParticipante}'
-                                            .padLeft(4, '0');
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Banco',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
+                                ],
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    // TextSpan(
+                                    //   text:
+                                    //       'Ingresa la información bancaria donde deseas recibir tu crédito.',
+                                    //   style: Get.textTheme.bodySmall?.copyWith(
+                                    //     color: Get.theme.colorScheme.onSurface,
+                                    //   ),
+                                    // ),
+                                    TextSpan(
+                                      text:
+                                          'Esto puede tardar algunos minutos, por favor verifique antes de volver a intentar.',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
-                              TextField(
-                                controller:
-                                    ctrl.pagoservicioCtrl.acctClienteController,
-                                keyboardType: TextInputType.number,
-                                onChanged: (value) {
-                                  ctrl.pagoservicioCtrl.acctClienteController
-                                      .text = value.toUpperCase();
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Télefono',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  hintText: '0424, 0416, 0412, etc.',
-                                ),
-                              ),
-                              // const SizedBox(height: 10.0),
-                              // TextField(
-                              //   controller:
-                              //       ctrl.pagoservicioCtrl.idClienteController,
-                              //   keyboardType: TextInputType.text,
-                              //   onChanged: (value) {
-                              //     ctrl.pagoservicioCtrl.idClienteController
-                              //         .text = value.toUpperCase();
-                              //   },
-                              //   decoration: InputDecoration(
-                              //     labelText: 'Identidad',
-                              //     border: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(10.0),
-                              //     ),
-                              //     hintText: 'V12345678, E12345678, etc.',
-                              //   ),
-                              // ),
-                              const SizedBox(height: 10.0),
-                              Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color:
-                                        Get.theme.colorScheme.surfaceContainer,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Monto a solicitar'.toCapitalized(),
-                                        style: Get.textTheme.bodyMedium
-                                            ?.copyWith(),
-                                      ),
-                                      Text(
-                                        '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo ?? '0'))}',
-                                        textAlign: TextAlign.center,
-                                        style:
-                                            Get.textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Bs. ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo ?? '0') * tasa)}',
-                                        textAlign: TextAlign.center,
-                                        style: Get.textTheme.bodyMedium,
-                                      ),
-                                      Text(
-                                        '(comisiones) Bs. - ${Helper().getAmountFormatCompletDefault(double.parse(item.moFlat ?? '0') * tasa)}',
-                                        textAlign: TextAlign.center,
-                                        style: Get.textTheme.bodySmall,
-                                      ),
-                                    ],
-                                  ))
                             ],
                           ),
                         ),
+                      // if (item.stFinanciamiento == 'PENDIENTE' &&
+                      //     item.inCredito == true)
+                      //   Container(
+                      //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      //     child: Column(
+                      //       children: [
+                      //         const SizedBox(height: 20.0),
+                      //         DropdownButtonFormField(
+                      //           isDense: true,
+                      //           hint: const Text('Seleccione Banco'),
+                      //           items: ctrl
+                      //               .pagoservicioCtrl.comunesCtrl.participantes
+                      //               .map((e) {
+                      //             return DropdownMenuItem(
+                      //               value: e,
+                      //               child: Text(
+                      //                 '${'${e.coParticipante}'.padLeft(4, '0')} - ${e.txAlias}',
+                      //                 maxLines: 1,
+                      //                 overflow: TextOverflow.ellipsis,
+                      //               ),
+                      //             );
+                      //           }).toList(),
+                      //           onChanged: (value) {
+                      //             if (value != null) {
+                      //               ctrl.pagoservicioCtrl.agtClienteController
+                      //                       .text =
+                      //                   '${value.coParticipante}'
+                      //                       .padLeft(4, '0');
+                      //             }
+                      //           },
+                      //           decoration: InputDecoration(
+                      //             labelText: 'Banco',
+                      //             border: OutlineInputBorder(
+                      //               borderRadius: BorderRadius.circular(10.0),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         const SizedBox(height: 10.0),
+                      //         TextField(
+                      //           controller:
+                      //               ctrl.pagoservicioCtrl.acctClienteController,
+                      //           keyboardType: TextInputType.number,
+                      //           onChanged: (value) {
+                      //             ctrl.pagoservicioCtrl.acctClienteController
+                      //                 .text = value.toUpperCase();
+                      //           },
+                      //           decoration: InputDecoration(
+                      //             labelText: 'Télefono',
+                      //             border: OutlineInputBorder(
+                      //               borderRadius: BorderRadius.circular(10.0),
+                      //             ),
+                      //             hintText: '0424, 0416, 0412, etc.',
+                      //           ),
+                      //         ),
+                      //         const SizedBox(height: 20.0),
+                      //       ],
+                      //     ),
+                      //   ),
+                      const SizedBox(height: 10.0),
+                      if (item.stFinanciamiento == 'PENDIENTE' &&
+                          item.inCredito == true)
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 40.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Get.theme.colorScheme.surfaceContainer,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.info,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  const SizedBox(width: 5.0),
+                                  Text(
+                                    'Nota',
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          'Esta operación se depositará en tu cuenta de R4 Sencillo perteneciente al usuario ${item.txIdentificacionCliente}.',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\nSi aún no tienes una cuenta R4 Sencillo, puedes crearla descargando la app.',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              Text(
+                                'Monto a solicitar'.toCapitalized(),
+                                style: Get.textTheme.bodyMedium?.copyWith(),
+                              ),
+                              Text(
+                                '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo ?? '0'))}',
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              // const SizedBox(height: 10.0),
+                              // Text(
+                              //   '(comisiones) Bs. - ${Helper().getAmountFormatCompletDefault(double.parse(item.moInteres ?? '0') * tasa)}',
+                              //   textAlign: TextAlign.center,
+                              //   style: Get.textTheme.bodySmall,
+                              // ),
+                              Text(
+                                'Bs. ${Helper().getAmountFormatCompletDefault((double.parse(item.moPrestamo ?? '0') - double.parse(item.moFlat ?? '0')) * tasa)}',
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        )
                     ],
                   ),
                 ),
