@@ -22,6 +22,10 @@ class FinanciamientoDetail extends StatelessWidget {
         return Obx(() {
           Financiamiento item = ctrl.financiamiento.value;
 
+          for (var element in item.cuotas ?? []) {
+            debugPrint(element.toString());
+          }
+
           return Column(
             children: [
               Container(
@@ -54,7 +58,6 @@ class FinanciamientoDetail extends StatelessWidget {
                         ...item.cuotas!.map(
                           (cuota) {
                             final isPagada = cuota.stCuota == 'PAGADA';
-
                             return ListTile(
                               leading: isPagada
                                   ? SizedBox(

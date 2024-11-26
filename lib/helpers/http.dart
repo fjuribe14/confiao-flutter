@@ -28,7 +28,7 @@ class Http {
 
           if (kDebugMode) {
             log('REQ TO PATH => ${options.path}');
-            // log('http queryParameters: ${jsonEncode(options.queryParameters)}');
+            log('http queryParameters: ${jsonEncode(options.queryParameters)}');
             log('http data: ${jsonEncode(options.data)}');
           }
 

@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TiendaCtrl extends GetxController {
   String url = ApiUrl.apiTienda;
+  String urlTiendas = ApiUrl.apiTiendas;
 
   RxBool loading = false.obs;
   Rx<Tienda> tienda = Tienda().obs;
@@ -25,14 +26,14 @@ class TiendaCtrl extends GetxController {
       data.clear();
 
       Map<String, dynamic>? queryParameters = {
-        // 'append': 'credito',
+        'append': 'credito',
         'st_empresa': 'ACTIVA',
         'with': 'empresa_modelo_financiamiento',
       };
 
       final response = await Http().http(showLoading: false).then(
             (http) => http.get(
-              '${dotenv.env['URL_API_MARKET']}$url',
+              '${dotenv.env['URL_API_MARKET']}$urlTiendas',
               queryParameters: queryParameters,
             ),
           );

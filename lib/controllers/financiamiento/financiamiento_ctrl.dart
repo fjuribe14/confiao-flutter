@@ -281,8 +281,8 @@ class FinanciamientoCtrl extends GetxController {
             (http) async => http.post(
                 '${dotenv.env['URL_API_SERVICIO']}${ApiUrl.apiCobrarCredito}',
                 data: {
-                  "tx_referencia": txReferencia,
                   'pc_flat': newFinanciamiento.pcComisionFlat,
+                  "tx_referencia": newFinanciamiento.idFinanciamientoUuid,
                   "id_cliente": pagoservicioCtrl.idClienteController.text,
                   "co_servicio": newFinanciamiento.coIdentificacionEmpresa,
                   "nb_cliente": pagoservicioCtrl.authCtrl.currentUser?.name,

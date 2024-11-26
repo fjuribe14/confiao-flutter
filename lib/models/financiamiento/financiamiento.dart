@@ -35,6 +35,7 @@ class Financiamiento {
   String? moFlat;
   String? pcComisionFlat;
   bool? inCredito;
+  String? idFinanciamientoUuid;
   List<Cuota>? cuotas;
   bool? hasCuotasPendientes;
 
@@ -66,6 +67,7 @@ class Financiamiento {
     this.moFlat,
     this.pcComisionFlat,
     this.inCredito,
+    this.idFinanciamientoUuid,
     this.cuotas,
     this.hasCuotasPendientes,
   });
@@ -107,6 +109,7 @@ class Financiamiento {
         cuotas: json["cuotas"] == null
             ? []
             : List<Cuota>.from(json["cuotas"]!.map((x) => Cuota.fromJson(x))),
+        idFinanciamientoUuid: json["id_financiamiento_uuid"],
         hasCuotasPendientes: json["cuotas"] == null
             ? false
             : List<Cuota>.from(json["cuotas"]!.map((x) => Cuota.fromJson(x)))
@@ -144,5 +147,6 @@ class Financiamiento {
         "cuotas": cuotas == null
             ? []
             : List<dynamic>.from(cuotas!.map((x) => x.toJson())),
+        "id_financiamiento_uuid": idFinanciamientoUuid,
       };
 }

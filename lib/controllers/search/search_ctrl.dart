@@ -37,15 +37,7 @@ class SearchCtrl extends GetxController {
       };
 
       queryParameters
-          .addAllIf(isCredito.isTrue, {'in_financia': isCredito.isTrue});
-
-      queryParameters.addAllIf(isCredito.isFalse, {'in_financia': ''});
-
-      queryParameters
           .addAllIf(item.idEmpresa != null, {'id_empresa': item.idEmpresa});
-
-      // queryParameters.addAllIf(
-      //     queryController.text.isNotEmpty, {'q': queryController.text});
 
       final response = await Http().http(showLoading: false).then(
             (http) => http.get(

@@ -182,7 +182,7 @@ class TiendaDetail extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Text(
-                                        '${item.nbEmpresa}'.toUpperCase(),
+                                        '${item.nbEmpresa}',
                                         maxLines: 1,
                                         textAlign: TextAlign.left,
                                         overflow: TextOverflow.ellipsis,
@@ -201,45 +201,50 @@ class TiendaDetail extends StatelessWidget {
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(height: 5.0),
-                                Obx(() {
-                                  return Row(
-                                    children: [
-                                      Expanded(child: Container()),
-                                      const SizedBox(width: 10),
-                                      ElevatedButton.icon(
-                                        onPressed: () async {
-                                          searchCtrl.isCredito.value =
-                                              !searchCtrl.isCredito.value;
-                                          await searchCtrl.getData();
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Get.theme.colorScheme
-                                              .surfaceContainerHighest,
-                                          shadowColor: Colors.transparent,
-                                          elevation: 0.0,
-                                        ),
-                                        icon: Icon(
-                                          searchCtrl.isCredito.value
-                                              ? Icons.arrow_back
-                                              : Icons.credit_card,
-                                          color: Get.theme.colorScheme.primary,
-                                        ),
-                                        label: Text(
-                                          searchCtrl.isCredito.value
-                                              ? 'Volver'
-                                              : 'Créditos',
-                                          style: Get.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.bold,
+                                if (item.credito == true)
+                                  const SizedBox(height: 5.0),
+                                if (item.credito == true)
+                                  Obx(() {
+                                    return Row(
+                                      children: [
+                                        Expanded(child: Container()),
+                                        const SizedBox(width: 10),
+                                        ElevatedButton.icon(
+                                          onPressed: () async {
+                                            searchCtrl.isCredito.value =
+                                                !searchCtrl.isCredito.value;
+                                            await searchCtrl.getData();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Get
+                                                .theme
+                                                .colorScheme
+                                                .surfaceContainerHighest,
+                                            shadowColor: Colors.transparent,
+                                            elevation: 0.0,
+                                          ),
+                                          icon: Icon(
+                                            searchCtrl.isCredito.value
+                                                ? Icons.arrow_back
+                                                : Icons.credit_card,
                                             color:
                                                 Get.theme.colorScheme.primary,
                                           ),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                })
+                                          label: Text(
+                                            searchCtrl.isCredito.value
+                                                ? 'Volver'
+                                                : 'Créditos',
+                                            style: Get.textTheme.titleMedium
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  Get.theme.colorScheme.primary,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  })
                               ],
                             ),
                           )
