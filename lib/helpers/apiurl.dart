@@ -16,8 +16,8 @@ class ApiUrl {
   static String authPasswordValidate = '/api/v3/auth/password/validate';
 
   /// Businness
-  static String apiTienda = '/api/v1/public/tienda';
   static String apiFactura = '/api/v1/public/factura';
+  static String apiTienda = '/api/v1/public/mis_tiendas';
   static String apiCheckout = '/api/v1/public/confiao/checkout';
 
   /// Notifications
