@@ -33,7 +33,7 @@ class SearchCtrl extends GetxController {
       Map<String, dynamic>? queryParameters = {
         'per_page': 0,
         'nu_cantidad_gte': 1,
-        'in_financia': isCredito.isTrue
+        'in_financia': isCredito.isTrue ? true : '',
       };
 
       queryParameters

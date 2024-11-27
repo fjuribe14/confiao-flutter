@@ -1,7 +1,4 @@
-// import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
@@ -18,7 +15,6 @@ class PagoServicioCtrl extends GetxController {
   RxBool loading = false.obs;
   RxDouble moTotal = 0.0.obs;
   RxDouble moSubTotal = 0.0.obs;
-  String uuid = const Uuid().v4();
   Rx<Tienda> tienda = Tienda().obs;
   AuthCtrl authCtrl = Get.find<AuthCtrl>();
   ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
@@ -74,7 +70,6 @@ class PagoServicioCtrl extends GetxController {
       final data = {
         "id_cuotas": cuotas,
         "co_producto": "050",
-        "tx_referencia": uuid,
         "mo_monto": moTotal.value,
         "id_cliente": idClienteController.text,
         "nb_cliente": authCtrl.currentUser?.name,
@@ -83,6 +78,7 @@ class PagoServicioCtrl extends GetxController {
         "co_clave_pago": coClavePagoController.text,
         "co_servicio": financiamiento.coIdentificacionEmpresa,
         "schema_acct_cliente": schemaAcctClienteController.text,
+        "tx_referencia": financiamientoCtrl.cuotasSelected[0].idCuotaUuid,
         'schema_id_cliente':
             await Helper().getSchemeName(idClienteController.text),
         "co_sub_producto": TypeMetodoPago.sencillo == typePago ? "003" : "002",

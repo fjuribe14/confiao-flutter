@@ -1,3 +1,4 @@
+import 'package:confiao/pages/index.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,9 @@ class CheckoutPage extends StatelessWidget {
 
             return Scaffold(
               appBar: AppBar(
-                title: const Text('Checkout'),
+                title: Text('Pagar',
+                    style: Get.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold)),
               ),
               body: SafeArea(
                 child: Column(
@@ -171,6 +174,15 @@ class CheckoutPage extends StatelessWidget {
                             ],
                           )),
                     ),
+                    if (financiamientoCtrl.cuotasSelected[0].moSaldoCuota !=
+                        null)
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: AmortizacionCuotas(
+                          tasa: tasa,
+                          cuotas: financiamientoCtrl.cuotasSelected,
+                        ),
+                      ),
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -193,7 +205,7 @@ class CheckoutPage extends StatelessWidget {
                                 Text(
                                   '\$ ${Helper().getAmountFormatCompletDefault(financiamientoCtrl.moTotalCuotasSelected)}',
                                   textAlign: TextAlign.end,
-                                  style: Get.textTheme.titleMedium?.copyWith(
+                                  style: Get.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

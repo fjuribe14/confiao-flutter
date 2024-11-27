@@ -87,10 +87,16 @@ class TiendaCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          // Text(
+                          //   '${ctrl.tienda.value.coIdentificacion}',
+                          //   maxLines: 1,
+                          //   overflow: TextOverflow.ellipsis,
+                          // ),
                           Text(
-                            '${ctrl.tienda.value.coIdentificacion}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            '${ctrl.tienda.value.txDireccion}',
+                            style: Get.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ],
                       ),

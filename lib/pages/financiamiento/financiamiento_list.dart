@@ -133,10 +133,9 @@ class FinanciamientoList extends StatelessWidget {
                           dense: true,
                           onTap: () {
                             ctrl.financiamiento.value = item;
-
                             Get.bottomSheet(
                               SizedBox(
-                                  height: Get.height / 1.5,
+                                  height: Get.height / 1.25,
                                   child: const FinanciamientoDetail()),
                               enableDrag: true,
                               isScrollControlled: true,

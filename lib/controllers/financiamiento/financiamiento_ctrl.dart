@@ -46,21 +46,21 @@ class FinanciamientoCtrl extends GetxController {
       cuotas.where((item) => item.stCuota != 'PAGADA').toList();
 
   List<Cuota> get cuotasSelected =>
-      cuotas.where((item) => item.selected!).toList();
+      cuotas.where((item) => item.selected).toList();
 
   bool get hasCuotasSelectedAndPendientes =>
-      cuotas.any((item) => item.stCuota != 'PAGADA' && item.selected!);
+      cuotas.any((item) => item.stCuota != 'PAGADA' && item.selected);
 
   double get moCuotasSelected => hasCuotasSelectedAndPendientes
       ? cuotas
-          .where((item) => item.stCuota != 'PAGADA' && item.selected!)
+          .where((item) => item.stCuota != 'PAGADA' && item.selected)
           .map((item) => double.parse('${item.moCuota}'))
           .reduce((a, b) => a + b)
       : 0.0;
 
   double get moTotalCuotasSelected => hasCuotasSelectedAndPendientes
       ? cuotas
-          .where((item) => item.stCuota != 'PAGADA' && item.selected!)
+          .where((item) => item.stCuota != 'PAGADA' && item.selected)
           .map((item) => double.parse('${item.moTotalCuota}'))
           .reduce((a, b) => a + b)
       : 0.0;
@@ -184,32 +184,40 @@ class FinanciamientoCtrl extends GetxController {
                   "id_sucursal": item.idSucursal,
                 })
             .toList(),
+        // add
+        "id_conectado": sub,
+        'in_credito': inFinancia,
+        "tx_identificacion_cliente":
+            '${user['tx_atributo']['co_identificacion']}',
+        // TODO <== Eliminar cuando todos hayan actualizado a 1.0.0+42
+        'in_crear_financiamiento': true,
       };
 
-      final response = await Http().http(showLoading: true).then(
+      // final response =
+      await Http().http(showLoading: true).then(
             (http) => http.post(
               '${dotenv.env['URL_API_MARKET']}$urlCheckout',
               data: dataCheckout,
             ),
           );
 
-      Map<String, dynamic> dataFinanciamiento = {
-        "id_conectado": sub,
-        'in_credito': inFinancia,
-        "mo_prestamo": moPrestamo,
-        "nu_documento": response.data['id_factura'],
-        "id_modelo_financiamiento": idModeloFinanciamiento,
-        "co_identificacion_empresa": coIdentificacionEmpresa,
-        "tx_identificacion_cliente":
-            '${user['tx_atributo']['co_identificacion']}',
-      };
+      // Map<String, dynamic> dataFinanciamiento = {
+      //   "id_conectado": sub,
+      //   'in_credito': inFinancia,
+      //   "mo_prestamo": moPrestamo,
+      //   "nu_documento": response.data['id_factura'],
+      //   "id_modelo_financiamiento": idModeloFinanciamiento,
+      //   "co_identificacion_empresa": coIdentificacionEmpresa,
+      //   "tx_identificacion_cliente":
+      //       '${user['tx_atributo']['co_identificacion']}',
+      // };
 
-      await Http().http(showLoading: true).then(
-            (http) => http.post(
-              '${dotenv.env['URL_API_BASE']}$urlPublic/crear',
-              data: dataFinanciamiento,
-            ),
-          );
+      // await Http().http(showLoading: true).then(
+      //       (http) => http.post(
+      //         '${dotenv.env['URL_API_BASE']}$urlPublic/crear',
+      //         data: dataFinanciamiento,
+      //       ),
+      //     );
 
       AlertService().showSnackBar(
         title: 'Felicidades 🎉',
@@ -262,7 +270,6 @@ class FinanciamientoCtrl extends GetxController {
 
   withdraw({
     required double tasa,
-    required String txReferencia,
     required Financiamiento newFinanciamiento,
   }) async {
     try {

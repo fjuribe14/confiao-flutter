@@ -19,6 +19,7 @@ export 'auth/register/register_one.dart';
 export 'auth/register/register_two.dart';
 export 'auth/register/register_page.dart';
 export 'cuota/cuota_pendientes_list.dart';
+export 'cuota/amortizaciones_cuotas.dart';
 export 'financiador/financiador_card.dart';
 export 'producto/producto_credit_list.dart';
 export 'notifications/notifications_list.dart';

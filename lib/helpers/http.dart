@@ -12,6 +12,9 @@ class Http {
   Future<Dio> http({bool showLoading = true}) async {
     var dio = Dio();
 
+    dio.options.connectTimeout = const Duration(seconds: 60);
+    dio.options.receiveTimeout = const Duration(seconds: 60);
+
     dio.options.contentType = "application/json";
     dio.options.headers = {"Accept": "application/json"};
 
