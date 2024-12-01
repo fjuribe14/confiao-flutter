@@ -652,10 +652,12 @@ class FinanciamientoDetail extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: ctrl.loading.value
                                       ? null
-                                      : () => ctrl.withdraw(
+                                      : () {
+                                          ctrl.withdraw(
                                             tasa: tasa,
                                             newFinanciamiento: item,
-                                          ),
+                                          );
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10.0),

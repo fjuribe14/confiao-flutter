@@ -45,6 +45,9 @@ class FinanciamientoCtrl extends GetxController {
   List<Cuota> get cuotasPendientes =>
       cuotas.where((item) => item.stCuota != 'PAGADA').toList();
 
+  List<Cuota> get cuotasVencidas =>
+      cuotas.where((item) => item.stCuota == 'VENCIDA').toList();
+
   List<Cuota> get cuotasSelected =>
       cuotas.where((item) => item.selected).toList();
 
@@ -126,7 +129,7 @@ class FinanciamientoCtrl extends GetxController {
         'order_by': 'id_financiamiento:desc',
         'st_financiamiento': status[statusSelected.value],
         'tx_identificacion_cliente':
-            authCtrl.currentUser?.txAtributo['co_identificacion'],
+            '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
       };
 
       final response = await Http().http(showLoading: false).then((http) =>
@@ -166,7 +169,8 @@ class FinanciamientoCtrl extends GetxController {
     try {
       loading.value = true;
 
-      final user = await Helper().getUser();
+      AuthCtrl authCtrl = Get.find<AuthCtrl>();
+
       final sub = await Helper().getTokenSub();
       final inFinancia = productos.first.inFinancia;
 
@@ -188,7 +192,7 @@ class FinanciamientoCtrl extends GetxController {
         "id_conectado": sub,
         'in_credito': inFinancia,
         "tx_identificacion_cliente":
-            '${user['tx_atributo']['co_identificacion']}',
+            '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
         // TODO <== Eliminar cuando todos hayan actualizado a 1.0.0+42
         'in_crear_financiamiento': true,
       };
@@ -203,13 +207,13 @@ class FinanciamientoCtrl extends GetxController {
 
       // Map<String, dynamic> dataFinanciamiento = {
       //   "id_conectado": sub,
-      //   'in_credito': inFinancia,
+      //   'in_credito': inFinancia,1
       //   "mo_prestamo": moPrestamo,
       //   "nu_documento": response.data['id_factura'],
       //   "id_modelo_financiamiento": idModeloFinanciamiento,
       //   "co_identificacion_empresa": coIdentificacionEmpresa,
       //   "tx_identificacion_cliente":
-      //       '${user['tx_atributo']['co_identificacion']}',
+      //       '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
       // };
 
       // await Http().http(showLoading: true).then(
@@ -219,20 +223,29 @@ class FinanciamientoCtrl extends GetxController {
       //       ),
       //     );
 
-      AlertService().showSnackBar(
-        title: 'Felicidades 🎉',
-        body: 'Se ha creado el financiamiento',
-      );
-
       if (inFinancia == true) {
-        await Get.offAndToNamed(
-          AppRouteName.financiamientoList,
-          arguments: {'status': 1},
+        AlertService().showSnackBar(
+          title: 'Felicidades 🎉',
+          body:
+              'Se ha creado su solicitud de crédito, dirijase a la sección de financiamientos PENDIENTES para solicitarlo',
         );
-        await getData();
       } else {
-        Get.offAndToNamed(AppRouteName.onboarding);
+        AlertService().showSnackBar(
+          title: 'Felicidades 🎉',
+          body: 'Se ha creado el financiamiento',
+        );
       }
+
+      // if (inFinancia == true) {
+      //   await Get.offAndToNamed(
+      //     AppRouteName.financiamientoList,
+      //     arguments: {'status': 1},
+      //   )?.whenComplete(() async {
+      //     await getData();
+      //   });
+      // } else {
+      Get.offAndToNamed(AppRouteName.onboarding);
+      // }
     } catch (e) {
       debugPrint('$e');
       AlertService().showSnackBar(
@@ -278,11 +291,13 @@ class FinanciamientoCtrl extends GetxController {
       AuthCtrl authCtrl = Get.find<AuthCtrl>();
 
       pagoservicioCtrl.idClienteController.text =
-          authCtrl.currentUser?.txAtributo['co_identificacion'];
+          '${authCtrl.currentUser?.txAtributo?.coIdentificacion}';
       pagoservicioCtrl.schemaAcctClienteController.text = 'ALIS';
       pagoservicioCtrl.agtClienteController.text = '0169';
       pagoservicioCtrl.acctClienteController.text =
           pagoservicioCtrl.idClienteController.text;
+
+      debugPrint(newFinanciamiento.idFinanciamientoUuid);
 
       await Http().http(showLoading: true).then(
             (http) async => http.post(

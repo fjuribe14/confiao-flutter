@@ -6,6 +6,7 @@ import 'package:confiao/controllers/index.dart';
 
 class ShoppingCartCtrl extends GetxController {
   RxBool loading = false.obs;
+  TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
   RxList<SearchProducto> data = <SearchProducto>[].obs;
   FinanciadorCtrl financiadorCtrl = Get.find<FinanciadorCtrl>();
 
@@ -13,43 +14,71 @@ class ShoppingCartCtrl extends GetxController {
       data.map((e) => e.moMontoSelected).reduce((a, b) => a + b);
 
   bool existInCart(SearchProducto item) {
-    return data.contains(item);
+    return data.any((e) => e.coProducto == item.coProducto);
   }
 
   bool hasCredit() {
-    return data.any((e) => e.nbCategoria == 'Crédito');
+    return data.any((e) => e.inFinancia == true);
   }
 
   addToCart(SearchProducto item) async {
-    if (double.parse(item.moMonto!).isGreaterThan(double.parse(
-        financiadorCtrl.data.first.limiteCliente!.moDisponible!))) {
-      //
-      AlertService().showSnackBar(
+    Tienda tienda = tiendaCtrl.tienda.value;
+
+    final financiador = financiadorCtrl.data.firstWhere((f) {
+      if (tienda.boFinanciamientoPublic != true) {
+        return f.txIdentificacion == tienda.coIdentificacion;
+      }
+
+      return f.idFinanciador == 1;
+    }, orElse: () => Financiador());
+
+    if (financiador.idFinanciador == null) {
+      return AlertService().showSnackBar(
+        title: 'Error',
+        body: 'Esta tienda no tiene financiador.',
+      );
+    }
+
+    if (double.parse(item.moMonto!).isGreaterThan(
+        double.parse(financiador.limiteCliente?.moDisponible ?? '0.0'))) {
+      return AlertService().showSnackBar(
         title: 'Error',
         body: 'No hay suficiente dinero disponible',
       );
-      //
-      return;
     } else {
       final bool creditResult = hasCredit();
 
-      if (item.nbCategoria == 'Crédito') {
-        if (await removeCategoryDialog()) {
-          data.removeWhere((e) => e.idCategoria != item.idCategoria);
-        }
-      } else {
-        if (creditResult) {
-          if (await removeCategoryDialog()) {
-            data.removeWhere((e) => e.nbCategoria == 'Crédito');
-          }
+      if (data.isEmpty) {
+        item.caSelected = 1;
+        data.add(item);
+        data.refresh();
+        addToCartDialog(item);
+        return;
+      }
+
+      if (creditResult && item.inFinancia != true) {
+        final bool result = await removeCategoryDialog();
+        if (result == true) {
+          data.removeWhere((e) => e.inFinancia == true);
+          item.caSelected = 1;
+          data.add(item);
+          data.refresh();
+          addToCartDialog(item);
+          return;
         }
       }
 
-      item.caSelected = 1;
-      data.add(item);
-      data.refresh();
-
-      addToCartDialog(item);
+      if (!creditResult && item.inFinancia == true) {
+        final bool result = await removeCategoryDialog();
+        if (result == true) {
+          data.removeWhere((e) => e.inFinancia != true);
+          item.caSelected = 1;
+          data.add(item);
+          data.refresh();
+          addToCartDialog(item);
+          return;
+        }
+      }
     }
   }
 
@@ -290,7 +319,7 @@ class ShoppingCartCtrl extends GetxController {
                 child: InkWell(
                   onTap: () {
                     Get.back(result: false);
-                    Get.back();
+                    Get.back(result: false);
                   },
                   child: Container(
                     width: double.infinity,

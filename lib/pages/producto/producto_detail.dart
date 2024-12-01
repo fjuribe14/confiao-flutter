@@ -44,7 +44,8 @@ class ProductoDetail extends StatelessWidget {
     return Obx(() {
       bool isDisponible = producto.nuCantidad! > 0;
       bool inCarrito = shoppingCartCtrl.existInCart(producto);
-      final intereses = double.parse(modeloFinanciamiento.pcTasaInteres!) / 100;
+      final intereses =
+          double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') / 100;
 
       return Scaffold(
         appBar: AppBar(

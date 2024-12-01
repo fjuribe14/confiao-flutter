@@ -80,6 +80,7 @@ class TxAtributo {
       txCalle,
       txDireccion;
   bool? boPep;
+  String? stVerificado;
   final dynamic idCliente;
   int? idEmpresa, idSucursal;
 
@@ -101,6 +102,7 @@ class TxAtributo {
     this.txCalle,
     this.txDireccion,
     this.boPep,
+    this.stVerificado,
     this.idSucursal,
     this.idEmpresa,
   });
@@ -116,6 +118,7 @@ class TxAtributo {
         coIdentificacion: json["co_identificacion"],
         schemeId: json["scheme_id"],
         boPep: json["bo_pep"],
+        stVerificado: json["st_verificado"],
         txGenero: json["tx_genero"],
         txPais: json["tx_pais"],
         txEstado: json["tx_estado"],
@@ -139,6 +142,7 @@ class TxAtributo {
         "scheme_id": schemeId,
         "tx_genero": txGenero,
         "bo_pep": boPep,
+        "st_verificado": stVerificado,
         "tx_pais": txPais,
         "tx_estado": txEstado,
         "tx_municipio": txMunicipio,

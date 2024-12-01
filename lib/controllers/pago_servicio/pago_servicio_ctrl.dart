@@ -55,7 +55,7 @@ class PagoServicioCtrl extends GetxController {
       }
 
       final coIdentificacion =
-          authCtrl.currentUser?.txAtributo['co_identificacion'];
+          '${authCtrl.currentUser?.txAtributo?.coIdentificacion}';
 
       if (idClienteController.text.isEmpty) {
         idClienteController.text = coIdentificacion;

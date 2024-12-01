@@ -108,6 +108,37 @@ class SetupPage extends StatelessWidget {
                                     Icons.arrow_forward_outlined,
                                     color: Get.theme.colorScheme.onPrimary,
                                   ),
+                                ),
+
+                              if (ctrl.index.value == 1)
+                                ElevatedButton.icon(
+                                  iconAlignment: IconAlignment.end,
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.only(
+                                      left: 20.0,
+                                      right: 14.0,
+                                    ),
+                                    backgroundColor:
+                                        Get.theme.colorScheme.error,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  onPressed: ctrl.selectedTerminos.value ==
+                                              true &&
+                                          ctrl.selectedPrivacidad.value == true
+                                      ? ctrl.next
+                                      : null,
+                                  icon: Icon(
+                                    Icons.arrow_forward_outlined,
+                                    color: Get.theme.colorScheme.onPrimary,
+                                  ),
+                                  label: Text(
+                                    'Finalizar'.tr,
+                                    style: TextStyle(
+                                      color: Get.theme.colorScheme.onPrimary,
+                                    ),
+                                  ),
                                 )
                             ],
                           )

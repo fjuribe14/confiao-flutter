@@ -19,14 +19,24 @@ class ShoppingCartPage extends StatelessWidget {
         // Producto de crédito
         final bool inFinancia = ctrl.data.first.inFinancia ?? false;
 
-        // Financiador
-        FinanciadorCtrl financiadorCtrl = Get.find<FinanciadorCtrl>();
-        final moDisponible = double.parse(
-            financiadorCtrl.data.first.limiteCliente?.moDisponible ?? '0.0');
-
         // Tienda
         TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
         Tienda tienda = tiendaCtrl.tienda.value;
+
+        // Financiador
+        FinanciadorCtrl financiadorCtrl = Get.find<FinanciadorCtrl>();
+
+        final financiador = financiadorCtrl.data.firstWhere((f) {
+          if (tienda.boFinanciamientoPublic != true) {
+            return f.txIdentificacion == tienda.coIdentificacion;
+          }
+
+          return f.idFinanciador == 1;
+        }, orElse: () => Financiador());
+
+        final moDisponible = double.parse(
+          financiador.limiteCliente?.moDisponible ?? '0.0',
+        );
 
         // Modelo Financiamiento
         ModeloFinanciamientoCtrl modeloFinanciamientoCtrl =
@@ -95,10 +105,24 @@ class ShoppingCartPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text('Disponible'),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Disponible en  ',
+                              children: [
+                                TextSpan(
+                                  text: '${tienda.nbEmpresa?.toUpperCase()}',
+                                  style:
+                                      Get.theme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
                           Text(
                             '\$ ${Helper().getAmountFormatCompletDefault(moDisponible)}',
-                            style: Get.theme.textTheme.titleMedium?.copyWith(
+                            style: Get.theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           )

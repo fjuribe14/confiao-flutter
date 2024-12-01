@@ -11,6 +11,7 @@ class Tienda {
   String? txDireccion;
   String? txDescripcion;
   bool? boFinanciamiento;
+  bool? boFinanciamientoPublic;
   String? txImagen;
   bool? credito;
   List<EmpresaModeloFinanciamiento>? empresaModeloFinanciamiento;
@@ -22,6 +23,7 @@ class Tienda {
     this.txDireccion,
     this.txDescripcion,
     this.boFinanciamiento,
+    this.boFinanciamientoPublic,
     this.txImagen,
     this.credito,
     this.empresaModeloFinanciamiento,
@@ -34,6 +36,7 @@ class Tienda {
         txDireccion: json["tx_direccion"],
         txDescripcion: json["tx_descripcion"],
         boFinanciamiento: json["bo_financiamiento"],
+        boFinanciamientoPublic: json["bo_financiamiento_public"],
         txImagen: json["tx_imagen"],
         credito: json["credito"],
         empresaModeloFinanciamiento:
@@ -51,6 +54,7 @@ class Tienda {
         "tx_direccion": txDireccion,
         "tx_descripcion": txDescripcion,
         "bo_financiamiento": boFinanciamiento,
+        "bo_financiamiento_public": boFinanciamientoPublic,
         "tx_imagen": txImagen,
         "credito": credito,
         "empresa_modelo_financiamiento": empresaModeloFinanciamiento == null

@@ -75,7 +75,8 @@ class RegisterCtrl extends GetxController {
             "tx_telefono": phoneController.text.trim(),
             "fe_nacimiento": null,
             "id_cliente": null,
-            "co_identificacion": identificacionController.text.trim(),
+            "co_identificacion":
+                identificacionController.text.trim().split(' ').join(''),
             "scheme_id": await Helper()
                 .getSchemeName(identificacionController.text.trim()),
             "tx_genero": null,

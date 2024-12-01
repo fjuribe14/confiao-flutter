@@ -152,6 +152,15 @@ class FinanciamientoCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (ctrl.cuotasVencidas.isNotEmpty)
+                  const SizedBox(height: 10.0),
+                if (ctrl.cuotasVencidas.isNotEmpty)
+                  Text(
+                    '⚠️ (${ctrl.cuotasVencidas.length}) Cuotas vencidas',
+                    style: Get.textTheme.titleSmall?.copyWith(
+                      color: Get.theme.colorScheme.error,
+                    ),
+                  ),
               ],
             ),
           );
