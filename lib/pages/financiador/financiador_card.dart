@@ -1,8 +1,9 @@
-import 'package:confiao/helpers/index.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:confiao/models/index.dart';
+import 'package:confiao/helpers/index.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:confiao/controllers/index.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -14,6 +15,7 @@ class FinanciadorCard extends StatelessWidget {
     double tasa = 0.0;
 
     Get.put(FinanciadorCtrl());
+    TiendaCtrl tiendaCtrl = Get.put(TiendaCtrl());
     ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
 
     if (comunesCtrl.tasas.isNotEmpty) {
@@ -27,7 +29,7 @@ class FinanciadorCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Obx(
             () {
-              if (ctrl.loading.isTrue) {
+              if (ctrl.loading.isTrue && tiendaCtrl.loading.isTrue) {
                 return Shimmer.fromColors(
                   baseColor: Get.theme.colorScheme.surfaceContainer,
                   highlightColor: Get.theme.colorScheme.surfaceContainerHigh,
@@ -43,7 +45,7 @@ class FinanciadorCard extends StatelessWidget {
                 );
               }
 
-              if (ctrl.data.isEmpty) {
+              if (ctrl.data.isEmpty && tiendaCtrl.data.isEmpty) {
                 return Container(
                   height: 100,
                   width: double.infinity,
@@ -58,7 +60,14 @@ class FinanciadorCard extends StatelessWidget {
                 );
               }
 
-              // final item = ctrl.data.first;
+              List<String> tiendasID =
+                  tiendaCtrl.data.map((e) => '${e.coIdentificacion}').toList();
+
+              List<Financiador> financiadores = ctrl.data.where((e) {
+                if (tiendasID.isEmpty) return true;
+                if (e.idFinanciador == 1) return true;
+                return tiendasID.contains(e.txIdentificacion);
+              }).toList();
 
               return Column(
                 children: [
@@ -68,7 +77,7 @@ class FinanciadorCard extends StatelessWidget {
                       enlargeFactor: 0.0,
                       viewportFraction: 1.0,
                       enlargeCenterPage: true,
-                      enableInfiniteScroll: false,
+                      enableInfiniteScroll: true,
                       clipBehavior: Clip.hardEdge,
                       scrollDirection: Axis.horizontal,
                       scrollPhysics: const BouncingScrollPhysics(),
@@ -76,11 +85,11 @@ class FinanciadorCard extends StatelessWidget {
                       onPageChanged: (index, reason) =>
                           ctrl.index.value = index,
                     ),
-                    items: ctrl.data.map((item) {
+                    items: financiadores.map((item) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Row(
@@ -96,18 +105,24 @@ class FinanciadorCard extends StatelessWidget {
                                       height: 100,
                                     ),
                                   ),
-                                  Text(
-                                    '${item.nbFinanciador}',
-                                    style: Get.textTheme.titleLarge
-                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  Expanded(
+                                    child: Text(
+                                      '${item.nbFinanciador}'.toUpperCase(),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Get.textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ],
                               ),
                               item.inAfiliado!
                                   ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           '\$ ${Helper().getAmountFormatCompletDefault(double.parse('${item.limiteCliente?.moDisponible}'))}',
@@ -129,7 +144,7 @@ class FinanciadorCard extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10.0),
                                       child: Container(
                                         width: double.infinity,
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
@@ -191,7 +206,7 @@ class FinanciadorCard extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: ctrl.data.asMap().entries.map((entry) {
+                    children: financiadores.asMap().entries.map((entry) {
                       return Container(
                         width: 6.0,
                         height: 6.0,

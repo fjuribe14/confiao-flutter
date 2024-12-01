@@ -48,12 +48,10 @@ class AuthCtrl extends GetxController {
   Future<void> _setInitialScreen() async {
     final user = await getCurrentUser();
 
-    // debugPrint('stVerificado: ${user?.stVerificado == 'VERIFICADO'}');
-
     if (user == null && Get.currentRoute != AppRouteName.authLogin) {
       Get.offAllNamed(AppRouteName.authLogin);
     } else if (user != null && Get.currentRoute != AppRouteName.home) {
-      if (user.txAtributo?.stVerificado == 'VERIFICADO') {
+      if (user.stVerificado == 'VERIFICADO') {
         Get.offAllNamed(AppRouteName.home);
       } else {
         Get.offAllNamed(AppRouteName.setup);

@@ -71,6 +71,7 @@ class SetupCtrl extends GetxController {
                   active: true,
                   keepSessionAlive: '1',
                   name: nameController.text,
+                  stVerificado: 'VERIFICADO',
                   email: emailController.text,
                   username: emailController.text,
                   txAtributo: TxAtributo(
