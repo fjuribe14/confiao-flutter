@@ -48,12 +48,14 @@ class NotificationCtrl extends GetxController {
       debugPrint('fcmToken: $fcmToken');
 
       var deviceInfo = await DeviceInfoService().getDeviceInfo;
+
       final authCtrl = Get.find<AuthCtrl>();
+      final token = await Helper().getToken();
 
       await Dio().post(
         '${dotenv.env['URL_API_GTW']}${ApiUrl.apiRegistrarDispositivo}',
         options: Options(contentType: 'application/json', headers: {
-          'Authorization': 'Bearer ${await Helper().getToken()}',
+          'Authorization': 'Bearer $token',
         }),
         data: {
           "tx_data": '',

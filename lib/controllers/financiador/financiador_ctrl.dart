@@ -29,6 +29,7 @@ class FinanciadorCtrl extends GetxController {
 
       Map<String, String> queryParameters = {
         'st_financiador': 'ACTIVO',
+        'order_by': 'id_financiador:asc',
         'append': 'in_afiliado,limite_cliente',
         'tx_identificacion_cliente':
             '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',

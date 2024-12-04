@@ -9,6 +9,7 @@ class Financiador {
   int? idFinanciador;
   String? nbFinanciador;
   String? txIdentificacion;
+  String? txImagen;
   String? tiIdentificacion;
   String? moLimiteFinanciamiento;
   String? moFinanciadoTotal;
@@ -20,6 +21,7 @@ class Financiador {
     this.idFinanciador,
     this.nbFinanciador,
     this.txIdentificacion,
+    this.txImagen,
     this.tiIdentificacion,
     this.moLimiteFinanciamiento,
     this.moFinanciadoTotal,
@@ -32,6 +34,7 @@ class Financiador {
         idFinanciador: json["id_financiador"],
         nbFinanciador: json["nb_financiador"],
         txIdentificacion: json["tx_identificacion"],
+        txImagen: json["tx_imagen"],
         tiIdentificacion: json["ti_identificacion"],
         moLimiteFinanciamiento: json["mo_limite_financiamiento"],
         moFinanciadoTotal: json["mo_financiado_total"],
@@ -46,6 +49,7 @@ class Financiador {
         "id_financiador": idFinanciador,
         "nb_financiador": nbFinanciador,
         "tx_identificacion": txIdentificacion,
+        "tx_imagen": txImagen,
         "ti_identificacion": tiIdentificacion,
         "mo_limite_financiamiento": moLimiteFinanciamiento,
         "mo_financiado_total": moFinanciadoTotal,

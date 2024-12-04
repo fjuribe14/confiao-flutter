@@ -73,10 +73,11 @@ class FinanciamientoCard extends StatelessWidget {
                       iconAlignment: IconAlignment.end,
                       icon: Icon(
                         Icons.arrow_forward,
+                        color: Get.theme.colorScheme.primary,
                         size: Get.textTheme.titleSmall?.fontSize,
                       ),
                       label: Text(
-                        'Ver todos',
+                        'Financiamientos',
                         style: Get.textTheme.titleSmall?.copyWith(
                           color: Get.theme.colorScheme.primary,
                         ),
