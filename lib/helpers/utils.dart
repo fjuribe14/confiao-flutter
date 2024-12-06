@@ -193,6 +193,10 @@ class Helper {
     PackageInfo device = await DeviceInfoService().getAppInfo;
     return 'V${device.version}.${device.buildNumber}';
   }
+
+  dateFormat({required DateTime dateTime, String format = 'dd-MM-yyyy'}) {
+    return DateFormat(format).format(dateTime);
+  }
 }
 
 extension StringCasingExtension on String {

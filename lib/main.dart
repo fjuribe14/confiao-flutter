@@ -1,3 +1,4 @@
+import 'package:confiao/controllers/index.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +29,9 @@ void main() async {
 
   /** Get env variables */
   final appName = dotenv.env['APP_NAME'] ?? 'Confiao';
+
+  /** Initialize DB */
+  Get.put(DbCtrl(), permanent: true);
 
   runApp(MyApp(appName: appName));
 }

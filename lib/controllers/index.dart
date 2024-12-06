@@ -1,3 +1,4 @@
+export 'db/db_ctrl.dart';
 export 'auth/auth_ctrl.dart';
 export 'home/home_ctrl.dart';
 export 'setup/setup_ctrl.dart';

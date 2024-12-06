@@ -4,17 +4,26 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
+import 'package:confiao/controllers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:confiao/controllers/auth/auth_ctrl.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class NotificationCtrl extends GetxController {
   RxInt notificationCount = 0.obs;
   late NotificationSettings settings;
+  DbCtrl dbCtrl = Get.find<DbCtrl>();
   RxList<PushMessage> notifications = <PushMessage>[].obs;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+
+  Rx<PushMessage> notification = PushMessage(
+      body: '',
+      title: '',
+      id: 0,
+      messageId: '',
+      sentDate: DateTime.now(),
+      data: {}).obs;
 
   Iterable<PushMessage> get notificationsUnread =>
       notifications.where((item) => item.status!);
@@ -68,6 +77,10 @@ class NotificationCtrl extends GetxController {
         },
       );
 
+      final resp = await dbCtrl.getPushMessages();
+
+      notifications.value = resp;
+
       _onForegroundMessage();
     }
   }
@@ -88,10 +101,11 @@ class NotificationCtrl extends GetxController {
     FirebaseMessaging.onMessage.listen(handleRemoteMessage);
   }
 
-  void handleRemoteMessage(RemoteMessage message) {
+  void handleRemoteMessage(RemoteMessage message) async {
     if (message.notification == null) return;
 
     final notification = PushMessage(
+      id: 0,
       status: true,
       data: message.data,
       body: message.notification!.body ?? '',
@@ -113,7 +127,9 @@ class NotificationCtrl extends GetxController {
       data: notification.messageId,
     );
 
-    debugPrint("handleRemoteMessage ${notification.toString()}");
+    // debugPrint("handleRemoteMessage ${notification.toString()}");
+
+    await dbCtrl.insertPushMessage(notification);
 
     notifications.add(notification);
     notifications.value = notifications.reversed.toList();

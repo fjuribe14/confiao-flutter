@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:isar/isar.dart';
 
-PushMessage pushMessageFromJson(String str) =>
-    PushMessage.fromJson(json.decode(str));
+part 'push_message.g.dart';
 
-String pushMessageToJson(PushMessage data) => json.encode(data.toJson());
-
+@collection
 class PushMessage {
+  final int id;
   String messageId;
   String title;
   String body;
@@ -15,6 +15,7 @@ class PushMessage {
   bool? status;
 
   PushMessage({
+    required this.id,
     required this.messageId,
     required this.title,
     required this.body,
@@ -40,16 +41,18 @@ class PushMessage {
   }
 
   factory PushMessage.fromJson(Map<String, dynamic> json) => PushMessage(
-        messageId: json["message_id"],
-        title: json["title"],
-        body: json["body"],
+        id: json["id"] ?? 0,
+        messageId: json["message_id"] ?? '',
+        title: json["title"] ?? '',
+        body: json["body"] ?? '',
         sentDate: DateTime.parse(json["sent_date"]),
-        data: json["data"],
-        imageUrl: json["image_url"],
+        data: json["data"] ?? '',
+        imageUrl: json["image_url"] ?? '',
         status: json['status'] ?? true,
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "message_id": messageId,
         "title": title,
         "body": body,
@@ -59,3 +62,8 @@ class PushMessage {
         'status': status,
       };
 }
+
+PushMessage pushMessageFromJson(String str) =>
+    PushMessage.fromJson(json.decode(str));
+
+String pushMessageToJson(PushMessage data) => json.encode(data.toJson());

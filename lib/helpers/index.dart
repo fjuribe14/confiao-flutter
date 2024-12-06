@@ -1,3 +1,4 @@
+export 'db.dart';
 export 'http.dart';
 export 'theme.dart';
 export 'alert.dart';

@@ -387,7 +387,7 @@ class AuthCtrl extends GetxController {
             const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
         titlePadding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
         title: Text(
-          'Nesecitamos verificar que eres tú',
+          'Necesitamos verificar que eres tú',
           textAlign: TextAlign.center,
           style: Get.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.bold,
@@ -395,7 +395,6 @@ class AuthCtrl extends GetxController {
         ),
         content: Container(
           width: double.infinity,
-          height: Get.height * 0.075,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
             color: Get.theme.primaryColor.withOpacity(0.1),
