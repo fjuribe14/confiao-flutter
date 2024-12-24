@@ -43,8 +43,6 @@ class ShoppingCartPage extends StatelessWidget {
             Get.find<ModeloFinanciamientoCtrl>();
         ModeloFinanciamiento modeloFinanciamiento =
             modeloFinanciamientoCtrl.modeloFinanciamiento.value;
-        final intereses =
-            double.parse(modeloFinanciamiento.pcTasaInteres!) / 100;
 
         // Tasa valor
         ComunesCtrl comunesCtrl = Get.find<ComunesCtrl>();
