@@ -54,19 +54,51 @@ class ShoppingCartPage extends StatelessWidget {
           // Cuotas
           cuotas.clear();
           //
+          int diasAnual = 360;
+          int caCuotas = modeloFinanciamiento.caCuotas ?? 0;
+          int nuDiasEntreCuotas = modeloFinanciamiento.nuDiasEntreCuotas ?? 0;
+          double pcPorCuota =
+              double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') /
+                  diasAnual;
+          double moProducto = ctrl.moTotal;
+          double moCuota = (moProducto / caCuotas).toPrecision(2);
+
+          double moPcPorCuota = 0.0;
+          double moTotalPagar = 0.0;
+          //
           if (modeloFinanciamiento.caCuotas != null && ctrl.data.isNotEmpty) {
             for (var i = 0; i < modeloFinanciamiento.caCuotas!; i++) {
+              // Si no es la primera cuota se resta el monto de la cuota anterior
+              if (i != 0) {
+                final cuotaAnterior = cuotas[i - 1];
+                moProducto = cuotaAnterior['moProducto'] - moCuota;
+                moProducto = moProducto.toPrecision(2);
+              }
+
+              double moInteres =
+                  ((moProducto * nuDiasEntreCuotas * pcPorCuota) / 100)
+                      .toPrecision(2);
+              double moTotalCuota = (moCuota + moInteres).toPrecision(2);
+
               cuotas.add({
                 'nuCuota': i + 1,
-                'moMonto': ctrl.moTotal / modeloFinanciamiento.caCuotas!,
-                'feCuota': Intl()
-                    .date('yyyy-MM-dd')
-                    .format(DateTime.now().add(Duration(
-                      days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!),
-                    ))),
+                'moProducto': moProducto,
+                'moCuota': moCuota,
+                'moInteres': moInteres,
+                'moTotalCuota': moTotalCuota,
+                'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
+                    Duration(
+                        days: ((i + 1) *
+                            modeloFinanciamiento.nuDiasEntreCuotas!)))),
               });
+
+              moPcPorCuota += moInteres;
+              moTotalPagar += moTotalCuota;
             }
           }
+
+          final pcIntereses =
+              ((moPcPorCuota / ctrl.moTotal) * 100).toPrecision(0);
 
           return Scaffold(
             appBar: AppBar(
@@ -379,7 +411,7 @@ class ShoppingCartPage extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        '+${modeloFinanciamiento.pcTasaInteres ?? 0}%',
+                                        '+$pcIntereses%',
                                         style:
                                             Get.textTheme.bodySmall?.copyWith(
                                           color: Get.theme.colorScheme.onSurface
@@ -394,22 +426,14 @@ class ShoppingCartPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      '\$ ${Helper().getAmountFormatCompletDefault(
-                                        double.parse('${ctrl.moTotal}')
-                                                .toPrecision(2) *
-                                            intereses,
-                                      )}',
+                                      '\$ ${Helper().getAmountFormatCompletDefault(moTotalPagar)}',
                                       style: Get.textTheme.bodyLarge?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     const SizedBox(height: 2.0),
                                     Text(
-                                      'Bs. ${Helper().getAmountFormatCompletDefault(
-                                        (double.parse('${ctrl.moTotal}') *
-                                                tasa) *
-                                            intereses,
-                                      )}',
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
                                       style: Get.textTheme.bodySmall?.copyWith(
                                         color: Get.theme.colorScheme.onSurface
                                             .withOpacity(0.5),
@@ -459,7 +483,7 @@ class ShoppingCartPage extends StatelessWidget {
                                           Text(
                                             '\$ ${Helper().getAmountFormatCompletDefault(
                                               double.parse(
-                                                      '${cuota['moMonto']}')
+                                                      '${cuota['moTotalCuota']}')
                                                   .toPrecision(2),
                                             )}',
                                             style: Get.textTheme.bodyLarge
@@ -471,7 +495,7 @@ class ShoppingCartPage extends StatelessWidget {
                                           Text(
                                             'Bs. ${Helper().getAmountFormatCompletDefault(
                                               double.parse(
-                                                          '${cuota['moMonto']}')
+                                                          '${cuota['moTotalCuota']}')
                                                       .toPrecision(2) *
                                                   tasa,
                                             )}',
@@ -523,7 +547,7 @@ class ShoppingCartPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '\$ ${Helper().getAmountFormatCompletDefault(ctrl.moTotal + (ctrl.moTotal * intereses))}',
+                                '\$ ${Helper().getAmountFormatCompletDefault(moTotalPagar)}',
                                 maxLines: 1,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
@@ -531,7 +555,7 @@ class ShoppingCartPage extends StatelessWidget {
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'Bs. ${Helper().getAmountFormatCompletDefault((ctrl.moTotal + (ctrl.moTotal * intereses)) * tasa)}',
+                                'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
                                 maxLines: 1,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,

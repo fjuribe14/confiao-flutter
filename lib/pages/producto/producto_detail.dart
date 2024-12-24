@@ -28,24 +28,50 @@ class ProductoDetail extends StatelessWidget {
     SearchCtrl searchCtrl = Get.find<SearchCtrl>();
     SearchProducto producto = searchCtrl.producto.value;
 
-    if (modeloFinanciamiento.caCuotas != null) {
-      for (var i = 0; i < modeloFinanciamiento.caCuotas!; i++) {
-        cuotas.add({
-          'nuCuota': i + 1,
-          'moMonto': double.parse(producto.moMonto ?? '0.0') /
-              modeloFinanciamiento.caCuotas!,
-          'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
-              Duration(
-                  days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!)))),
-        });
+    int diasAnual = 360;
+    int caCuotas = modeloFinanciamiento.caCuotas ?? 0;
+    int nuDiasEntreCuotas = modeloFinanciamiento.nuDiasEntreCuotas ?? 0;
+    double pcPorCuota =
+        double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') / diasAnual;
+    double moProducto = double.parse(producto.moMonto ?? '0.0').toPrecision(2);
+    double moCuota = (moProducto / caCuotas).toPrecision(2);
+
+    double moPcPorCuota = 0.0;
+    double moTotalPagar = 0.0;
+
+    for (var i = 0; i < caCuotas; i++) {
+      // Si no es la primera cuota se resta el monto de la cuota anterior
+      if (i != 0) {
+        final cuotaAnterior = cuotas[i - 1];
+        moProducto = cuotaAnterior['moProducto'] - moCuota;
+        moProducto = moProducto.toPrecision(2);
       }
+
+      double moInteres =
+          ((moProducto * nuDiasEntreCuotas * pcPorCuota) / 100).toPrecision(2);
+      double moTotalCuota = (moCuota + moInteres).toPrecision(2);
+
+      cuotas.add({
+        'nuCuota': i + 1,
+        'moProducto': moProducto,
+        'moCuota': moCuota,
+        'moInteres': moInteres,
+        'moTotalCuota': moTotalCuota,
+        'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(Duration(
+            days: ((i + 1) * modeloFinanciamiento.nuDiasEntreCuotas!)))),
+      });
+
+      moPcPorCuota += moInteres;
+      moTotalPagar += moTotalCuota;
     }
+
+    final pcIntereses =
+        ((moPcPorCuota / double.parse(producto.moMonto ?? '0.0')) * 100)
+            .toPrecision(0);
 
     return Obx(() {
       bool isDisponible = producto.nuCantidad! > 0;
       bool inCarrito = shoppingCartCtrl.existInCart(producto);
-      final intereses =
-          double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') / 100;
 
       return Scaffold(
         appBar: AppBar(
@@ -148,214 +174,199 @@ class ProductoDetail extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 20.0),
-                      if (modeloFinanciamiento.caCuotas != null)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                            color: Get.theme.colorScheme.onPrimary,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      'Inicial',
-                                      style: Get.textTheme.bodyLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          color: Get.theme.colorScheme.onPrimary,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    'Inicial',
+                                    style: Get.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    '${Helper().getAmountFormatCompletDefault(double.parse(modeloFinanciamiento.pcInicial!))}%',
-                                    style: Get.textTheme.bodyLarge?.copyWith(),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 10.0),
-                              Divider(
-                                height: 1.0,
-                                color: Get.theme.colorScheme.surfaceContainer,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      'Pago',
-                                      style: Get.textTheme.bodyLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                ),
+                                Text(
+                                  '${Helper().getAmountFormatCompletDefault(double.parse(modeloFinanciamiento.pcInicial!))}%',
+                                  style: Get.textTheme.bodyLarge?.copyWith(),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            Divider(
+                              height: 1.0,
+                              color: Get.theme.colorScheme.surfaceContainer,
+                            ),
+                            const SizedBox(height: 10.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    'Pago',
+                                    style: Get.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    'Cada ${modeloFinanciamiento.nuDiasEntreCuotas} días',
-                                    style: Get.textTheme.bodyLarge?.copyWith(),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 10.0),
-                              Divider(
-                                height: 1.0,
-                                color: Get.theme.colorScheme.surfaceContainer,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Intereses',
-                                          style:
-                                              Get.textTheme.bodyLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '+${modeloFinanciamiento.pcTasaInteres ?? 0}%',
-                                          style:
-                                              Get.textTheme.bodySmall?.copyWith(
-                                            color: Get
-                                                .theme.colorScheme.onSurface
-                                                .withOpacity(0.5),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                ),
+                                Text(
+                                  'Cada ${modeloFinanciamiento.nuDiasEntreCuotas} días',
+                                  style: Get.textTheme.bodyLarge?.copyWith(),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            Divider(
+                              height: 1.0,
+                              color: Get.theme.colorScheme.surfaceContainer,
+                            ),
+                            const SizedBox(height: 10.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '\$ ${Helper().getAmountFormatCompletDefault(
-                                          double.parse('${producto.moMonto}')
-                                                  .toPrecision(2) *
-                                              intereses,
-                                        )}',
+                                        'Intereses',
                                         style:
                                             Get.textTheme.bodyLarge?.copyWith(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(height: 2.0),
                                       Text(
-                                        'Bs. ${Helper().getAmountFormatCompletDefault(
-                                          (double.parse('${producto.moMonto}') *
-                                                  tasa) *
-                                              intereses,
-                                        )}',
+                                        '+$pcIntereses%',
                                         style:
                                             Get.textTheme.bodySmall?.copyWith(
                                           color: Get.theme.colorScheme.onSurface
                                               .withOpacity(0.5),
                                         ),
-                                      ),
+                                      )
                                     ],
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 10.0),
-                              Divider(
-                                height: 1.0,
-                                color: Get.theme.colorScheme.surfaceContainer,
-                              ),
-                              const SizedBox(height: 10.0),
-                              ...cuotas.map((cuota) {
-                                bool isUltima =
-                                    cuota['nuCuota'] == cuotas.length;
-
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            'Cuota ${cuota['nuCuota']}',
+                                    Text(
+                                      '\$ ${Helper().getAmountFormatCompletDefault(moTotalPagar)}',
+                                      style: Get.textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2.0),
+                                    Text(
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface
+                                            .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            Divider(
+                              height: 1.0,
+                              color: Get.theme.colorScheme.surfaceContainer,
+                            ),
+                            const SizedBox(height: 10.0),
+                            ...cuotas.map((cuota) {
+                              bool isUltima = cuota['nuCuota'] == cuotas.length;
+
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          'Cuota ${cuota['nuCuota']}',
+                                          style:
+                                              Get.textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Get
+                                                .theme.colorScheme.onSurface
+                                                .withOpacity(0.5),
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            '\$ ${Helper().getAmountFormatCompletDefault(
+                                              double.parse(
+                                                      '${cuota['moTotalCuota']}')
+                                                  .toPrecision(2),
+                                            )}',
                                             style: Get.textTheme.bodyLarge
                                                 ?.copyWith(
                                               fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2.0),
+                                          Text(
+                                            'Bs. ${Helper().getAmountFormatCompletDefault(
+                                              double.parse(
+                                                          '${cuota['moTotalCuota']}')
+                                                      .toPrecision(2) *
+                                                  tasa,
+                                            )}',
+                                            style: Get.textTheme.bodySmall
+                                                ?.copyWith(
                                               color: Get
                                                   .theme.colorScheme.onSurface
                                                   .withOpacity(0.5),
                                             ),
                                           ),
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '\$ ${Helper().getAmountFormatCompletDefault(
-                                                double.parse(
-                                                        '${cuota['moMonto']}')
-                                                    .toPrecision(2),
-                                              )}',
-                                              style: Get.textTheme.bodyLarge
-                                                  ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 2.0),
-                                            Text(
-                                              'Bs. ${Helper().getAmountFormatCompletDefault(
-                                                double.parse(
-                                                            '${cuota['moMonto']}')
-                                                        .toPrecision(2) *
-                                                    tasa,
-                                              )}',
-                                              style: Get.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                color: Get
-                                                    .theme.colorScheme.onSurface
-                                                    .withOpacity(0.5),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  if (!isUltima) const SizedBox(height: 5.0),
+                                  if (!isUltima)
+                                    Divider(
+                                      height: 1.0,
+                                      color: Get
+                                          .theme.colorScheme.surfaceContainer,
                                     ),
-                                    if (!isUltima) const SizedBox(height: 5.0),
-                                    if (!isUltima)
-                                      Divider(
-                                        height: 1.0,
-                                        color: Get
-                                            .theme.colorScheme.surfaceContainer,
-                                      ),
-                                    if (!isUltima) const SizedBox(height: 10.0),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        )
+                                  if (!isUltima) const SizedBox(height: 10.0),
+                                ],
+                              );
+                            }),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 )
