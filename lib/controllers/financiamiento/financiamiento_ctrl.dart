@@ -236,7 +236,7 @@ class FinanciamientoCtrl extends GetxController {
         AlertService().showSnackBar(
           title: 'Felicidades 🎉',
           body:
-              'Se ha creado su solicitud de crédito, dirijase a la sección de financiamientos PENDIENTES para solicitarlo',
+              'Se ha creado su solicitud de crédito, dirijase a la sección de financiamientos REGISTRADO para ver su estado.',
         );
       } else {
         AlertService().showSnackBar(
