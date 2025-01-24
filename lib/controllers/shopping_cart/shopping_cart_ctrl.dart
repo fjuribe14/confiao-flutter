@@ -10,8 +10,9 @@ class ShoppingCartCtrl extends GetxController {
   RxList<SearchProducto> data = <SearchProducto>[].obs;
   FinanciadorCtrl financiadorCtrl = Get.find<FinanciadorCtrl>();
 
-  double get moTotal =>
-      data.map((e) => e.moMontoSelected).reduce((a, b) => a + b);
+  double get moTotal => data.isEmpty
+      ? 0.0
+      : data.map((e) => e.moMontoSelected ?? 0.0).reduce((a, b) => a + b);
 
   bool existInCart(SearchProducto item) {
     return data.any((e) => e.coProducto == item.coProducto);
@@ -43,7 +44,7 @@ class ShoppingCartCtrl extends GetxController {
         double.parse(financiador.limiteCliente?.moDisponible ?? '0.0'))) {
       return AlertService().showSnackBar(
         title: 'Error',
-        body: 'No hay suficiente dinero disponible',
+        body: 'Se ha excedido el límite de crédito.',
       );
     } else {
       final bool creditResult = hasCredit();
@@ -96,7 +97,8 @@ class ShoppingCartCtrl extends GetxController {
   addOneToCart(SearchProducto item) {
     if (item.caSelected.isLowerThan(item.nuCantidad!)) {
       item.caSelected = ++item.caSelected;
-      item.moMontoSelected = item.moMontoSelected + double.parse(item.moMonto!);
+      item.moMontoSelected =
+          (item.moMontoSelected ?? 0.0) + double.parse(item.moMonto!);
     }
 
     data.refresh();
@@ -104,7 +106,8 @@ class ShoppingCartCtrl extends GetxController {
 
   removeOneToCart(SearchProducto item) {
     if (item.caSelected.isGreaterThan(1)) {
-      item.moMontoSelected = item.moMontoSelected - double.parse(item.moMonto!);
+      item.moMontoSelected =
+          (item.moMontoSelected ?? 0.0) - double.parse(item.moMonto!);
       item.caSelected = --item.caSelected;
     }
 

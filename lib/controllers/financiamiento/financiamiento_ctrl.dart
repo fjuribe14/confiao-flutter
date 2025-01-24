@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FinanciamientoCtrl extends GetxController {
   String url = ApiUrl.apiFinanciamiento;
-  String urlCheckout = ApiUrl.apiCheckout;
+  String urlCheckout = ApiUrl.apiSolicitarProducto; //ApiUrl.apiCheckout;
   String urlPublic = ApiUrl.apiFinanciamientoPublic;
 
   RxBool loading = false.obs;
@@ -20,9 +20,9 @@ class FinanciamientoCtrl extends GetxController {
   List<DateTime> dias = <DateTime>[].obs;
   RxList<Financiamiento> data = <Financiamiento>[].obs;
   ScrollController scrollController = ScrollController();
-  List<String> status = <String>['ACEPTADO', 'PENDIENTE'];
   Rx<Financiamiento> financiamiento = Financiamiento().obs;
   RxList<Financiamiento> dataHistorial = <Financiamiento>[].obs;
+  List<String> status = <String>['ACEPTADO', 'REGISTRADO', 'PENDIENTE'];
 
   late PagoServicioCtrl pagoservicioCtrl;
 
@@ -195,6 +195,15 @@ class FinanciamientoCtrl extends GetxController {
             '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
         // TODO <== Eliminar cuando todos hayan actualizado a 1.0.0+42
         'in_crear_financiamiento': true,
+        // Nuevo de confiame
+        'co_cdtragt_receptor': '0169',
+        'co_schema_id_receptor': 'SCID',
+        'co_schema_acct_receptor': 'ALIS',
+        'id_cdtr_receptor':
+            '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
+        'id_acct_receptor':
+            '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
+        'tx_identificacion_empresa': coIdentificacionEmpresa
       };
 
       // final response =

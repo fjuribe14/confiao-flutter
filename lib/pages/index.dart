@@ -3,6 +3,7 @@ export 'setup/setup_one.dart';
 export 'setup/setup_two.dart';
 export 'setup/setup_page.dart';
 export 'setup/setup_four.dart';
+export 'home/welcome_user.dart';
 export 'setup/setup_three.dart';
 export 'tienda/tienda_card.dart';
 export 'tienda/tienda_list.dart';

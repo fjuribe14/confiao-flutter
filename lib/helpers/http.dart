@@ -32,7 +32,7 @@ class Http {
           if (kDebugMode) {
             log('REQ TO PATH => ${options.path}');
             log('http queryParameters: ${jsonEncode(options.queryParameters)}');
-            log('http data: ${jsonEncode(options.data)}');
+            // log('http data: ${jsonEncode(options.data)}');
           }
 
           final token = await getTokenLocaly();
@@ -45,10 +45,10 @@ class Http {
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          // if (kDebugMode) {
-          // log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
-          // log('DATA FROM PATH ${response.requestOptions.path} => ${response.data}');
-          // }
+          if (kDebugMode) {
+            // log('RESP FROM PATH => ${response.statusCode} :: ${response.requestOptions.path}');
+            // log('DATA FROM PATH ${response.requestOptions.path} => ${response.data}');
+          }
 
           if (showLoading) {
             alertService.showLoading(false);
@@ -57,10 +57,10 @@ class Http {
           return handler.next(response);
         },
         onError: (DioException err, ErrorInterceptorHandler handler) async {
-          // if (kDebugMode) {
-          //   log('ERROR FROM PATH => ${err.requestOptions.path}');
-          //   log('cod: ${err.response?.statusCode} >> message: ${err.response?.data}');
-          // }
+          if (kDebugMode) {
+            log('ERROR FROM PATH => ${err.requestOptions.path}');
+            // log('cod: ${err.response?.statusCode} >> message: ${err.response?.data}');
+          }
 
           if (showLoading) {
             alertService.showLoading(false);

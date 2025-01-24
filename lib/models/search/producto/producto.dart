@@ -21,7 +21,7 @@ class SearchProducto {
   String? nbSucursal;
   bool? inFinancia;
   int caSelected;
-  double moMontoSelected;
+  double? moMontoSelected;
 
   SearchProducto({
     this.idProducto,

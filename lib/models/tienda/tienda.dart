@@ -67,7 +67,7 @@ class Tienda {
 class EmpresaModeloFinanciamiento {
   int? idEmpresaModeloFinanciamiento;
   int? idEmpresa;
-  String? idModeloFinanciamiento;
+  int? idModeloFinanciamiento;
   String? txTipoModeloFinanciamiento;
 
   EmpresaModeloFinanciamiento({

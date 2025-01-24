@@ -46,6 +46,85 @@ class FinanciamientoDetail extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10.0),
+                      if (item.stFinanciamiento == 'REGISTRADO')
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 40.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Get.theme.colorScheme.surfaceContainer,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.info,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  const SizedBox(width: 5.0),
+                                  Text(
+                                    'Nota',
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          'Esta operación se depositará en tu cuenta de R4 Sencillo perteneciente al usuario ${item.txIdentificacionCliente}.',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '\nSi aún no tienes una cuenta R4 Sencillo, puedes crearla descargando la app.',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              Text(
+                                'Monto solicitado'.toCapitalized(),
+                                style: Get.textTheme.bodyMedium?.copyWith(),
+                              ),
+                              Text(
+                                '\$ ${Helper().getAmountFormatCompletDefault(double.parse(item.moPrestamo ?? '0'))}',
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              // const SizedBox(height: 10.0),
+                              // Text(
+                              //   '(comisiones) Bs. - ${Helper().getAmountFormatCompletDefault(double.parse(item.moInteres ?? '0') * tasa)}',
+                              //   textAlign: TextAlign.center,
+                              //   style: Get.textTheme.bodySmall,
+                              // ),
+                              Text(
+                                'Bs. ${Helper().getAmountFormatCompletDefault((double.parse(item.moPrestamo ?? '0') - double.parse(item.moFlat ?? '0')) * tasa)}',
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
                       if ((item.cuotas?.isNotEmpty ?? false) &&
                           item.stFinanciamiento == 'ACEPTADO')
                         ...item.cuotas!.map(
@@ -586,7 +665,8 @@ class FinanciamientoDetail extends StatelessWidget {
                 height: 100.0,
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 10.0),
-                child: item.stFinanciamiento != 'PENDIENTE'
+                child: !['PENDIENTE', 'REGISTRADO']
+                        .contains(item.stFinanciamiento)
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [

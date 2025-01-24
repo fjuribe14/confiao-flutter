@@ -27,6 +27,7 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              WelcomeUser(),
               FinanciadorCard(),
               FinanciamientoCard(),
               TiendaList(),

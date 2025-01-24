@@ -17,7 +17,8 @@ class ShoppingCartPage extends StatelessWidget {
         List<Map<String, dynamic>> cuotas = [];
 
         // Producto de crédito
-        final bool inFinancia = ctrl.data.first.inFinancia ?? false;
+        final bool inFinancia =
+            ctrl.data.isNotEmpty ? ctrl.data.first.inFinancia! : false;
 
         // Tienda
         TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
@@ -95,8 +96,9 @@ class ShoppingCartPage extends StatelessWidget {
             }
           }
 
-          final pcIntereses =
-              ((moPcPorCuota / ctrl.moTotal) * 100).toPrecision(0);
+          final pcIntereses = ctrl.moTotal == 0.0
+              ? 0.0
+              : ((moPcPorCuota / ctrl.moTotal) * 100).toPrecision(0);
 
           return Scaffold(
             appBar: AppBar(

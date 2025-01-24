@@ -15,6 +15,8 @@ class Financiador {
   String? moFinanciadoTotal;
   String? stFinanciador;
   bool? inAfiliado;
+  bool? inPublico;
+  bool? inBeneficiario;
   LimiteCliente? limiteCliente;
 
   Financiador({
@@ -27,6 +29,8 @@ class Financiador {
     this.moFinanciadoTotal,
     this.stFinanciador,
     this.inAfiliado,
+    this.inPublico,
+    this.inBeneficiario,
     this.limiteCliente,
   });
 
@@ -40,6 +44,8 @@ class Financiador {
         moFinanciadoTotal: json["mo_financiado_total"],
         stFinanciador: json["st_financiador"],
         inAfiliado: json["in_afiliado"],
+        inPublico: json["in_publico"],
+        inBeneficiario: json["in_beneficiario"],
         limiteCliente: json["limite_cliente"] == null
             ? null
             : LimiteCliente.fromJson(json["limite_cliente"]),
@@ -55,6 +61,8 @@ class Financiador {
         "mo_financiado_total": moFinanciadoTotal,
         "st_financiador": stFinanciador,
         "in_afiliado": inAfiliado,
+        "in_publico": inPublico,
+        "in_beneficiario": inBeneficiario,
         "limite_cliente": limiteCliente?.toJson(),
       };
 }
