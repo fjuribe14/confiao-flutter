@@ -15,4 +15,6 @@ export 'participante/participante.dart';
 export 'solicitud_otp/solicitud_otp.dart';
 export 'financiamiento/financiamiento.dart';
 export 'refresh_session/refresh_session.dart';
+export 'solicitar_clave_pago/solicitar_clave_pago.dart';
+export 'cobrar_cuota_creadito/cobrar_cuota_credito.dart';
 export 'modelo_financiamiento/modelo_financiamiento.dart';

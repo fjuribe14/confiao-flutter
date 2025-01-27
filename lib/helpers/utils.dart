@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -197,6 +198,102 @@ class Helper {
   dateFormat({required DateTime dateTime, String format = 'dd-MM-yyyy'}) {
     return DateFormat(format).format(dateTime);
   }
+
+  FinanciamientoPreview previewFinanciamiento({
+    required double montoFinanciamiento,
+    required ModeloFinanciamiento modeloFinanciamiento,
+  }) {
+    int diasAnual = 365;
+
+    int caDias = modeloFinanciamiento.caCuotas! *
+        modeloFinanciamiento.nuDiasEntreCuotas!;
+
+    double pcDiario =
+        double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') / diasAnual;
+
+    double pcIntereses = (pcDiario * caDias).toPrecision(2);
+
+    double moTotal =
+        montoFinanciamiento + montoFinanciamiento * (pcIntereses / 100);
+
+    final double moPcInicial = (moTotal *
+            (double.parse(modeloFinanciamiento.pcInicial ?? '0.0')
+                    .toPrecision(2) /
+                100))
+        .toPrecision(2);
+
+    double moTotalPagar = (montoFinanciamiento - moPcInicial) +
+        montoFinanciamiento * (pcIntereses / 100);
+
+    return FinanciamientoPreview(
+      caDias: caDias,
+      moTotal: moTotal,
+      pcDiario: pcDiario,
+      pcIntereses: pcIntereses,
+      moPcInicial: moPcInicial,
+      moTotalPagar: moTotalPagar,
+      cuotas: calcularCuotas(
+        montoFinanciamiento: montoFinanciamiento,
+        modeloFinanciamiento: modeloFinanciamiento,
+      ),
+    );
+  }
+
+  List<CuotaPreview> calcularCuotas({
+    required double montoFinanciamiento,
+    required ModeloFinanciamiento modeloFinanciamiento,
+  }) {
+    List<CuotaPreview> cuotas = [];
+    int caCuotas = modeloFinanciamiento.caCuotas!;
+    double pcTasaInteres =
+        double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0');
+    int nuDiasEntreCuotas = modeloFinanciamiento.nuDiasEntreCuotas!;
+    double tasaDiaria = pcTasaInteres * nuDiasEntreCuotas / (360 * 100);
+    double pcInicial = double.parse(modeloFinanciamiento.pcInicial ?? '0.0');
+
+    montoFinanciamiento =
+        montoFinanciamiento - montoFinanciamiento * (pcInicial / 100);
+
+    for (var i = 0; i < caCuotas; i++) {
+      final cuota = calcularAmortizacion(
+        index: i,
+        caCuotas: caCuotas,
+        tasaDiaria: tasaDiaria,
+        montoFinanciamiento: montoFinanciamiento,
+        modeloFinanciamiento: modeloFinanciamiento,
+      );
+
+      cuotas.add(cuota);
+    }
+
+    return cuotas;
+  }
+
+  CuotaPreview calcularAmortizacion({
+    required int index,
+    required int caCuotas,
+    required double tasaDiaria,
+    required double montoFinanciamiento,
+    required ModeloFinanciamiento modeloFinanciamiento,
+  }) {
+    double saldoInicio = montoFinanciamiento;
+    double moTotalCuota =
+        (saldoInicio * (tasaDiaria * pow(1 + tasaDiaria, caCuotas))) /
+            (pow(1 + tasaDiaria, caCuotas) - 1);
+    double interes = saldoInicio * tasaDiaria;
+    double capital = moTotalCuota - interes;
+    double saldoFinal = saldoInicio - capital;
+
+    return CuotaPreview(
+        nuCuota: index + 1,
+        saldoInicio: saldoInicio,
+        interes: interes,
+        moTotalCuota: moTotalCuota,
+        capital: capital,
+        saldoFinal: saldoFinal,
+        feCuota: Intl().date('dd-MM-yyyy').format(DateTime.now().add(Duration(
+            days: ((index + 1) * modeloFinanciamiento.nuDiasEntreCuotas!)))));
+  }
 }
 
 extension StringCasingExtension on String {
@@ -207,4 +304,96 @@ extension StringCasingExtension on String {
       .split(' ')
       .map((str) => str.toCapitalized())
       .join(' ');
+}
+
+FinanciamientoPreview financiamientoPreviewFromJson(String str) =>
+    FinanciamientoPreview.fromJson(json.decode(str));
+
+String financiamientoPreviewToJson(FinanciamientoPreview data) =>
+    json.encode(data.toJson());
+
+class FinanciamientoPreview {
+  int? caDias;
+  double? moTotal;
+  double? pcDiario;
+  double? pcIntereses;
+  double? moPcInicial;
+  double? moTotalPagar;
+  List<CuotaPreview>? cuotas;
+
+  FinanciamientoPreview({
+    this.caDias,
+    this.moTotal,
+    this.pcDiario,
+    this.pcIntereses,
+    this.moPcInicial,
+    this.moTotalPagar,
+    this.cuotas,
+  });
+
+  factory FinanciamientoPreview.fromJson(Map<String, dynamic> json) =>
+      FinanciamientoPreview(
+        caDias: json["caDias"],
+        moTotal: json["moTotal"]?.toDouble(),
+        pcDiario: json["pcDiario"]?.toDouble(),
+        pcIntereses: json["pcIntereses"]?.toDouble(),
+        moPcInicial: json["moPcInicial"]?.toDouble(),
+        moTotalPagar: json["moTotalPagar"]?.toDouble(),
+        cuotas: json["cuotas"] == null
+            ? []
+            : List<CuotaPreview>.from(
+                json["cuotas"]!.map((x) => CuotaPreview.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "caDias": caDias,
+        "moTotal": moTotal,
+        "pcDiario": pcDiario,
+        "pcIntereses": pcIntereses,
+        "moPcInicial": moPcInicial,
+        "moTotalPagar": moTotalPagar,
+        "cuotas": cuotas == null
+            ? []
+            : List<dynamic>.from(cuotas!.map((x) => x.toJson())),
+      };
+}
+
+class CuotaPreview {
+  int? nuCuota;
+  double? saldoInicio;
+  double? interes;
+  double? moTotalCuota;
+  double? capital;
+  double? saldoFinal;
+  String? feCuota;
+
+  CuotaPreview({
+    this.nuCuota,
+    this.saldoInicio,
+    this.interes,
+    this.moTotalCuota,
+    this.capital,
+    this.saldoFinal,
+    this.feCuota,
+  });
+
+  factory CuotaPreview.fromJson(Map<String, dynamic> json) => CuotaPreview(
+        nuCuota: json["nuCuota"],
+        saldoInicio: json["saldoInicio"],
+        interes: json["interes"]?.toDouble(),
+        moTotalCuota: json["moTotalCuota"]?.toDouble(),
+        capital: json["capital"]?.toDouble(),
+        saldoFinal: json["saldoFinal"]?.toDouble(),
+        feCuota: json["feCuota"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "nuCuota": nuCuota,
+        "saldoInicio": saldoInicio,
+        "interes": interes,
+        "moTotalCuota": moTotalCuota,
+        "capital": capital,
+        "saldoFinal": saldoFinal,
+        "feCuota": feCuota,
+      };
 }

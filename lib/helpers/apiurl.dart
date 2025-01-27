@@ -33,14 +33,20 @@ class ApiUrl {
   static String apiFinanciador = '/api/v2/financiador';
   static String apiFinanciadorPublic = '/api/v2/public/mis_financiadores';
   static String apiFinanciamientoPublic = '/api/v2/public/financiamiento';
-  static String apiModeloFinanciamiento = '/api/v2/public/modelo_financiamiento';
-  static String apiSolicitarProducto = '/api/v2/financiamiento/solicitar_producto';
+  static String apiModeloFinanciamiento =
+      '/api/v2/public/modelo_financiamiento';
+  static String apiSolicitarProducto =
+      '/api/v2/financiamiento/solicitar_producto';
 
   /// Pagar
   static String apiClavePago = "/api/v2/servicios/pagar/clave_pago";
   static String apiCobrarCredito = "/api/v2/servicios/cobrar/credito";
   static String apiPagarPersonal = "/api/v2/servicios/pagar/personal";
   static String apiEstatusRequest = "/coremfibp/api/v2/json/bcorec/stsrqt";
+  // V2
+  static String apiSolicitarClavePago = "/api/v2/btcbox/solicitar_clave_pago";
+  static String apiCobrarCuotaDebito =
+      "/api/v2/financiamiento/cobrar_cuota_debito";
 
   /// Comunes
   static const String apiTasaValor = '/api/v1/tasa_valor';

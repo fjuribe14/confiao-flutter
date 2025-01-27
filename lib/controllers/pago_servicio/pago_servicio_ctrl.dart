@@ -8,8 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 enum TypeMetodoPago { solicitudClave, debitoInmediato, sencillo }
 
 class PagoServicioCtrl extends GetxController {
-  String url = ApiUrl.apiPagarPersonal;
-  String urlClavePago = ApiUrl.apiClavePago;
+  String url = ApiUrl.apiCobrarCuotaDebito; //ApiUrl.apiPagarPersonal;
+  String urlClavePago = ApiUrl.apiSolicitarClavePago; //ApiUrl.apiClavePago;
 
   RxDouble tasa = 0.0.obs;
   RxBool loading = false.obs;
@@ -67,57 +67,43 @@ class PagoServicioCtrl extends GetxController {
         acctClienteController.text = coIdentificacion;
       }
 
-      final data = {
-        "id_cuotas": cuotas,
-        "co_producto": "050",
-        "mo_monto": moTotal.value,
-        "id_cliente": idClienteController.text,
-        "nb_cliente": authCtrl.currentUser?.name,
-        "agt_cliente": agtClienteController.text,
-        "acct_cliente": acctClienteController.text,
-        "co_clave_pago": coClavePagoController.text,
-        "co_servicio": financiamiento.coIdentificacionEmpresa,
-        "schema_acct_cliente": schemaAcctClienteController.text,
-        "tx_referencia": financiamientoCtrl.cuotasSelected[0].idCuotaUuid,
-        'schema_id_cliente':
-            await Helper().getSchemeName(idClienteController.text),
-        "co_sub_producto": TypeMetodoPago.sencillo == typePago ? "003" : "002",
-        "tx_concepto":
-            "Pago de #${financiamiento.idFinanciamiento} Cuotas ${cuotas.join(', ')}",
-      };
-
-      // debugPrint('idClienteController: ${idClienteController.text}');
-      // debugPrint('agtClienteController: ${agtClienteController.text}');
-      // debugPrint('acctClienteController: ${acctClienteController.text}');
-      // debugPrint('coClavePagoController: ${coClavePagoController.text}');
-
-      // debugPrint('claimClientDataResult: $claimClientDataResult');
-      // debugPrint(
-      //     'Validation: ${typePago == TypeMetodoPago.solicitudClave && claimClientDataResult}');
-      // debugPrint('data: ${jsonEncode(data)}');
+      final schemaIdCliente =
+          await Helper().getSchemeName(idClienteController.text);
 
       if (typePago == TypeMetodoPago.solicitudClave && claimClientDataResult) {
         await Http().http(showLoading: true).then((value) => value.post(
             '${dotenv.env['URL_API_SERVICIO']}$urlClavePago',
-            data: data));
+            data: SolicitarClavePago(
+              moMonto: moTotal.value,
+              schemaIdCliente: schemaIdCliente,
+              idCliente: idClienteController.text,
+              agtCliente: agtClienteController.text,
+              acctCliente: acctClienteController.text,
+              schemaAcctCliente: schemaAcctClienteController.text,
+              txIdentificacionEmpresa: financiamiento.coIdentificacionEmpresa,
+            )));
 
         claimClavePagoResult = await claimClavePago();
-
-        // debugPrint('claimClavePagoResult: $claimClavePagoResult');
 
         if (claimClavePagoResult) {
           await checkout(TypeMetodoPago.debitoInmediato);
         }
       } else {
-        // debugPrint('Pagar: ${jsonEncode(data)}');
-
         verificationByClient = await getVerificationByClient();
 
-        // debugPrint('verificationByClient: $verificationByClient');
-
         if (verificationByClient) {
-          await Http().http(showLoading: true).then((value) =>
-              value.post('${dotenv.env['URL_API_SERVICIO']}$url', data: data));
+          await Http().http(showLoading: true).then(
+              (value) => value.post('${dotenv.env['URL_API_SERVICIO']}$url',
+                  data: CobrarCuotaDebito(
+                    cuotas: cuotas,
+                    coSchemaIdReceptor: schemaIdCliente,
+                    txClavePago: coClavePagoController.text,
+                    idCdtrReceptor: idClienteController.text,
+                    idAcctReceptor: acctClienteController.text,
+                    coCdtragtReceptor: agtClienteController.text,
+                    idFinanciamiento: financiamiento.idFinanciamiento,
+                    coSchemaAcctReceptor: schemaAcctClienteController.text,
+                  )));
 
           AlertService().showSnackBar(
             title: 'Se ha enviado el pago',

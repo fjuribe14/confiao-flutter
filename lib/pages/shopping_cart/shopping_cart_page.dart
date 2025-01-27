@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:confiao/models/index.dart';
 import 'package:confiao/helpers/index.dart';
@@ -14,11 +13,11 @@ class ShoppingCartPage extends StatelessWidget {
     return GetBuilder<ShoppingCartCtrl>(
       init: ShoppingCartCtrl(),
       builder: (ctrl) {
-        List<Map<String, dynamic>> cuotas = [];
+        List<CuotaPreview> cuotas = [];
 
         // Producto de crédito
         final bool inFinancia =
-            ctrl.data.isNotEmpty ? ctrl.data.first.inFinancia! : false;
+            ctrl.data.isNotEmpty && ctrl.data.first.inFinancia == true;
 
         // Tienda
         TiendaCtrl tiendaCtrl = Get.find<TiendaCtrl>();
@@ -50,56 +49,20 @@ class ShoppingCartPage extends StatelessWidget {
         double tasa = double.parse(comunesCtrl.tasas[0].moMonto ?? '0.0');
 
         return Obx(() {
-          // Cuotas
           cuotas.clear();
-          //
-          int diasAnual = 360;
-          int caCuotas = modeloFinanciamiento.caCuotas ?? 0;
-          int nuDiasEntreCuotas = modeloFinanciamiento.nuDiasEntreCuotas ?? 0;
-          double pcPorCuota =
-              double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') /
-                  diasAnual;
           double moProducto = ctrl.moTotal;
-          double moCuota = (moProducto / caCuotas).toPrecision(2);
-
-          double moPcPorCuota = 0.0;
-          double moTotalPagar = 0.0;
           //
-          if (modeloFinanciamiento.caCuotas != null && ctrl.data.isNotEmpty) {
-            for (var i = 0; i < modeloFinanciamiento.caCuotas!; i++) {
-              // Si no es la primera cuota se resta el monto de la cuota anterior
-              if (i != 0) {
-                final cuotaAnterior = cuotas[i - 1];
-                moProducto = cuotaAnterior['moProducto'] - moCuota;
-                moProducto = moProducto.toPrecision(2);
-              }
-
-              double moInteres =
-                  ((moProducto * nuDiasEntreCuotas * pcPorCuota) / 100)
-                      .toPrecision(2);
-              double moTotalCuota = (moCuota + moInteres).toPrecision(2);
-
-              cuotas.add({
-                'nuCuota': i + 1,
-                'moProducto': moProducto,
-                'moCuota': moCuota,
-                'moInteres': moInteres,
-                'moTotalCuota': moTotalCuota,
-                'feCuota': Intl().date('yyyy-MM-dd').format(DateTime.now().add(
-                    Duration(
-                        days: ((i + 1) *
-                            modeloFinanciamiento.nuDiasEntreCuotas!)))),
-              });
-
-              moPcPorCuota += moInteres;
-              moTotalPagar += moTotalCuota;
-            }
-          }
-
-          final pcIntereses = ctrl.moTotal == 0.0
-              ? 0.0
-              : ((moPcPorCuota / ctrl.moTotal) * 100).toPrecision(0);
-
+          final preview = Helper().previewFinanciamiento(
+            montoFinanciamiento: moProducto,
+            modeloFinanciamiento: modeloFinanciamiento,
+          );
+          //
+          double moPcInicial = preview.moPcInicial!;
+          double pcIntereses = preview.pcIntereses!;
+          double moTotalPagar = preview.moTotalPagar!;
+          //
+          cuotas.addAll(preview.cuotas!);
+          //
           return Scaffold(
             appBar: AppBar(
               title: const Text('Carrito de compras'),
@@ -348,16 +311,49 @@ class ShoppingCartPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Text(
-                                    'Inicial',
-                                    style: Get.textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Inicial',
+                                        style:
+                                            Get.textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2.0),
+                                      Text(
+                                        '${Helper().getAmountFormatCompletDefault(double.parse(modeloFinanciamiento.pcInicial!))}%',
+                                        style:
+                                            Get.textTheme.bodySmall?.copyWith(
+                                          color: Get.theme.colorScheme.onSurface
+                                              .withOpacity(0.5),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  '${Helper().getAmountFormatCompletDefault(double.parse(modeloFinanciamiento.pcInicial!))}%',
-                                  style: Get.textTheme.bodyLarge?.copyWith(),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '\$ ${Helper().getAmountFormatCompletDefault(moPcInicial)}',
+                                      style: Get.textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2.0),
+                                    Text(
+                                      'Bs. ${Helper().getAmountFormatCompletDefault(moPcInicial * tasa)}',
+                                      style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Get.theme.colorScheme.onSurface
+                                            .withOpacity(0.5),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
@@ -426,14 +422,14 @@ class ShoppingCartPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      '\$ ${Helper().getAmountFormatCompletDefault(moTotalPagar)}',
+                                      '\$ ${Helper().getAmountFormatCompletDefault((moTotalPagar - moPcInicial))}',
                                       style: Get.textTheme.bodyLarge?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     const SizedBox(height: 2.0),
                                     Text(
-                                      'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
+                                      'Bs. ${Helper().getAmountFormatCompletDefault((moTotalPagar - moPcInicial) * tasa)}',
                                       style: Get.textTheme.bodySmall?.copyWith(
                                         color: Get.theme.colorScheme.onSurface
                                             .withOpacity(0.5),
@@ -450,7 +446,7 @@ class ShoppingCartPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 10.0),
                             ...cuotas.map((cuota) {
-                              bool isUltima = cuota['nuCuota'] == cuotas.length;
+                              bool isUltima = cuota.nuCuota == cuotas.length;
 
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -463,15 +459,33 @@ class ShoppingCartPage extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         flex: 1,
-                                        child: Text(
-                                          'Cuota ${cuota['nuCuota']}',
-                                          style:
-                                              Get.textTheme.bodyLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Get
-                                                .theme.colorScheme.onSurface
-                                                .withOpacity(0.5),
-                                          ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Cuota ${cuota.nuCuota}',
+                                              style: Get.textTheme.bodyLarge
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Get
+                                                    .theme.colorScheme.onSurface
+                                                    .withOpacity(0.5),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2.0),
+                                            Text(
+                                              '${cuota.feCuota}',
+                                              style: Get.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                color: Get
+                                                    .theme.colorScheme.onSurface
+                                                    .withOpacity(0.5),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       Column(
@@ -483,7 +497,7 @@ class ShoppingCartPage extends StatelessWidget {
                                           Text(
                                             '\$ ${Helper().getAmountFormatCompletDefault(
                                               double.parse(
-                                                      '${cuota['moTotalCuota']}')
+                                                      '${cuota.moTotalCuota}')
                                                   .toPrecision(2),
                                             )}',
                                             style: Get.textTheme.bodyLarge
@@ -495,7 +509,7 @@ class ShoppingCartPage extends StatelessWidget {
                                           Text(
                                             'Bs. ${Helper().getAmountFormatCompletDefault(
                                               double.parse(
-                                                          '${cuota['moTotalCuota']}')
+                                                          '${cuota.moTotalCuota}')
                                                       .toPrecision(2) *
                                                   tasa,
                                             )}',
@@ -547,7 +561,7 @@ class ShoppingCartPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '\$ ${Helper().getAmountFormatCompletDefault(moTotalPagar)}',
+                                '\$ ${Helper().getAmountFormatCompletDefault(moTotalPagar - moPcInicial)}',
                                 maxLines: 1,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
@@ -555,7 +569,7 @@ class ShoppingCartPage extends StatelessWidget {
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
+                                'Bs. ${Helper().getAmountFormatCompletDefault((moTotalPagar - moPcInicial) * tasa)}',
                                 maxLines: 1,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,

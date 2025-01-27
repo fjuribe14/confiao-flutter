@@ -32,7 +32,7 @@ class FinanciadorCtrl extends GetxController {
         'st_financiador': 'ACTIVO',
         'order_by': 'id_financiador:asc',
         'append': 'in_afiliado,in_beneficiario,in_publico,limite_cliente',
-        'co_identificacion':
+        'tx_identificacion_cliente':
             '${authCtrl.currentUser?.txAtributo?.coIdentificacion}',
       };
 

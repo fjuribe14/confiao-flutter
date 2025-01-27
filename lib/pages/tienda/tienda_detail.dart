@@ -165,7 +165,9 @@ class TiendaDetail extends StatelessWidget {
                                   color: Get.theme.colorScheme.onPrimary,
                                 ),
                                 image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.cover),
+                                  image: imageProvider,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
