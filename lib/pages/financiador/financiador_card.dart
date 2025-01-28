@@ -229,10 +229,10 @@ class FinanciadorCard extends StatelessWidget {
                                                     shape: BoxShape.rectangle,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10.0),
+                                                            8.0),
                                                     image: DecorationImage(
                                                       image: imageProvider,
-                                                      fit: BoxFit.cover,
+                                                      fit: BoxFit.contain,
                                                     ),
                                                   ),
                                                 ),

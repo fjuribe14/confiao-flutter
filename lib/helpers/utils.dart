@@ -211,31 +211,35 @@ class Helper {
     double pcDiario =
         double.parse(modeloFinanciamiento.pcTasaInteres ?? '0.0') / diasAnual;
 
-    double pcIntereses = (pcDiario * caDias).toPrecision(2);
-
-    double moTotal =
-        montoFinanciamiento + montoFinanciamiento * (pcIntereses / 100);
-
-    final double moPcInicial = (moTotal *
+    final double moPcInicial = (montoFinanciamiento *
             (double.parse(modeloFinanciamiento.pcInicial ?? '0.0')
                     .toPrecision(2) /
                 100))
         .toPrecision(2);
 
-    double moTotalPagar = (montoFinanciamiento - moPcInicial) +
-        montoFinanciamiento * (pcIntereses / 100);
+    double moTotalPagar = 0.0;
+
+    List<CuotaPreview> cuotas = calcularCuotas(
+      montoFinanciamiento: montoFinanciamiento,
+      modeloFinanciamiento: modeloFinanciamiento,
+    );
+
+    for (var value in cuotas) {
+      moTotalPagar += value.moTotalCuota!;
+    }
+
+    double pcIntereses =
+        ((moTotalPagar - montoFinanciamiento) * 100 / montoFinanciamiento)
+            .toPrecision(2);
 
     return FinanciamientoPreview(
       caDias: caDias,
-      moTotal: moTotal,
+      cuotas: cuotas,
       pcDiario: pcDiario,
       pcIntereses: pcIntereses,
       moPcInicial: moPcInicial,
       moTotalPagar: moTotalPagar,
-      cuotas: calcularCuotas(
-        montoFinanciamiento: montoFinanciamiento,
-        modeloFinanciamiento: modeloFinanciamiento,
-      ),
+      moTotal: montoFinanciamiento,
     );
   }
 
