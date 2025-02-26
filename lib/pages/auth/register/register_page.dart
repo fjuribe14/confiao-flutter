@@ -49,7 +49,7 @@ class RegisterPage extends StatelessWidget {
                                   activeDotColor: Get.theme.colorScheme.primary,
                                   dotColor: Get
                                       .theme.colorScheme.onPrimaryContainer
-                                      .withOpacity(0.3),
+                                      .withValues(alpha: 0.3),
                                 ),
                               ),
                               const Spacer(),

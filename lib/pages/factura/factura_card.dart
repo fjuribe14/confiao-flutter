@@ -46,7 +46,7 @@ class FacturaCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
-          color: Get.theme.colorScheme.primary.withOpacity(0.1),
+          color: Get.theme.colorScheme.primary.withValues(alpha: 0.1),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

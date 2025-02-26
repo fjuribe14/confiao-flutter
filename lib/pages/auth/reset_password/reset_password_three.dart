@@ -27,8 +27,8 @@ class ResetPasswordThree extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Get.theme.colorScheme.primary.withOpacity(0.5),
-                      Get.theme.colorScheme.primary.withOpacity(0.2),
+                      Get.theme.colorScheme.primary.withValues(alpha: 0.5),
+                      Get.theme.colorScheme.primary.withValues(alpha: 0.2),
                     ],
                   ),
                 ),

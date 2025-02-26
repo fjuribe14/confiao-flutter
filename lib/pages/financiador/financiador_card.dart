@@ -150,10 +150,10 @@ class FinanciadorCard extends StatelessWidget {
                                                 style: Get.textTheme.labelSmall
                                                     ?.copyWith(
                                                   color: inAfiliado
-                                                      ? Colors.white
-                                                          .withOpacity(0.8)
-                                                      : Colors.black
-                                                          .withOpacity(0.8),
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.8)
+                                                      : Colors.black.withValues(
+                                                          alpha: 0.8),
                                                 ),
                                               ),
                                               const SizedBox(height: 2.0),
@@ -179,7 +179,7 @@ class FinanciadorCard extends StatelessWidget {
                                                       .textTheme.labelSmall
                                                       ?.copyWith(
                                                     color: Colors.white
-                                                        .withOpacity(0.8),
+                                                        .withValues(alpha: 0.8),
                                                   ),
                                                 ),
                                               if (inAfiliado)
@@ -208,7 +208,7 @@ class FinanciadorCard extends StatelessWidget {
                                                       .textTheme.titleSmall
                                                       ?.copyWith(
                                                     color: Colors.white
-                                                        .withOpacity(0.8),
+                                                        .withValues(alpha: 0.8),
                                                   ),
                                                 ),
                                             ],
@@ -296,8 +296,8 @@ class FinanciadorCard extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 10.0, right: 6.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Get.theme.colorScheme.secondary.withOpacity(
-                              ctrl.index.value == entry.key ? 1.0 : 0.3),
+                          color: Get.theme.colorScheme.secondary.withValues(
+                              alpha: ctrl.index.value == entry.key ? 1.0 : 0.3),
                         ),
                       );
                     }).toList(),

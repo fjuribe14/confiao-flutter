@@ -47,7 +47,7 @@ class SetupPage extends StatelessWidget {
                                   activeDotColor: Get.theme.colorScheme.error,
                                   dotColor: Get
                                       .theme.colorScheme.onErrorContainer
-                                      .withOpacity(0.3),
+                                      .withValues(alpha: 0.3),
                                 ),
                               ),
                               const Spacer(),

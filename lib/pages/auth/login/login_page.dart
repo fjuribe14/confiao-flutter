@@ -77,7 +77,7 @@ class LoginPage extends StatelessWidget {
                         child: Center(
                             child: Container(
                                 decoration: BoxDecoration(
-                          color: Colors.white70.withOpacity(0.5),
+                          color: Colors.white70.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(16 * 2),
                         ))),
                       ),
@@ -110,7 +110,7 @@ class LoginPage extends StatelessWidget {
                                   style: Get.theme.textTheme.titleMedium
                                       ?.copyWith(
                                           color: Get.theme.primaryColor
-                                              .withOpacity(0.8)),
+                                              .withValues(alpha: 0.8)),
                                 ),
                               ),
                               const SizedBox(height: 16.0 * 2),
@@ -118,8 +118,8 @@ class LoginPage extends StatelessWidget {
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16.0),
-                                  color:
-                                      Get.theme.primaryColor.withOpacity(0.1),
+                                  color: Get.theme.primaryColor
+                                      .withValues(alpha: 0.1),
                                 ),
                                 child: TextFormField(
                                   cursorColor: Get.theme.primaryColor,
@@ -138,8 +138,8 @@ class LoginPage extends StatelessWidget {
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16.0),
-                                  color:
-                                      Get.theme.primaryColor.withOpacity(0.1),
+                                  color: Get.theme.primaryColor
+                                      .withValues(alpha: 0.1),
                                 ),
                                 child: Row(
                                   children: [
@@ -171,7 +171,7 @@ class LoginPage extends StatelessWidget {
                                                 ? Icons.visibility_off_outlined
                                                 : Icons.remove_red_eye_outlined,
                                             color: Get.theme.primaryColor
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                           )),
                                     )
                                   ],
@@ -252,7 +252,7 @@ class LoginPage extends StatelessWidget {
                                         height: Responsive.width(16.0),
                                         decoration: BoxDecoration(
                                           color: Get.theme.primaryColor
-                                              .withOpacity(0.1),
+                                              .withValues(alpha: 0.1),
                                           borderRadius:
                                               BorderRadius.circular(16),
                                         ),
@@ -273,8 +273,8 @@ class LoginPage extends StatelessWidget {
                                   width: double.infinity,
                                   height: Responsive.width(16.0),
                                   decoration: BoxDecoration(
-                                    color:
-                                        Get.theme.primaryColor.withOpacity(0.1),
+                                    color: Get.theme.primaryColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Center(

@@ -86,7 +86,7 @@ class FinanciamientoCtrl extends GetxController {
       case 'PAGADA':
         return Get.theme.colorScheme.primary;
       default:
-        return Get.theme.colorScheme.onSurface.withOpacity(0.3);
+        return Get.theme.colorScheme.onSurface.withValues(alpha: 0.3);
     }
   }
 

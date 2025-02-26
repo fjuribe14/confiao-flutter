@@ -397,7 +397,7 @@ class AuthCtrl extends GetxController {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
-            color: Get.theme.primaryColor.withOpacity(0.1),
+            color: Get.theme.primaryColor.withValues(alpha: 0.1),
           ),
           child: Obx(
             () => Row(
@@ -427,7 +427,7 @@ class AuthCtrl extends GetxController {
                       textVisible.value
                           ? Icons.visibility_off_outlined
                           : Icons.remove_red_eye_outlined,
-                      color: Get.theme.primaryColor.withOpacity(0.5),
+                      color: Get.theme.primaryColor.withValues(alpha: 0.5),
                     ),
                   ),
                 )
@@ -446,7 +446,7 @@ class AuthCtrl extends GetxController {
                     height: Get.height * 0.075,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: Get.theme.primaryColor.withOpacity(0.1),
+                      color: Get.theme.primaryColor.withValues(alpha: 0.1),
                     ),
                     child: Center(
                       child: Text(

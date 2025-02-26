@@ -258,7 +258,7 @@ class ProductoDetail extends StatelessWidget {
                                         style:
                                             Get.textTheme.bodySmall?.copyWith(
                                           color: Get.theme.colorScheme.onSurface
-                                              .withOpacity(0.5),
+                                              .withValues(alpha: 0.5),
                                         ),
                                       )
                                     ],
@@ -279,7 +279,7 @@ class ProductoDetail extends StatelessWidget {
                                       'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
                                       style: Get.textTheme.bodySmall?.copyWith(
                                         color: Get.theme.colorScheme.onSurface
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ],
@@ -313,7 +313,7 @@ class ProductoDetail extends StatelessWidget {
                                             fontWeight: FontWeight.bold,
                                             color: Get
                                                 .theme.colorScheme.onSurface
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                           ),
                                         ),
                                       ),
@@ -346,7 +346,7 @@ class ProductoDetail extends StatelessWidget {
                                                 ?.copyWith(
                                               color: Get
                                                   .theme.colorScheme.onSurface
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                             ),
                                           ),
                                         ],
@@ -414,14 +414,15 @@ class ProductoDetail extends StatelessWidget {
                             color: isDisponible
                                 ? Get.theme.colorScheme.onPrimary
                                 : Get.theme.colorScheme.onSurface
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                           ),
                         ),
                   icon: Icon(
                     Icons.shopping_bag_rounded,
                     color: isDisponible
                         ? Get.theme.colorScheme.onPrimary
-                        : Get.theme.colorScheme.onSurface.withOpacity(0.5),
+                        : Get.theme.colorScheme.onSurface
+                            .withValues(alpha: 0.5),
                     size: Get.textTheme.titleMedium?.fontSize,
                   ),
                 ),

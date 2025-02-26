@@ -59,7 +59,8 @@ class TiendaDetail extends StatelessWidget {
                               height: Get.height * 0.075,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
-                                color: Get.theme.primaryColor.withOpacity(0.1),
+                                color: Get.theme.primaryColor
+                                    .withValues(alpha: 0.1),
                               ),
                               child: Center(
                                 child: Text(

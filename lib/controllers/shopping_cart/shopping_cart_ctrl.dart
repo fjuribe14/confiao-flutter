@@ -153,7 +153,7 @@ class ShoppingCartCtrl extends GetxController {
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: Get.theme.primaryColor.withOpacity(0.1),
+                      color: Get.theme.primaryColor.withValues(alpha: 0.1),
                     ),
                     child: Center(
                       child: Text(
@@ -239,7 +239,7 @@ class ShoppingCartCtrl extends GetxController {
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: Get.theme.primaryColor.withOpacity(0.1),
+                      color: Get.theme.primaryColor.withValues(alpha: 0.1),
                     ),
                     child: Center(
                       child: Text(
@@ -326,7 +326,7 @@ class ShoppingCartCtrl extends GetxController {
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: Get.theme.primaryColor.withOpacity(0.1),
+                      color: Get.theme.primaryColor.withValues(alpha: 0.1),
                     ),
                     child: Center(
                       child: Text(

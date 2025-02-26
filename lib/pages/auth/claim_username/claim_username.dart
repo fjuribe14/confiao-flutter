@@ -31,7 +31,7 @@ class ClaimUsername extends StatelessWidget {
               height: Responsive.width(16.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.0),
-                color: Get.theme.primaryColor.withOpacity(0.1),
+                color: Get.theme.primaryColor.withValues(alpha: 0.1),
               ),
               child: TextFormField(
                 cursorColor: Get.theme.primaryColor,

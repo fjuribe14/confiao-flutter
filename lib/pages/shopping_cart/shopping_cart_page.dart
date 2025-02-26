@@ -413,7 +413,7 @@ class ShoppingCartPage extends StatelessWidget {
                                         style:
                                             Get.textTheme.bodySmall?.copyWith(
                                           color: Get.theme.colorScheme.onSurface
-                                              .withOpacity(0.5),
+                                              .withValues(alpha: 0.5),
                                         ),
                                       )
                                     ],
@@ -434,7 +434,7 @@ class ShoppingCartPage extends StatelessWidget {
                                       'Bs. ${Helper().getAmountFormatCompletDefault(moTotalPagar * tasa)}',
                                       style: Get.textTheme.bodySmall?.copyWith(
                                         color: Get.theme.colorScheme.onSurface
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ],
@@ -468,7 +468,7 @@ class ShoppingCartPage extends StatelessWidget {
                                             fontWeight: FontWeight.bold,
                                             color: Get
                                                 .theme.colorScheme.onSurface
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                           ),
                                         ),
                                       ),
@@ -501,7 +501,7 @@ class ShoppingCartPage extends StatelessWidget {
                                                 ?.copyWith(
                                               color: Get
                                                   .theme.colorScheme.onSurface
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                             ),
                                           ),
                                         ],

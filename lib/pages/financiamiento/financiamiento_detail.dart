@@ -267,7 +267,7 @@ class FinanciamientoDetail extends StatelessWidget {
                             horizontal: 40.0,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.amber.withOpacity(0.2),
+                            color: Colors.amber.withValues(alpha: 0.2),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
