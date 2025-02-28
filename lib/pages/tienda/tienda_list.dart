@@ -33,6 +33,10 @@ class TiendaList extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10.0),
+              Text(
+                'Encontramos ${ctrl.data.length} tiendas',
+              ),
+              const SizedBox(height: 10.0),
               Container(
                 height: 100.0,
                 margin: const EdgeInsets.only(bottom: 10.0),

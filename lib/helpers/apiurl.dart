@@ -16,10 +16,10 @@ class ApiUrl {
   static String authPasswordValidate = '/api/v3/auth/password/validate';
 
   /// Businness
-  static String apiTienda = '/api/v1/public/tienda';
-  static String apiFactura = '/api/v1/public/factura';
-  static String apiTiendas = '/api/v1/public/mis_tiendas';
-  static String apiCheckout = '/api/v1/public/confiao/checkout';
+  static String apiTienda = '/api/v2/public/tienda';
+  static String apiFactura = '/api/v2/public/factura';
+  static String apiTiendas = '/api/v2/public/mis_tiendas';
+  static String apiCheckout = '/api/v2/public/confiao/checkout';
 
   /// Notifications
   static const String apiRestEndpointDevices = '/api/v3/dispositivo';
@@ -28,18 +28,19 @@ class ApiUrl {
       '/api/v3/dispositivo_reciente';
 
   /// Confiao
-  static String apiCuota = '/api/v1/cuota';
-  static String apiFinanciador = '/api/v1/financiador';
-  static String apiFinanciamiento = '/api/v1/financiamiento';
-  static String apiFinanciamientoPublic = '/api/v1/public/financiamiento';
+  static String apiCuota = '/api/v2/cuota';
+  static String apiFinanciador = '/api/v2/public/mis_financiadores';
+  // static String apiFinanciador = '/api/v2/financiador';
+  static String apiFinanciamiento = '/api/v2/financiamiento';
+  static String apiFinanciamientoPublic = '/api/v2/public/financiamiento';
   static String apiModeloFinanciamiento =
-      '/api/v1/public/modelo_financiamiento';
+      '/api/v2/public/modelo_financiamiento';
 
   /// Pagar
-  static String apiClavePago = "/api/v1/servicios/pagar/clave_pago";
-  static String apiCobrarCredito = "/api/v1/servicios/cobrar/credito";
-  static String apiPagarPersonal = "/api/v1/servicios/pagar/personal";
-  static String apiEstatusRequest = "/coremfibp/api/v1/json/bcorec/stsrqt";
+  static String apiClavePago = "/api/v2/servicios/pagar/clave_pago";
+  static String apiCobrarCredito = "/api/v2/servicios/cobrar/credito";
+  static String apiPagarPersonal = "/api/v2/servicios/pagar/personal";
+  static String apiEstatusRequest = "/coremfibp/api/v2/json/bcorec/stsrqt";
 
   /// Comunes
   static const String apiTasaValor = '/api/v1/tasa_valor';

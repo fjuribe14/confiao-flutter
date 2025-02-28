@@ -6,7 +6,7 @@ import 'package:confiao/controllers/index.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SearchCtrl extends GetxController {
-  String url = '/api/v1/public/buscar';
+  String url = '/api/v2/public/buscar';
 
   late Tienda item;
   RxBool loading = false.obs;
